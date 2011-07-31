@@ -6,6 +6,8 @@ geanypy_sources				=	__init__.py \
 								editorprefs.py \
 								editor.py \
 								mainwidgets.py \
+								project.py \
+								app.py \
 								console.py
 geanypy_objects				=	$(geanypy_sources:.py=.pyc)
 geanypydir					=	$(PYTHON_SITE_PKG)/geany

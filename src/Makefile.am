@@ -17,4 +17,6 @@ geanypy_la_SOURCES			=	plugin.c \
 								editorprefs.c \
 								indentprefs.c \
 								editor.c \
-								mainwidgets.c
+								mainwidgets.c \
+								project.c \
+								app.c

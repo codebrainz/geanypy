@@ -27,7 +27,7 @@ GeanyPy_start_interpreter(const gchar *path_to_add)
 {
     gchar *init_code;
 
-
+    /* This prevents a crash in the dynload thingy */
 	if (dlopen(GEANYPY_PYTHON_LIBRARY, RTLD_LAZY | RTLD_GLOBAL) == NULL)
     {
         g_warning("Unable to pre-load Python library.");
@@ -48,6 +48,8 @@ GeanyPy_start_interpreter(const gchar *path_to_add)
     init_geany_indent_prefs();
     init_geany_editor_prefs();
     init_geany_editor();
+    init_geany_project();
+    init_geany_app();
     init_geany_main_widgets();
     PyRun_SimpleString("import geany");
 }
