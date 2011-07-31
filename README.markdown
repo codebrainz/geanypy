@@ -34,3 +34,43 @@ geany.main_widgets.window.set_title("Hello Window")
 
 ```
 
+Dependencies:
+-------------
+
+To build GeanyPy you need the following dependencies:
+
+* Python 2.6+ and development files (I don't think Python 3 will work).
+* Geany 0.21+ and development files (ex, from SVN)
+* PyGTK 2.0 and development files
+
+On Debian/Ubuntu, the (non-Geany) dependencies can be installed like this:
+
+    $ apt-get install python python-dev python-gtk2 python-gtk2-dev
+
+Installation:
+-------------
+
+First you need to know where Geany is installed:
+
+    $ GEANY_PREFIX=`pkg-config --variable=prefix geany`
+
+The you can install as normal:
+
+    $ ./autogen.sh
+    $ ./configure --prefix=$GEANY_PREFIX
+    $ make
+    # make install
+
+*Note:* That even if `GEANY_PREFIX` is in your home directory, you still need
+root access since the Python modules will go into your system-wide
+`site-packages` directory.
+
+You should be able to force a specific version of Python to be used, by using
+the `PYTHON_VERSION` environment variable.
+
+Running on Windows:
+-------------------
+
+Good luck!  Let me know how it goes :)
+
+(Really, it should be possible with some tweaking)

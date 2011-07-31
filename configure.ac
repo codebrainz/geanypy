@@ -15,10 +15,10 @@ AC_PROG_CC
 AC_PROG_SED
 
 # Check for Python to pre-compile python sources
-AC_PATH_PROG([PYTHON], [python], [no])
+AC_PATH_PROG([PYTHON], [python[$PYTHON_VERSION]], [no])
 AC_SUBST([PYTHON])
 if [[ x"$PYTHON" = "xno" ]]; then
-	AC_MSG_ERROR([Python not found, is it installed?])
+	AC_MSG_ERROR([Python not found, is python$PYTHON_VERSION installed?])
 fi
 
 # Check for headers, libraries and packages
