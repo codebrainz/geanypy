@@ -33,4 +33,3 @@ Makefile.in
 
 # Project-specific
 /.backup/
-scripts/
