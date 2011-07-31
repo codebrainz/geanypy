@@ -65,17 +65,13 @@ def open_files(filenames, read_only=False, filetype="", forced_enc=""):
 def remove_page(page_num):
     return _geany_document.remove_page(page_num)
 
-def iter_documents():
-    i = 0
-    while True:
-        _doc = Document.get_from_index(i)
-        if _doc is None:
-            break
-        i += 1
+def get_documents_list():
+    doc_list = []
+    for _doc in _geany_document.get_documents_list():
         doc = Document()
         doc._doc = _doc
-        yield doc
-
+        doc_list.append(doc)
+    return doc_list
 
 class Document(object):
 
@@ -158,6 +154,10 @@ class Document(object):
     @property
     def real_path(self):
         return self._doc._get_real_path()
+
+    @property
+    def editor(self):
+        return self._doc._get_editor()
 
     def close(self):
         return self._doc.close()

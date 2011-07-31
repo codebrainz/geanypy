@@ -1,3 +1,24 @@
+/*
+ * document.c - see Geany's document.h
+ *
+ * Copyright 2011 Matthew Brush <mbrush@codebrainz.ca>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ */
+
 #include <Python.h>
 #include <structmember.h>
 #include <gtk/gtk.h>
@@ -327,6 +348,19 @@ Document__get_real_path(Document *self, PyObject *args)
 }
 
 
+static PyObject *
+Document__get_editor(Document *self, PyObject *args)
+{
+    Editor *editor;
+    if (DOC_VALID(self->doc) && self->doc->editor != NULL)
+    {
+        editor = Editor_create_new_from_geany_editor(self->doc->editor);
+        return (PyObject *) editor;
+    }
+    Py_RETURN_NONE;
+}
+
+
 static PyMethodDef Document_methods[] = {
     { "close", (PyCFunction)Document_close, METH_VARARGS },
     { "_get_basename_for_display", (PyCFunction)Document__get_basename_for_display, METH_VARARGS },
@@ -349,6 +383,7 @@ static PyMethodDef Document_methods[] = {
     { "_get_is_valid", (PyCFunction)Document__get_is_valid, METH_VARARGS },
     { "_get_read_only", (PyCFunction)Document__get_readonly, METH_VARARGS },
     { "_get_real_path", (PyCFunction)Document__get_real_path, METH_VARARGS },
+    { "_get_editor", (PyCFunction)Document__get_editor, METH_VARARGS },
 	{NULL}
 };
 
@@ -632,6 +667,29 @@ Document_remove_page(PyObject *self, PyObject *args)
     Py_RETURN_NONE;
 }
 
+
+static PyObject *
+Document_get_documents_list(PyObject *module, PyObject *args)
+{
+    GeanyDocument *doc;
+    Document *py_doc;
+    gint i;
+    PyObject *list;
+
+    list = PyList_New(0);
+
+    for (i = 0; i < geany_data->documents_array->len; i++)
+    {
+        doc = g_ptr_array_index(geany_data->documents_array, i);
+        py_doc = (Document *) PyObject_CallObject((PyObject *)&DocumentType, NULL);
+        py_doc->doc = doc;
+        PyList_Append(list, (PyObject *) py_doc);
+    }
+
+    return list;
+}
+
+
 static
 PyMethodDef DocumentModule_methods[] = {
     { "compare_by_display_name", (PyCFunction)Document_compare_by_display_name, METH_VARARGS },
@@ -644,6 +702,7 @@ PyMethodDef DocumentModule_methods[] = {
     { "new_file", (PyCFunction)Document_new_file, METH_VARARGS },
     { "open_file", (PyCFunction)Document_open_file, METH_VARARGS },
     { "remove_page", (PyCFunction)Document_remove_page, METH_VARARGS },
+    { "get_documents_list", (PyCFunction)Document_get_documents_list, METH_VARARGS },
     { NULL }
 };
 

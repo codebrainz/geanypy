@@ -2,6 +2,10 @@ geanypy_sources				=	__init__.py \
 								dialogs.py \
 								document.py \
 								filetype.py \
+								indentprefs.py \
+								editorprefs.py \
+								editor.py \
+								mainwidgets.py \
 								console.py
 geanypy_objects				=	$(geanypy_sources:.py=.pyc)
 geanypydir					=	$(PYTHON_SITE_PKG)/geany

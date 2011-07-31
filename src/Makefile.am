@@ -13,4 +13,8 @@ geanypy_la_SOURCES			=	plugin.c \
 								plugin.h \
 								dialogs.c \
 								document.c \
-								filetype.c
+								filetype.c \
+								editorprefs.c \
+								indentprefs.c \
+								editor.c \
+								mainwidgets.c

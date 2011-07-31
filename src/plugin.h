@@ -44,21 +44,43 @@ extern GeanyFunctions	*geany_functions;
 typedef struct
 {
 	PyObject_HEAD
-
 	GeanyFiletype *ft;
-
-    PyObject *display_name;
-
 } Filetype;
 
 
 typedef struct
 {
 	PyObject_HEAD
-
 	GeanyDocument *doc;
-
 } Document;
+
+
+typedef struct
+{
+	PyObject_HEAD
+	GeanyEditor *editor;
+} Editor;
+
+
+typedef struct
+{
+	PyObject_HEAD
+	GeanyEditorPrefs *editor_prefs;
+} EditorPrefs;
+
+
+typedef struct
+{
+	PyObject_HEAD
+	GeanyIndentPrefs *indent_prefs;
+} IndentPrefs;
+
+
+typedef struct
+{
+	PyObject_HEAD
+	GeanyMainWidgets *main_widgets;
+} MainWidgets;
 
 
 #ifndef PyMODINIT_FUNC
@@ -71,6 +93,16 @@ PyMODINIT_FUNC init_geany_filetype(void);
 Filetype *Filetype_create_new_from_geany_filetype(GeanyFiletype *ft);
 
 PyMODINIT_FUNC init_geany_dialogs(void);
+
+PyMODINIT_FUNC init_geany_editor_prefs(void);
+PyMODINIT_FUNC init_geany_indent_prefs(void);
+IndentPrefs *IndentPrefs_create_new_from_geany_indent_prefs(GeanyIndentPrefs *indent_prefs);
+PyMODINIT_FUNC init_geany_editor(void);
+Editor *Editor_create_new_from_geany_editor(GeanyEditor *editor);
+
+PyMODINIT_FUNC init_geany_main_widgets(void);
+
+PyMODINIT_FUNC init_geany_main_widgets(void);
 
 #ifdef __cplusplus
 } /* extern "C" */

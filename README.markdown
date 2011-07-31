@@ -30,5 +30,7 @@ print(doc.file_type.display_name)
 
 geany.dialogs.show_msgbox("Hello World")
 
+geany.main_widgets.window.set_title("Hello Window")
+
 ```
 

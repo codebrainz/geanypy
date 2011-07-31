@@ -9,10 +9,6 @@ extern GeanyPlugin		*geany_plugin;
 extern GeanyData		*geany_data;
 extern GeanyFunctions	*geany_functions;
 
-static gboolean
-Filetype_add_property(Filetype *self, const gchar *name, const gchar *get_func, const gchar *set_func);
-
-
 
 static void
 Filetype_dealloc(Filetype *self)
@@ -40,20 +36,8 @@ Filetype_init(Filetype *self, PyObject *args, PyObject *kwds)
 {
     self->ft = NULL;
 
-   // g_debug("Filetype_init() called");
-    //Filetype_add_property(self, "display_name", "_get_display_name", NULL);
-
 	return 0;
 }
-/*
-    { "_get_display_name", (PyCFunction)Filetype__get_display_name, METH_VARARGS },
-    { "_get_extension", (PyCFunction)Filetype__get_extension, METH_VARARGS },
-    { "_get_index", (PyCFunction)Filetype__get_index, METH_VARARGS },
-    { "_get_lang_id", (PyCFunction)Filetype__get_lang_id, METH_VARARGS },
-    { "_get_name", (PyCFunction)Filetype__get_name, METH_VARARGS },
-    { "_get_patterns", (PyCFunction)Filetype__get_patterns, METH_VARARGS },
-    { "_get_title", (PyCFunction)Filetype__get_title, METH_VARARGS },
-*/
 
 
 static PyObject *
@@ -144,103 +128,6 @@ Filetype__get_title(Filetype *self, PyObject *args)
 }
 
 
-static gboolean
-Filetype_add_property(Filetype *self, const gchar *name, const gchar *get_func, const gchar *set_func)
-{
-    PyObject *mod_builtin;
-    PyObject *prop_builtin;
-    PyObject *py_self;
-    PyObject *py_getter = NULL, *py_setter = NULL;
-    PyObject *args;
-    PyObject *prop;
-
-    mod_builtin = PyImport_ImportModule("__builtin__");
-    if (!mod_builtin)
-    {
-        g_warning("Failed to import the '__builtin__' module.");
-        return FALSE;
-    }
-
-    prop_builtin = PyObject_GetAttrString(mod_builtin, "property");
-    if (!prop_builtin)
-    {
-        g_warning("Failed to get the 'property' builtin.");
-        Py_XDECREF(mod_builtin);
-        return FALSE;
-    }
-    Py_XDECREF(mod_builtin);
-
-    py_self = (PyObject *) self;
-
-    py_getter = PyObject_GetAttrString(py_self, get_func);
-    if (!py_getter)
-    {
-        g_warning("Failed to get the 'getter' function.");
-        Py_XDECREF(prop_builtin);
-        return FALSE;
-    }
-
-    if (set_func != NULL)
-    {
-        py_setter = PyObject_GetAttrString(py_self, set_func);
-        if (!py_setter)
-        {
-            g_warning("Failed to get the 'setter' function.");
-            Py_XDECREF(prop_builtin);
-            Py_XDECREF(py_getter);
-            return FALSE;
-        }
-        args = Py_BuildValue("OO", py_getter, py_setter);
-        if (!args)
-        {
-            g_warning("Failed to built arguments from getter and setter.");
-            Py_XDECREF(prop_builtin);
-            Py_XDECREF(py_getter);
-            Py_XDECREF(py_setter);
-            return FALSE;
-        }
-    }
-    else
-    {
-        args = Py_BuildValue("(O)", py_getter);
-        if (!args)
-        {
-            g_warning("Failed to build arguments from getter.");
-            Py_XDECREF(prop_builtin);
-            Py_XDECREF(py_getter);
-            return FALSE;
-        }
-    }
-
-    prop = PyObject_CallObject(prop_builtin, args);
-    if (!prop)
-    {
-        g_warning("Failed to create property.");
-        Py_XDECREF(prop_builtin);
-        Py_XDECREF(py_getter);
-        Py_XDECREF(py_setter);
-        return FALSE;
-    }
-    Py_XDECREF(prop_builtin);
-
-    if (PyObject_SetAttrString(py_self, name, prop) == -1)
-    {
-        if (PyErr_Occurred())
-            PyErr_Print();
-        g_warning("Failed to set property '%s' on object.", name);
-        Py_XDECREF(py_getter);
-        Py_XDECREF(py_setter);
-        Py_XDECREF(prop);
-        return FALSE;
-    }
-
-    Py_XDECREF(py_getter);
-    Py_XDECREF(py_setter);
-    Py_XDECREF(prop);
-    return TRUE;
-}
-
-
 static PyMethodDef Filetype_methods[] = {
     { "_get_display_name", (PyCFunction)Filetype__get_display_name, METH_VARARGS },
     { "_get_extension", (PyCFunction)Filetype__get_extension, METH_VARARGS },
@@ -254,8 +141,6 @@ static PyMethodDef Filetype_methods[] = {
 
 
 static PyMemberDef Filetype_members[] = {
-    { "display_name", T_STRING, offsetof(Filetype, display_name), 0,
-        "The translated display name of the Filetype." },
 	//{"active_profile", T_STRING, offsetof(Document, active_profile), 0,
 		//"The profile used by Zen Coding when performing actions."},
 	//{"context", T_LONG, offsetof(Document, context), 0,

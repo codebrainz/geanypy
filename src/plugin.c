@@ -45,6 +45,10 @@ GeanyPy_start_interpreter(const gchar *path_to_add)
     init_geany_dialogs();
     init_geany_filetype();
     init_geany_document();
+    init_geany_indent_prefs();
+    init_geany_editor_prefs();
+    init_geany_editor();
+    init_geany_main_widgets();
     PyRun_SimpleString("import geany");
 }
 
