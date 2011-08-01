@@ -5,7 +5,7 @@ AC_INIT([geanypy], [0.01], [mbrush@codebrainz.ca])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_SRCDIR([src/plugin.c])
-AC_CONFIG_HEADERS([config.h])
+AC_CONFIG_HEADERS([src/plugin-config.h])
 AM_INIT_AUTOMAKE([foreign silent-rules])
 LT_INIT([disable-static])
 

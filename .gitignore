@@ -29,7 +29,9 @@ Makefile.in
 /m4/l*.m4
 /missing
 /libtool
-
+/build-aux/
+/src/plugin-config.h*
+/src/stamp-h1
 
 # Project-specific
 /.backup/
