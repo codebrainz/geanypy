@@ -138,7 +138,7 @@ class Document(object):
 
     @property
     def has_tags(self):
-        return self._doc._get_has_tags
+        return self._doc._get_has_tags()
 
     @property
     def index(self):
