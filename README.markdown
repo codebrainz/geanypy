@@ -3,8 +3,8 @@ GeanyPy
 
 *Warning:* This is a work in-progress, and it doesn't do too much yet.
 
-How it works:
--------------
+How it works
+------------
 
 In the `src/` directory is a normal Geany plugin (`plugin.c`) which loads the
 Python interpreter.  It then loads some C Python modules (`dialogs.c`,
@@ -34,8 +34,8 @@ geany.main_widgets.window.set_title("Hello Window")
 
 ```
 
-Dependencies:
--------------
+Dependencies
+------------
 
 To build GeanyPy you need the following dependencies:
 
@@ -47,8 +47,8 @@ On Debian/Ubuntu, the (non-Geany) dependencies can be installed like this:
 
     $ apt-get install python python-dev python-gtk2 python-gtk2-dev
 
-Installation:
--------------
+Installation
+------------
 
 First you need to know where Geany is installed:
 
@@ -68,8 +68,8 @@ root access since the Python modules will go into your system-wide
 You should be able to force a specific version of Python to be used, by using
 the `PYTHON_VERSION` environment variable.
 
-Running on Windows:
--------------------
+Running on Windows
+------------------
 
 Good luck!  Let me know how it goes :)
 

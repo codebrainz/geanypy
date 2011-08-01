@@ -3,7 +3,6 @@ import project
 
 
 class App(object):
-
     _app = None
 
     def __init__(self):
@@ -24,5 +23,3 @@ class App(object):
             proj = project.Project()
             proj._project = _proj
             return proj
-
-    # TODO: TMWorkspace

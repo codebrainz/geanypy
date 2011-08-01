@@ -8,6 +8,8 @@ geanypy_sources				=	__init__.py \
 								mainwidgets.py \
 								project.py \
 								app.py \
+								fileprefs.py \
+								scintilla.py \
 								console.py
 geanypy_objects				=	$(geanypy_sources:.py=.pyc)
 geanypydir					=	$(PYTHON_SITE_PKG)/geany

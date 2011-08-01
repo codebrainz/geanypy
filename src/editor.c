@@ -229,6 +229,19 @@ Editor__set_indent_type(Editor *self, PyObject *args)
 }
 
 
+static PyObject *
+Editor__get_scintilla(Editor *self, PyObject *args)
+{
+    Scintilla *sci;
+    if (self->editor != NULL)
+    {
+        sci = Scintilla_create_new_from_scintilla(self->editor->sci);
+        return (PyObject *) sci;
+    }
+    Py_RETURN_NONE;
+}
+
+
 static PyMethodDef Editor_methods[] = {
     { "create_widget", (PyCFunction) Editor_create_widget, METH_VARARGS },
     { "find_snippet", (PyCFunction) Editor_find_snippet, METH_VARARGS },
@@ -245,6 +258,7 @@ static PyMethodDef Editor_methods[] = {
     { "_get_eol_char_name", (PyCFunction) Editor__get_eol_char_name, METH_VARARGS },
     { "_get_indent_prefs", (PyCFunction) Editor__get_indent_prefs, METH_VARARGS },
     { "_set_indent_type", (PyCFunction) Editor__set_indent_type, METH_VARARGS },
+    { "_get_scintilla", (PyCFunction) Editor__get_scintilla, METH_VARARGS },
 	{ NULL }
 };
 

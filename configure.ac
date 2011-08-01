@@ -23,7 +23,7 @@ fi
 
 # Check for headers, libraries and packages
 AC_CHECK_HEADERS([stdio.h string.h dlfcn.h])
-PKG_CHECK_MODULES([geany], [geany])
+PKG_CHECK_MODULES([geany], [geany >= 0.21])
 PKG_CHECK_MODULES([pygtk], [pygtk-2.0])
 AX_PYTHON_DEVEL([>= '2.6'])
 

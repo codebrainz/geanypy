@@ -97,6 +97,20 @@ typedef struct
 } App;
 
 
+typedef struct
+{
+	PyObject_HEAD
+	GeanyFilePrefs *file_prefs;
+} FilePrefs;
+
+
+typedef struct
+{
+	PyObject_HEAD
+	ScintillaObject *sci;
+} Scintilla;
+
+
 #ifndef PyMODINIT_FUNC
 #define PyMODINIT_FUNC void
 #endif
@@ -122,6 +136,13 @@ PyMODINIT_FUNC init_geany_project(void);
 Project *Project_create_new(void);
 
 PyMODINIT_FUNC init_geany_app(void);
+
+PyMODINIT_FUNC init_geany_file_prefs(void);
+
+PyMODINIT_FUNC init_geany_file_prefs(void);
+
+PyMODINIT_FUNC init_geany_scintilla(void);
+Scintilla *Scintilla_create_new_from_scintilla(ScintillaObject *sci);
 
 
 #ifdef __cplusplus

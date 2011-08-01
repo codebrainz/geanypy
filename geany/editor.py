@@ -1,6 +1,7 @@
 import _geany_editor
 import indentprefs
 import editorprefs
+import scintilla
 
 
 INDENT_TYPE_SPACES = 0
@@ -93,6 +94,14 @@ class Editor(object):
     @indent_type.setter
     def indent_type(self, value):
         self._editor._set_indent_type(value)
+
+    @property
+    def sci(self):
+        _sci = self._editor._get_scintilla()
+        if _sci is not None:
+            sci = scintilla.Scintilla()
+            sci._sci = _sci
+            return sci
 
     def create_widget(self):
         return self._editor.create_widget()

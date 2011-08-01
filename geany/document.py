@@ -1,5 +1,6 @@
 import _geany_document
 import filetype
+import editor
 
 def compare_by_display_name(doc_a, doc_b):
     return _geany_document.compare_by_display_name(doc_a, doc_b)
@@ -157,7 +158,11 @@ class Document(object):
 
     @property
     def editor(self):
-        return self._doc._get_editor()
+        _ed = self._doc._get_editor()
+        if _ed is not None:
+            ed = editor.Editor()
+            ed._editor = _ed
+            return ed
 
     def close(self):
         return self._doc.close()
