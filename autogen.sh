@@ -1,3 +1,9 @@
 #!/bin/sh
 
-autoreconf -vfi || exit 1
+_mkdir()
+{
+	test -d $@ || mkdir $@
+}
+
+_mkdir build-aux	|| exit 1
+autoreconf -vfi		|| exit 1
