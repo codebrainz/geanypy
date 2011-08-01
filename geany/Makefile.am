@@ -18,6 +18,8 @@ geanypy_DATA				=	$(geanypy_sources)  $(geanypy_objects)
 EXTRA_DIST					=	$(geanypy_sources)
 CLEANFILES					=	$(geanypy_objects)
 
-%.pyc: %.py
+.SUFFIXES = .pyc .py
+
+.py.pyc:
 	$(AM_V_GEN) \
 	$(PYTHON) -c "from py_compile import compile; compile('$<', '$@')"
