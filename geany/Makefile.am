@@ -19,4 +19,5 @@ EXTRA_DIST					=	$(geanypy_sources)
 CLEANFILES					=	$(geanypy_objects)
 
 %.pyc: %.py
-	$(AM_V_GEN)$(PYTHON) -c "import py_compile; py_compile.compile('$<')"
+	$(AM_V_GEN) \
+	$(PYTHON) -c "from py_compile import compile; compile('$<', '$@')"
