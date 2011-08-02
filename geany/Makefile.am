@@ -12,7 +12,7 @@ geanypy_sources				=	__init__.py \
 								scintilla.py \
 								console.py
 geanypy_objects				=	$(geanypy_sources:.py=.pyc)
-geanypydir					=	$(PYTHON_SITE_PKG)/geany
+geanypydir					=	$(libdir)/geany/geanypy/geany
 geanypy_DATA				=	$(geanypy_sources)  $(geanypy_objects)
 
 EXTRA_DIST					=	$(geanypy_sources)

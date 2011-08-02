@@ -6,6 +6,8 @@
 #include <glib.h>
 #include <gtk/gtk.h>
 #include <geanyplugin.h>
+
+#include "plugin-config.h"
 #include "plugin.h"
 
 

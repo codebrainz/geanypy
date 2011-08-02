@@ -27,15 +27,6 @@ extern "C" {
 #endif
 
 
-#ifndef GEANYPY_PYTHON_DIR
-#define GEANYPY_PYTHON_DIR "/usr/local/share/geany/geanypy/geany"
-#endif
-
-#ifndef GEANYPY_PYTHON_LIBRARY
-#define GEANYPY_PYTHON_LIBRARY "libpython2.6.so"
-#endif
-
-
 extern GeanyPlugin		*geany_plugin;
 extern GeanyData		*geany_data;
 extern GeanyFunctions	*geany_functions;

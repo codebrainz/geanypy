@@ -24,6 +24,17 @@ AX_PYTHON_DEVEL([>= '2.6'])
 AX_PYTHON_LIBRARY(,[AC_MSG_ERROR([Cannot determine location of the Python DSO])])
 AC_SUBST([PYTHON])
 
+# Puts these in the configuration header
+AC_DEFINE_UNQUOTED(
+    [GEANYPY_PYTHON_DIR],
+    ["${prefix}/lib/geany/geanypy"],
+    [Location to put GeanyPy Python package])
+
+AC_DEFINE_UNQUOTED(
+    [GEANYPY_PYTHON_LIBRARY],
+    ["$PYTHON_LIBRARY"],
+    [Location of Python library to dlopen()])
+
 # Generate build files
 AC_OUTPUT([
     Makefile
