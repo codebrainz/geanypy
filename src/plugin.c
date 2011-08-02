@@ -169,7 +169,7 @@ GeanyPy_init_manager(const gchar *plugin_dir)
         return;
     }
 
-    args = Py_BuildValue("(s)", plugin_dir);
+    args = Py_BuildValue("([s, s])", GEANYPY_PLUGIN_DIR, plugin_dir);
     manager = PyObject_CallObject(man, args);
     Py_DECREF(man);
     Py_DECREF(args);

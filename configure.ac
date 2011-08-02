@@ -31,6 +31,11 @@ AC_DEFINE_UNQUOTED(
     [Location to put GeanyPy Python package])
 
 AC_DEFINE_UNQUOTED(
+    [GEANYPY_PLUGIN_DIR],
+    ["${prefix}/share/geany/geanypy/plugins"],
+    [Location where pre-installed plugins go])
+
+AC_DEFINE_UNQUOTED(
     [GEANYPY_PYTHON_LIBRARY],
     ["$PYTHON_LIBRARY"],
     [Location of Python library to dlopen()])
@@ -40,4 +45,5 @@ AC_OUTPUT([
     Makefile
 	src/Makefile
 	geany/Makefile
+    plugins/Makefile
 ])

@@ -7,9 +7,9 @@ from loader import PluginLoader
 
 class PluginManager(gtk.Dialog):
 
-    def __init__(self, plugin_dir):
+    def __init__(self, plugin_dirs=[]):
         gtk.Dialog.__init__(self, title="Plugin Manager")
-        self.loader = PluginLoader(plugin_dir)
+        self.loader = PluginLoader(plugin_dirs)
 
         self.set_default_size(400, 450)
         self.set_has_separator(True)
@@ -172,6 +172,8 @@ class PluginManager(gtk.Dialog):
         model.set_value(iter, 0, active)
         if active:
             self.activate_plugin(model.get_value(iter, 2))
+        else:
+            self.deactivate_plugin(model.get_value(iter, 2))
 
 
     def on_row_activated(self, tvw, path, view_col, cell, model):

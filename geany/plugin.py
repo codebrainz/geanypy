@@ -56,16 +56,19 @@ class Plugin(object):
 
     @property
     def name(self):
-        return self.__geany_plugin_info__.get('name', None)
+        return self.__plugin_name__
 
     @property
     def description(self):
-        return self.__geany_plugin_info__.get('description', None)
+        if hasattr(self, '__plugin_description__'):
+            return self.__plugin_description__
 
     @property
     def version(self):
-        return self.__geany_plugin_info__.get('version', None)
+        if hasattr(self, '__plugin_version__'):
+            return self.__plugin_version__
 
     @property
     def author(self):
-        return self.__geany_plugin_info__.get('author', None)
+        if hasattr(self, '__plugin_author__'):
+            return self.__plugin_author__

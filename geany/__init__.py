@@ -6,10 +6,12 @@ import mainwidgets
 import editorprefs
 import app
 import fileprefs
+from plugin import Plugin
 from console import _make_window as show_console
 
 
-__all__ = [ "show_console", "main_widgets", "editor_prefs", "app", "file_prefs" ]
+__all__ = [ "show_console", "main_widgets", "editor_prefs", "app",
+            "file_prefs", "Plugin" ]
 
 
 main_widgets = mainwidgets.MainWidgets()

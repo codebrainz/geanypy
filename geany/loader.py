@@ -10,9 +10,9 @@ class PluginLoader(object):
 
     plugins = {}
 
-    def __init__(self, plugin_dir):
+    def __init__(self, plugin_dirs):
 
-        self.plugin_dirs = [plugin_dir]
+        self.plugin_dirs = plugin_dirs
 
         self.available_plugins = []
         for plugin in self.iter_plugin_info():
@@ -24,11 +24,12 @@ class PluginLoader(object):
     def restore_loaded_plugins(self):
 
         for path in self.plugin_dirs:
-            state_file = os.path.join(path, '.loaded_plugins')
-            if os.path.isfile(state_file):
-                loaded_plugins = list(f.strip() for f in open(state_file) if f.strip())
-                for filename in loaded_plugins:
-                    self.load_plugin(filename)
+            if os.path.isdir(path):
+                state_file = os.path.join(path, '.loaded_plugins')
+                if os.path.isfile(state_file):
+                    loaded_plugins = list(f.strip() for f in open(state_file) if f.strip())
+                    for filename in loaded_plugins:
+                        self.load_plugin(filename)
 
 
     def load_all_plugins(self):
@@ -59,32 +60,33 @@ class PluginLoader(object):
     def iter_plugin_info(self):
 
         for d in self.plugin_dirs:
-            for f in os.listdir(d):
-                if f.endswith('.py'):
-                    filename = os.path.abspath(os.path.join(d, f))
-                    if filename.endswith("test.py"):
-                        continue
-                    text = open(filename).read()
-                    module_name = os.path.basename(filename)[:-3]
-                    try:
-                        module = imp.load_source(module_name, filename)
-                    except ImportError:
-                        continue
-                    for k, v in module.__dict__.iteritems():
-                        if k == geany.Plugin.__name__:
+            if os.path.isdir(d):
+                for f in os.listdir(d):
+                    if f.endswith('.py'):
+                        filename = os.path.abspath(os.path.join(d, f))
+                        if filename.endswith("test.py"):
                             continue
+                        text = open(filename).read()
+                        module_name = os.path.basename(filename)[:-3]
                         try:
-                            if issubclass(v, geany.Plugin):
-                                inf = PluginInfo(
-                                        filename,
-                                        getattr(v, '__plugin_name__'),
-                                        getattr(v, '__plugin_version__', ''),
-                                        getattr(v, '__plugin_description__', ''),
-                                        getattr(v, '__plugin_author__', ''),
-                                        v)
-                                yield inf
-                        except TypeError:
+                            module = imp.load_source(module_name, filename)
+                        except ImportError:
                             continue
+                        for k, v in module.__dict__.iteritems():
+                            if k == geany.Plugin.__name__:
+                                continue
+                            try:
+                                if issubclass(v, geany.Plugin):
+                                    inf = PluginInfo(
+                                            filename,
+                                            getattr(v, '__plugin_name__'),
+                                            getattr(v, '__plugin_version__', ''),
+                                            getattr(v, '__plugin_description__', ''),
+                                            getattr(v, '__plugin_author__', ''),
+                                            v)
+                                    yield inf
+                            except TypeError:
+                                continue
 
 
     def load_plugin(self, filename):
