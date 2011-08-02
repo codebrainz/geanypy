@@ -26,6 +26,11 @@ PLUGIN_SET_INFO(_("GeanyPy"),
 				"Matthew Brush <mbrush@codebrainz.ca>");
 
 
+static GtkWidget *loader_item = NULL;
+static PyObject *manager = NULL;
+static gchar *plugin_dir = NULL;
+
+
 static void
 GeanyPy_start_interpreter(void)
 {
@@ -34,7 +39,7 @@ GeanyPy_start_interpreter(void)
     /* This prevents a crash in the dynload thingy */
 	if (dlopen(GEANYPY_PYTHON_LIBRARY, RTLD_LAZY | RTLD_GLOBAL) == NULL)
     {
-        g_warning("Unable to pre-load Python library.");
+        g_warning(_("Unable to pre-load Python library."));
         return;
     }
 
@@ -84,7 +89,7 @@ GeanyPy_install_console(void)
     module = PyImport_ImportModule("geany.console");
     if (module == NULL)
     {
-        g_warning("Failed to import console module");
+        g_warning(_("Failed to import console module"));
         return;
     }
 
@@ -93,13 +98,13 @@ GeanyPy_install_console(void)
 
     if (console == NULL)
     {
-        g_warning("Failed to retrieve Console from console module");
+        g_warning(_("Failed to retrieve Console from console module"));
         return;
     }
 
     args = Py_BuildValue("()");
     kwargs = Py_BuildValue("{s:s, s:s}",
-                "banner", "Geany Python Console",
+                "banner", _("Geany Python Console"),
                 "start_script", "import geany\n");
 
     console_inst = PyObject_Call(console, args, kwargs);
@@ -109,7 +114,7 @@ GeanyPy_install_console(void)
 
     if (console_inst == NULL)
     {
-        g_warning("Unable to instantiate new Console");
+        g_warning(_("Unable to instantiate new Console"));
         return;
     }
 
@@ -119,7 +124,7 @@ GeanyPy_install_console(void)
 
     if (console_widget == NULL)
     {
-        g_warning("Failed to get GtkWidget for Console");
+        g_warning(_("Failed to get GtkWidget for Console"));
         return;
     }
 
@@ -142,22 +147,107 @@ GeanyPy_install_console(void)
 
 
 static void
+GeanyPy_init_manager(const gchar *plugin_dir)
+{
+    PyObject *module, *man, *args;
+
+    g_return_if_fail(plugin_dir != NULL);
+
+    module = PyImport_ImportModule("geany.manager");
+    if (module == NULL)
+    {
+        g_warning(_("Failed to import manager module"));
+        return;
+    }
+
+    man = PyObject_GetAttrString(module, "PluginManager");
+    Py_DECREF(module);
+
+    if (man == NULL)
+    {
+        g_warning(_("Failed to retrieve PluginManager from manager module"));
+        return;
+    }
+
+    args = Py_BuildValue("(s)", plugin_dir);
+    manager = PyObject_CallObject(man, args);
+    Py_DECREF(man);
+    Py_DECREF(args);
+
+    if (manager == NULL)
+    {
+        g_warning(_("Unable to instantiate new PluginManager"));
+        return;
+    }
+}
+
+
+static void
+GeanyPy_show_manager(void)
+{
+    PyObject *show_method;
+    show_method = PyObject_GetAttrString(manager, "show");
+    if (show_method == NULL)
+    {
+        g_warning(_("Unable to get show() method on plugin manager"));
+        return;
+    }
+    PyObject_CallObject(show_method, NULL);
+    Py_DECREF(show_method);
+}
+
+
+static void
 on_geany_startup_complete(GObject unused, gpointer user_data)
 {
     GeanyPy_install_console();
+
+    plugin_dir = g_build_filename(geany->app->configdir,
+                    "plugins", "geanypy", "plugins", NULL);
+
+    if (!g_file_test(plugin_dir, G_FILE_TEST_IS_DIR))
+    {
+        if (g_mkdir_with_parents(plugin_dir, 0755) == -1)
+        {
+            g_warning(_("Unable to create Python plugins directory: %s: %s"),
+                plugin_dir,
+                strerror(errno));
+            g_free(plugin_dir);
+            return;
+        }
+    }
+
+    GeanyPy_init_manager(plugin_dir);
+}
+
+
+static void
+on_python_plugin_loader_activate(GtkMenuItem *item, gpointer user_data)
+{
+    GeanyPy_show_manager();
 }
 
 
 void plugin_init(GeanyData *data)
 {
+
 	GeanyPy_start_interpreter();
 
     plugin_signal_connect(geany_plugin, NULL, "geany-startup-complete",
         TRUE, G_CALLBACK(on_geany_startup_complete), NULL);
+
+    loader_item = gtk_menu_item_new_with_label(_("Python Plugin Manager"));
+    gtk_menu_append(GTK_MENU(geany->main_widgets->tools_menu), loader_item);
+    gtk_widget_show(loader_item);
+    g_signal_connect(loader_item, "activate",
+        G_CALLBACK(on_python_plugin_loader_activate), NULL);
 }
 
 
 void plugin_cleanup(void)
 {
+    Py_XDECREF(manager);
 	GeanyPy_stop_interpreter();
+    gtk_widget_destroy(loader_item);
+    g_free(plugin_dir);
 }

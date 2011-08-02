@@ -10,7 +10,10 @@ geanypy_sources				=	__init__.py \
 								app.py \
 								fileprefs.py \
 								scintilla.py \
-								console.py
+								console.py \
+								manager.py \
+								loader.py \
+								plugin.py
 geanypy_objects				=	$(geanypy_sources:.py=.pyc)
 geanypydir					=	$(libdir)/geany/geanypy/geany
 geanypy_DATA				=	$(geanypy_sources)  $(geanypy_objects)
