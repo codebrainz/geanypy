@@ -1,7 +1,11 @@
 GeanyPy
 =======
 
-*Warning:* This is a work in-progress, and it doesn't do too much yet.
+Write Geany plugins in Python!
+
+*Please note:* since GeanyPy is under heavy development, the API it exposes
+may change quite drastically.  If you start using GeanyPy to write plugins,
+drop me a line and I'll do my best to not break your code.
 
 How it works
 ------------
@@ -12,12 +16,19 @@ Python interpreter.  It then loads some C Python modules (`dialogs.c`,
 the `geany` Python module which is just glue/sugar-coating to make the C
 module more "Pythonic".
 
-There will be a Python plugin loader soon, which will find Python plugins and
-import them into Geany's process.  These plugins can import the `geany` module,
-giving them access to the plugin API.
+To write a plugin, inherit from the `geany.Plugin` class and implmenent the
+required members (see `geany/plugin.py` documentation comments).  Then put the
+plugin in a searched plugin path.  Currently two locations are search for
+plugins.  The first is `PREFIX/share/geany/geanypy/plugins` and the recommended
+location is under your personal Geany directory (usually
+`~/.config/geany/plugins/geanypy/plugins`).  To load or unload plugins, click
+the Python Plugin Manager item under the Tools menu which will appear when you
+activate GeanyPy through Geany's regular plugin manager.
 
-Currently, a Python interactive interpreter is run when the plugin is loaded.
-If you want to play around with the bindings, here's an example.
+When GeanyPy plugin is loaded, it will add a new tab to the notebook in the
+message window area that contains an interactive Python shell with the `geany`
+module pre-imported.  You can tinker around with API with this console, for
+example:
 
 
 ```python
@@ -47,6 +58,9 @@ On Debian/Ubuntu, the (non-Geany) dependencies can be installed like this:
 
     $ apt-get install python python-dev python-gtk2 python-gtk2-dev
 
+See Geany's documentation/website for information on compiling it from the
+Subversion or Git repositories.
+
 Installation
 ------------
 
@@ -61,12 +75,9 @@ The you can install as normal:
     $ make
     # make install
 
-*Note:* That even if `GEANY_PREFIX` is in your home directory, you still need
-root access since the Python modules will go into your system-wide
-`site-packages` directory.
-
 You should be able to force a specific version of Python to be used, by using
-the `PYTHON_VERSION` environment variable.
+the `PYTHON_VERSION` environment variable, but I've only tested with 2.6.6 so
+far.  I imagine 2.7 series will also work fine.
 
 Running on Windows
 ------------------
