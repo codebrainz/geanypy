@@ -599,7 +599,7 @@ Document_new_file(PyObject *self, PyObject *args)
 
     if (PyArg_ParseTuple(args, "|zOz", &filename, &py_ft, &initial_text))
     {
-        if (py_ft != NULL)
+        if (py_ft != NULL  && py_ft != Py_None)
         {
             filetype = (Filetype *) py_ft;
             if (filetype->ft != NULL)
