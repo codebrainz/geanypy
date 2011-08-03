@@ -22,6 +22,7 @@ import loader
 import main
 import mainwidgets
 import manager
+import msgwindow
 import plugin
 import project
 import scintilla

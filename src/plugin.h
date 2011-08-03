@@ -148,6 +148,8 @@ PyMODINIT_FUNC init_geany_highlighting(void);
 
 PyMODINIT_FUNC init_geany_main(void);
 
+PyMODINIT_FUNC init_geany_msgwin(void);
+
 
 #ifdef __cplusplus
 } /* extern "C" */
