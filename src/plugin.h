@@ -150,6 +150,8 @@ PyMODINIT_FUNC init_geany_main(void);
 
 PyMODINIT_FUNC init_geany_msgwin(void);
 
+PyMODINIT_FUNC init_geany_navqueue(void);
+
 
 #ifdef __cplusplus
 } /* extern "C" */

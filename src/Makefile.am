@@ -24,4 +24,5 @@ geanypy_la_SOURCES			=	plugin.c \
 								encodings.c \
 								highlighting.c \
 								main.c \
-								msgwindow.c
+								msgwindow.c \
+								navqueue.c

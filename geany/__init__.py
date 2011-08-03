@@ -23,6 +23,7 @@ import main
 import mainwidgets
 import manager
 import msgwindow
+import navqueue
 import plugin
 import project
 import scintilla

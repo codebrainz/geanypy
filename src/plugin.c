@@ -61,6 +61,7 @@ GeanyPy_start_interpreter(void)
     init_geany_scintilla();
     init_geany_main();
     init_geany_msgwin();
+    init_geany_navqueue();
 
     /* Adjust Python path to find wrapper package (geany) */
     init_code = g_strdup_printf(
