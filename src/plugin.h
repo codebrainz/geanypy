@@ -102,6 +102,13 @@ typedef struct
 } Scintilla;
 
 
+typedef struct
+{
+	PyObject_HEAD
+	const GeanyLexerStyle *lexer_style;
+} LexerStyle;
+
+
 #ifndef PyMODINIT_FUNC
 #define PyMODINIT_FUNC void
 #endif
@@ -136,6 +143,8 @@ PyMODINIT_FUNC init_geany_scintilla(void);
 Scintilla *Scintilla_create_new_from_scintilla(ScintillaObject *sci);
 
 PyMODINIT_FUNC init_geany_encodings(void);
+
+PyMODINIT_FUNC init_geany_highlighting(void);
 
 
 #ifdef __cplusplus

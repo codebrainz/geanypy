@@ -15,7 +15,8 @@ import editor
 import editorprefs
 import encodings
 import fileprefs
-import filetype
+import filetypes
+import highlighting
 import indentprefs
 import loader
 import mainwidgets

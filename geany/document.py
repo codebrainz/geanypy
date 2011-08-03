@@ -1,5 +1,5 @@
 import _geany_document
-import filetype
+import filetypes
 import editor
 
 def compare_by_display_name(doc_a, doc_b):

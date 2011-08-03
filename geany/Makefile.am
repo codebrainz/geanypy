@@ -1,7 +1,7 @@
 geanypy_sources				=	__init__.py \
 								dialogs.py \
 								document.py \
-								filetype.py \
+								filetypes.py \
 								indentprefs.py \
 								editorprefs.py \
 								editor.py \
@@ -14,7 +14,8 @@ geanypy_sources				=	__init__.py \
 								manager.py \
 								loader.py \
 								plugin.py \
-								encodings.py
+								encodings.py \
+								highlighting.py
 geanypy_objects				=	$(geanypy_sources:.py=.pyc)
 geanypydir					=	$(libdir)/geany/geanypy/geany
 geanypy_DATA				=	$(geanypy_sources)  $(geanypy_objects)

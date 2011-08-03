@@ -12,7 +12,7 @@ geanypy_la_SOURCES			=	plugin.c \
 								plugin.h \
 								dialogs.c \
 								document.c \
-								filetype.c \
+								filetypes.c \
 								editorprefs.c \
 								indentprefs.c \
 								editor.c \
@@ -21,4 +21,5 @@ geanypy_la_SOURCES			=	plugin.c \
 								app.c \
 								fileprefs.c \
 								scintilla.c \
-								encodings.c
+								encodings.c \
+								highlighting.c

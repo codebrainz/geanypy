@@ -50,6 +50,7 @@ Editor_init(Editor *self, PyObject *args, PyObject *kwds)
 static PyObject *
 Editor_create_widget(Editor *self, PyObject *args)
 {
+    g_debug("create_widget() not yet implemented, sorry");
     Py_RETURN_NONE;
 }
 

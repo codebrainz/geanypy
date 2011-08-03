@@ -57,6 +57,7 @@ GeanyPy_start_interpreter(void)
     init_geany_file_prefs();
     init_geany_main_widgets();
     init_geany_encodings();
+    init_geany_highlighting();
     init_geany_scintilla();
 
     /* Adjust Python path to find wrapper package (geany) */
