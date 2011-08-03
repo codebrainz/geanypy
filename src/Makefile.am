@@ -20,4 +20,5 @@ geanypy_la_SOURCES			=	plugin.c \
 								project.c \
 								app.c \
 								fileprefs.c \
-								scintilla.c
+								scintilla.c \
+								encodings.c

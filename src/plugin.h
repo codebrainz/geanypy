@@ -135,6 +135,8 @@ PyMODINIT_FUNC init_geany_file_prefs(void);
 PyMODINIT_FUNC init_geany_scintilla(void);
 Scintilla *Scintilla_create_new_from_scintilla(ScintillaObject *sci);
 
+PyMODINIT_FUNC init_geany_encodings(void);
+
 
 #ifdef __cplusplus
 } /* extern "C" */

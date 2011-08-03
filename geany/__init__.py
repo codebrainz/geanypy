@@ -13,6 +13,7 @@ import dialogs
 import document
 import editor
 import editorprefs
+import encodings
 import fileprefs
 import filetype
 import indentprefs
