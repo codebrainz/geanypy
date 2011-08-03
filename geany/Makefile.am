@@ -15,7 +15,8 @@ geanypy_sources				=	__init__.py \
 								loader.py \
 								plugin.py \
 								encodings.py \
-								highlighting.py
+								highlighting.py \
+								main.py
 geanypy_objects				=	$(geanypy_sources:.py=.pyc)
 geanypydir					=	$(libdir)/geany/geanypy/geany
 geanypy_DATA				=	$(geanypy_sources)  $(geanypy_objects)

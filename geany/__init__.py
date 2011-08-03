@@ -19,6 +19,7 @@ import filetypes
 import highlighting
 import indentprefs
 import loader
+import main
 import mainwidgets
 import manager
 import plugin
@@ -30,9 +31,13 @@ from editorprefs import EditorPrefs
 from fileprefs import FilePrefs
 from mainwidgets import MainWidgets
 from plugin import Plugin
+from main import is_realized, locale_init, reload_configuration
 
 
 __all__ = [ "Plugin",
+            "is_realized",
+            "locale_init",
+            "reload_configuration",
             "main_widgets",
             "editor_prefs",
             "app",

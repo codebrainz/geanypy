@@ -146,6 +146,8 @@ PyMODINIT_FUNC init_geany_encodings(void);
 
 PyMODINIT_FUNC init_geany_highlighting(void);
 
+PyMODINIT_FUNC init_geany_main(void);
+
 
 #ifdef __cplusplus
 } /* extern "C" */
