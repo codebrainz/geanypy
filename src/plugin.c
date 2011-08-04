@@ -23,7 +23,7 @@ PLUGIN_VERSION_CHECK(211)
 PLUGIN_SET_INFO(_("GeanyPy"),
 				_("Python plugins support"),
 				"1.0",
-				"Matthew Brush <mbrush@codebrainz.ca>");
+				"Matthew Brush <mbrush@codebrainz.ca>")
 
 
 static GtkWidget *loader_item = NULL;
@@ -152,11 +152,11 @@ GeanyPy_install_console(void)
 
 
 static void
-GeanyPy_init_manager(const gchar *plugin_dir)
+GeanyPy_init_manager(const gchar *dir)
 {
     PyObject *module, *man, *args;
 
-    g_return_if_fail(plugin_dir != NULL);
+    g_return_if_fail(dir != NULL);
 
     module = PyImport_ImportModule("geany.manager");
     if (module == NULL)
@@ -174,7 +174,7 @@ GeanyPy_init_manager(const gchar *plugin_dir)
         return;
     }
 
-    args = Py_BuildValue("([s, s])", GEANYPY_PLUGIN_DIR, plugin_dir);
+    args = Py_BuildValue("([s, s])", GEANYPY_PLUGIN_DIR, dir);
     manager = PyObject_CallObject(man, args);
     Py_DECREF(man);
     Py_DECREF(args);

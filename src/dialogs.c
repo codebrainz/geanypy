@@ -14,10 +14,10 @@ extern GeanyFunctions	*geany_functions;
 static PyObject *
 Dialogs_show_input(PyObject *self, PyObject *args)
 {
-    gchar *title = NULL;
-    gchar *label_text = NULL;
-    gchar *default_text = NULL;
-    gchar *result = NULL;
+    const gchar *title = NULL;
+    const gchar *label_text = NULL;
+    const gchar *default_text = NULL;
+    const gchar *result = NULL;
     PyObject *py_win_obj;
     PyGObject *py_win_gobj;
     GtkWindow *win;
@@ -47,8 +47,8 @@ Dialogs_show_input(PyObject *self, PyObject *args)
 static PyObject *
 Dialogs_show_input_numeric(PyObject *self, PyObject *args)
 {
-    gchar *title = NULL;
-    gchar *label_text = NULL;
+    const gchar *title = NULL;
+    const gchar *label_text = NULL;
     gdouble value = 0.0, min = 0.0, max = 0.0, step = 0.0;
 
     if (PyArg_ParseTuple(args, "|zzdddd", &title, &label_text, &value, &min, &max, &step))

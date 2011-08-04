@@ -333,8 +333,8 @@ Scintilla_get_line_indentation(Scintilla *self, PyObject *args)
         {
             if (line == -1)
                 line = sci_get_current_line(self->sci);
-            line = sci_get_line_indentation(self->sci, line);
-            return Py_BuildValue("i", line);
+            width = sci_get_line_indentation(self->sci, line);
+            return Py_BuildValue("i", width);
         }
     }
     Py_RETURN_NONE;
@@ -611,6 +611,7 @@ Scintilla_scroll_caret(Scintilla *self, PyObject *args)
 {
     if (self->sci != NULL)
         sci_scroll_caret(self->sci);
+    Py_RETURN_NONE;
 }
 
 

@@ -27,11 +27,6 @@ extern "C" {
 #endif
 
 
-extern GeanyPlugin		*geany_plugin;
-extern GeanyData		*geany_data;
-extern GeanyFunctions	*geany_functions;
-
-
 typedef struct
 {
 	PyObject_HEAD
@@ -128,14 +123,10 @@ Editor *Editor_create_new_from_geany_editor(GeanyEditor *editor);
 
 PyMODINIT_FUNC init_geany_main_widgets(void);
 
-PyMODINIT_FUNC init_geany_main_widgets(void);
-
 PyMODINIT_FUNC init_geany_project(void);
 Project *Project_create_new(void);
 
 PyMODINIT_FUNC init_geany_app(void);
-
-PyMODINIT_FUNC init_geany_file_prefs(void);
 
 PyMODINIT_FUNC init_geany_file_prefs(void);
 

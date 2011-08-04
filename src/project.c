@@ -77,7 +77,7 @@ Project__get_file_name(Project *self, PyObject *args)
 static PyObject *
 Project__get_file_patterns(Project *self, PyObject *args)
 {
-    gint i, len;
+    guint i, len;
     PyObject *list, *item;
 
     if (self->project != NULL)

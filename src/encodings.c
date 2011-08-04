@@ -60,12 +60,12 @@ Encodings_convert_to_utf8_from_charset(PyObject *module, PyObject *args)
 static PyObject *
 Encodings_get_charset_from_index(PyObject *module, PyObject *args)
 {
-    gint index = 0;
+    gint idx = 0;
     const gchar *charset = NULL;
 
-    if (PyArg_ParseTuple(args, "i", &index))
+    if (PyArg_ParseTuple(args, "i", &idx))
     {
-        charset = encodings_get_charset_from_index(index);
+        charset = encodings_get_charset_from_index(idx);
         if (charset != NULL)
             return Py_BuildValue("s", charset);
     }

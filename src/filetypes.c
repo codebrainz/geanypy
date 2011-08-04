@@ -208,14 +208,14 @@ Filetype_index(PyObject *self, PyObject *args)
 {
     Filetype *py_ft;
     GeanyFiletype *ft;
-    gint index = -1;
+    gint idx = -1;
 
-    if (PyArg_ParseTuple(args, "i", &index))
+    if (PyArg_ParseTuple(args, "i", &idx))
     {
-        if (index == -1)
+        if (idx == -1)
             Py_RETURN_NONE;
 
-        if ((ft = filetypes_index(index)) != NULL)
+        if ((ft = filetypes_index(idx)) != NULL)
         {
             py_ft = (Filetype *) PyObject_CallObject((PyObject *) &FiletypeType, NULL);
             py_ft->ft = ft;

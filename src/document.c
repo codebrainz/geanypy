@@ -568,13 +568,13 @@ Document_get_from_page(PyObject *self, PyObject *args)
 static PyObject*
 Document_index(PyObject *self, PyObject *args)
 {
-    gint index;
+    gint idx;
     Document *py_doc;
     GeanyDocument *doc;
 
-    if (PyArg_ParseTuple(args, "i", &index))
+    if (PyArg_ParseTuple(args, "i", &idx))
     {
-        doc = document_index(index);
+        doc = document_index(idx);
         if (DOC_VALID(doc))
         {
             py_doc = (Document *) PyObject_CallObject((PyObject *)&DocumentType, NULL);
@@ -673,7 +673,7 @@ Document_get_documents_list(PyObject *module, PyObject *args)
 {
     GeanyDocument *doc;
     Document *py_doc;
-    gint i;
+    guint i;
     PyObject *list;
 
     list = PyList_New(0);
