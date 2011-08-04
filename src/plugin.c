@@ -221,6 +221,7 @@ on_geany_startup_complete(GObject unused, gpointer user_data)
                 plugin_dir,
                 strerror(errno));
             g_free(plugin_dir);
+            plugin_dir = NULL;
             return;
         }
     }
