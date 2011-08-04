@@ -191,6 +191,9 @@ static void
 GeanyPy_show_manager(void)
 {
     PyObject *show_method;
+
+    g_return_if_fail(manager != NULL);
+
     show_method = PyObject_GetAttrString(manager, "show");
     if (show_method == NULL)
     {
