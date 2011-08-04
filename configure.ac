@@ -41,9 +41,10 @@ AC_DEFINE_UNQUOTED(
     [Location of Python library to dlopen()])
 
 # Generate build files
-AC_OUTPUT([
+AC_CONFIG_FILES([
     Makefile
 	src/Makefile
 	geany/Makefile
     plugins/Makefile
 ])
+AC_OUTPUT
