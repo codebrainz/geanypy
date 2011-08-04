@@ -744,10 +744,11 @@ Scintilla_start_undo_action(Scintilla *self, PyObject *args)
 static PyObject *
 Scintilla_send_message(Scintilla *self, PyObject *args)
 {
-    glong msg, uptr = 0, sptr = 0, ret;
+    gint msg;
+    glong uptr = 0, sptr = 0, ret;
     if (self->sci != NULL)
     {
-        if (PyArg_ParseTuple(args, "l|ll", &uptr, &sptr))
+        if (PyArg_ParseTuple(args, "i|ll", &msg, &uptr, &sptr))
         {
             ret = scintilla_send_message(self->sci, msg, uptr, sptr);
             return Py_BuildValue("l", ret);
