@@ -206,8 +206,16 @@ GeanyPy_show_manager(void)
 
 
 static void
-on_geany_startup_complete(GObject unused, gpointer user_data)
+on_python_plugin_loader_activate(GtkMenuItem *item, gpointer user_data)
 {
+    GeanyPy_show_manager();
+}
+
+
+void plugin_init(GeanyData *data)
+{
+
+    GeanyPy_start_interpreter();
     GeanyPy_install_console();
 
     plugin_dir = g_build_filename(geany->app->configdir,
@@ -222,30 +230,14 @@ on_geany_startup_complete(GObject unused, gpointer user_data)
                 strerror(errno));
             g_free(plugin_dir);
             plugin_dir = NULL;
-            return;
         }
     }
 
-    GeanyPy_init_manager(plugin_dir);
-}
-
-
-static void
-on_python_plugin_loader_activate(GtkMenuItem *item, gpointer user_data)
-{
-    GeanyPy_show_manager();
-}
-
-
-void plugin_init(GeanyData *data)
-{
-
-	GeanyPy_start_interpreter();
-
-    plugin_signal_connect(geany_plugin, NULL, "geany-startup-complete",
-        TRUE, G_CALLBACK(on_geany_startup_complete), NULL);
+    if (plugin_dir != NULL)
+        GeanyPy_init_manager(plugin_dir);
 
     loader_item = gtk_menu_item_new_with_label(_("Python Plugin Manager"));
+    gtk_widget_set_sensitive(loader_item, plugin_dir != NULL);
     gtk_menu_append(GTK_MENU(geany->main_widgets->tools_menu), loader_item);
     gtk_widget_show(loader_item);
     g_signal_connect(loader_item, "activate",
