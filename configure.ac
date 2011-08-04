@@ -26,16 +26,6 @@ AC_SUBST([PYTHON])
 
 # Puts these in the configuration header
 AC_DEFINE_UNQUOTED(
-    [GEANYPY_PYTHON_DIR],
-    ["${prefix}/lib/geany/geanypy"],
-    [Location to put GeanyPy Python package])
-
-AC_DEFINE_UNQUOTED(
-    [GEANYPY_PLUGIN_DIR],
-    ["${prefix}/share/geany/geanypy/plugins"],
-    [Location where pre-installed plugins go])
-
-AC_DEFINE_UNQUOTED(
     [GEANYPY_PYTHON_LIBRARY],
     ["$PYTHON_LIBRARY"],
     [Location of Python library to dlopen()])
