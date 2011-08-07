@@ -7,6 +7,9 @@ Write Geany plugins in Python!
 may change quite drastically.  If you start using GeanyPy to write plugins,
 drop me a line and I'll do my best to not break your code.
 
+*Update:* There's now some documentation available, visit
+http://codebrainz.github.com/geanypy to read it.
+
 How it works
 ------------
 
