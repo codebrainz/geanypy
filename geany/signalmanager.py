@@ -1,11 +1,10 @@
 import geany
-import geany.signalmanager
-#from geany import signal_manager
-
-def geanysignal(event):
-    def wrapper(func):
-        geany.signal_manager.connect(event, func)
-    return wrapper
+import document
+import editor
+import filetypes
+import _geany_document
+import _geany_editor
+import _geany_filetypes
 
 class SignalManager(object):
 
@@ -47,5 +46,25 @@ class SignalManager(object):
     def emit_signal(self, event, *args):
         if event not in self._callbacks:
             raise ValueError("Cannot emit unknown event '%s'" % event)
+
+        new_args = []
+        for arg in args:
+            if isinstance(arg, _geany_document.Document):
+                doc = document.Document()
+                doc._doc = arg
+                new_args.append(doc)
+            elif isinstance(arg, _geany_filetypes.Filetype):
+                ft = document.Filetype()
+                ft._ft = arg
+                new_args.append(ft)
+            elif isinstance(arg, _geany_editor.Editor):
+                editor = editor.Editor()
+                editor._editor = arg
+                new_args.append(editor)
+            else:
+                new_args.append(arg)
+
+        new_args = tuple(new_args)
+
         for callback in self._callbacks[event]:
-            callback(*args)
+            callback(*new_args)

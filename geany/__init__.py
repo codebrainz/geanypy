@@ -32,7 +32,7 @@ from editorprefs import EditorPrefs
 from fileprefs import FilePrefs
 from mainwidgets import MainWidgets
 from main import is_realized, locale_init, reload_configuration
-from signalmanager import SignalManager, geanysignal
+from signalmanager import SignalManager
 
 
 __all__ = [ "Plugin",

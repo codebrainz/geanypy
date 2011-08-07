@@ -96,7 +96,7 @@ static void signal_manager_connect_signals(SignalManager *man)
     plugin_signal_connect(geany_plugin, NULL, "document-reload", TRUE, G_CALLBACK(on_document_reload), man);
     plugin_signal_connect(geany_plugin, NULL, "document-save", TRUE, G_CALLBACK(on_document_save), man);
     plugin_signal_connect(geany_plugin, NULL, "editor-notify", TRUE, G_CALLBACK(on_editor_notify), man);
-    plugin_signal_connect(geany_plugin, NULL, "genay-startup-complete", TRUE, G_CALLBACK(on_geany_startup_complete), man);
+    plugin_signal_connect(geany_plugin, NULL, "geany-startup-complete", TRUE, G_CALLBACK(on_geany_startup_complete), man);
     plugin_signal_connect(geany_plugin, NULL, "project-close", TRUE, G_CALLBACK(on_project_close), man);
     plugin_signal_connect(geany_plugin, NULL, "project-dialog-confirmed", TRUE, G_CALLBACK(on_project_dialog_confirmed), man);
     plugin_signal_connect(geany_plugin, NULL, "project-dialog-create", TRUE, G_CALLBACK(on_project_dialog_create), man);

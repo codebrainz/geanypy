@@ -36,7 +36,6 @@ directory (something like ~/.config/geany/plugins/geanypy/plugins).  Only
 files with a `.py` extension will be loaded.
 """
 
-from signalmanager import geanysignal
 
 class Plugin(object):
     """
@@ -62,7 +61,7 @@ class Plugin(object):
         When the plugin is loaded its __init__() function will be called
         so that's a good place to put plugin initialization code.
         """
-        pass
+
 
 
     def cleanup(self):
@@ -122,71 +121,3 @@ class Plugin(object):
             return self.__plugin_author__
         else:
             return ""
-
-    @geanysignal('build-start')
-    def on_build_start():
-        print("Signal 'build-start' emitted")
-
-    @geanysignal('document-activate')
-    def on_document_active(doc):
-        print("Signal 'document-activate' emitted")
-
-    @geanysignal('document-before-save')
-    def on_document_before_save(doc):
-        print("Signal 'document-before-save' emitted")
-
-    @geanysignal('document-close')
-    def on_document_close(doc):
-        print("Signal 'document-close' emitted")
-
-    @geanysignal('document-filetype-set')
-    def on_document_filetype_set(doc, ft):
-        print("Signal 'document-filetype-set' emitted")
-
-    @geanysignal('document-new')
-    def on_document_new(doc):
-        print("Signal 'document-new' emitted")
-
-    @geanysignal('document-open')
-    def on_document_open(doc):
-        print("Signal 'document-open' emitted")
-
-    @geanysignal('document-reload')
-    def on_document_reload(doc):
-        print("Signal 'document-reload' emitted")
-
-    @geanysignal('document-save')
-    def on_document_save(doc):
-        print("Signal 'document-save' emitted")
-
-    @geanysignal('editor-notify')
-    def on_editor_notify(editor, notif):
-        print("Signal 'editor-notify' emitted")
-
-    @geanysignal('geany-startup-complete')
-    def on_geany_startup_complete():
-        print("Signal 'geany-startup-complete' emitted")
-
-    @geanysignal('project-close')
-    def on_project_close():
-        print("Signal 'project-close' emitted")
-
-    @geanysignal('project-dialog-confirmed')
-    def on_project_dialog_confirmed(notebook):
-        print("Signal 'project-dialog-confirmed' emitted")
-
-    @geanysignal('project-dialog-create')
-    def on_project_dialog_create(notebook):
-        print("Signal 'project-dialog-create' emitted")
-
-    @geanysignal('project-open')
-    def on_project_open(config):
-        print("Signal 'project-open' emitted")
-
-    @geanysignal('project-save')
-    def on_project_save(config):
-        print("Signal 'project-save' emitted")
-
-    @geanysignal('update-editor-menu')
-    def on_update_editor_menu(word, pos, doc):
-        print("Signal 'update-editor-menu' emitted")
