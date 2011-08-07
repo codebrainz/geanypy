@@ -18,7 +18,8 @@ geanypy_sources				=	__init__.py \
 								highlighting.py \
 								main.py \
 								msgwindow.py \
-								navqueue.py
+								navqueue.py \
+								signalmanager.py
 geanypy_objects				=	$(geanypy_sources:.py=.pyc)
 geanypydir					=	$(libdir)/geany/geanypy/geany
 geanypy_DATA				=	$(geanypy_sources)  $(geanypy_objects)

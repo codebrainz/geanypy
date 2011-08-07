@@ -27,4 +27,6 @@ geanypy_la_SOURCES			=	plugin.c \
 								highlighting.c \
 								main.c \
 								msgwindow.c \
-								navqueue.c
+								navqueue.c \
+								signalmanager.c \
+								signalmanager.h

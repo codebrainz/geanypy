@@ -11,6 +11,7 @@
 
 #include "plugin-config.h"
 #include "plugin.h"
+#include "signalmanager.h"
 
 
 GeanyPlugin		*geany_plugin;
@@ -29,6 +30,7 @@ PLUGIN_SET_INFO(_("GeanyPy"),
 static GtkWidget *loader_item = NULL;
 static PyObject *manager = NULL;
 static gchar *plugin_dir = NULL;
+static SignalManager *signal_manager = NULL;
 
 
 static void
@@ -46,22 +48,22 @@ GeanyPy_start_interpreter(void)
     Py_Initialize();
 
     /* Import the C modules */
-    init_geany_dialogs();
-    init_geany_filetype();
-    init_geany_document();
-    init_geany_indent_prefs();
-    init_geany_editor_prefs();
-    init_geany_editor();
-    init_geany_project();
     init_geany_app();
-    init_geany_file_prefs();
-    init_geany_main_widgets();
+    init_geany_dialogs();
+    init_geany_document();
+    init_geany_editor();
+    init_geany_editor_prefs();
     init_geany_encodings();
+    init_geany_file_prefs();
+    init_geany_filetype();
     init_geany_highlighting();
-    init_geany_scintilla();
+    init_geany_indent_prefs();
     init_geany_main();
+    init_geany_main_widgets();
     init_geany_msgwin();
     init_geany_navqueue();
+    init_geany_project();
+    init_geany_scintilla();
 
     /* Adjust Python path to find wrapper package (geany) */
     init_code = g_strdup_printf(
@@ -214,8 +216,8 @@ on_python_plugin_loader_activate(GtkMenuItem *item, gpointer user_data)
 
 void plugin_init(GeanyData *data)
 {
-
     GeanyPy_start_interpreter();
+    signal_manager = signal_manager_new(geany_plugin);
     GeanyPy_install_console();
 
     plugin_dir = g_build_filename(geany->app->configdir,
@@ -247,6 +249,7 @@ void plugin_init(GeanyData *data)
 
 void plugin_cleanup(void)
 {
+    signal_manager_free(signal_manager);
     Py_XDECREF(manager);
 	GeanyPy_stop_interpreter();
     gtk_widget_destroy(loader_item);

@@ -36,8 +36,7 @@ directory (something like ~/.config/geany/plugins/geanypy/plugins).  Only
 files with a `.py` extension will be loaded.
 """
 
-# TODO: Remove the event stuff from here and either bind the C API or do
-#       this in another way/place.
+from signalmanager import geanysignal
 
 class Plugin(object):
     """
@@ -72,68 +71,6 @@ class Plugin(object):
         it's a good place to put and clean-up/tear-down code.
         """
         pass
-
-
-    def plugin_connect(self, event, func, *args, **kwargs):
-        """
-        Add a callback function to the list that will be called when the
-        event occurs.  The function should have a prototype like this:
-
-            some_callback_handler(*args, **kwargs)
-
-        Where the args and kwargs passed to plugin_connect() will be passed
-        the the callback function, possibly including addition data.
-
-        Plugins should be sure not to override this function.
-        """
-        try:
-            self._events[event].append((func, args, kwargs))
-        except KeyError:
-            print("Unable to connecto to event '%s': unknown event" % event)
-
-
-    def plugin_disconnect(self, event, func):
-        """
-        Remove a callback function from list that will be called when the
-        event occurrs.  Only the first matching func will be removed.
-
-        Plugins should be sure not to override this function.
-        """
-        try:
-            for callback_info in self._events[event]:
-                if callback_info[0] == func:
-                    self._events[event].remove(callback_info)
-                    break
-            else:
-                print("Unable to disconnect function from event '%s': " +
-                        "function not connected" % event)
-        except KeyError:
-            print("Unable to disconnect function from event '%s': " +
-                    "unknown event" % event)
-
-
-    def plugin_emit(self, event, *args, **kwargs):
-        """
-        Fires an event, causing any callback functions registered for the
-        event will be called.  The args and kwargs passed in will be prepended
-        to args associated with the callback function and kwargs will be
-        merged with the kwargs associated with the callback function.
-
-        Plugins should be sure not to override this function.
-        """
-        try:
-            for callback_info in self._events[event]:
-                try:
-                    new_args = args + callback_info[1]
-                    new_kwargs = {}
-                    for kw, arg in callback_info[2].items() + kwargs.items():
-                        new_args[kw] = arg
-                    callback_info[0](*new_args, **new_kwargs)
-                except IndexError:
-                    print("Unable to call event handler for event '%s': " +
-                            "corrupt callback information" % event)
-        except KeyError:
-            print("Unable to emit event '%s': unknown event" % event)
 
 
     @property
@@ -185,3 +122,71 @@ class Plugin(object):
             return self.__plugin_author__
         else:
             return ""
+
+    @geanysignal('build-start')
+    def on_build_start():
+        print("Signal 'build-start' emitted")
+
+    @geanysignal('document-activate')
+    def on_document_active(doc):
+        print("Signal 'document-activate' emitted")
+
+    @geanysignal('document-before-save')
+    def on_document_before_save(doc):
+        print("Signal 'document-before-save' emitted")
+
+    @geanysignal('document-close')
+    def on_document_close(doc):
+        print("Signal 'document-close' emitted")
+
+    @geanysignal('document-filetype-set')
+    def on_document_filetype_set(doc, ft):
+        print("Signal 'document-filetype-set' emitted")
+
+    @geanysignal('document-new')
+    def on_document_new(doc):
+        print("Signal 'document-new' emitted")
+
+    @geanysignal('document-open')
+    def on_document_open(doc):
+        print("Signal 'document-open' emitted")
+
+    @geanysignal('document-reload')
+    def on_document_reload(doc):
+        print("Signal 'document-reload' emitted")
+
+    @geanysignal('document-save')
+    def on_document_save(doc):
+        print("Signal 'document-save' emitted")
+
+    @geanysignal('editor-notify')
+    def on_editor_notify(editor, notif):
+        print("Signal 'editor-notify' emitted")
+
+    @geanysignal('geany-startup-complete')
+    def on_geany_startup_complete():
+        print("Signal 'geany-startup-complete' emitted")
+
+    @geanysignal('project-close')
+    def on_project_close():
+        print("Signal 'project-close' emitted")
+
+    @geanysignal('project-dialog-confirmed')
+    def on_project_dialog_confirmed(notebook):
+        print("Signal 'project-dialog-confirmed' emitted")
+
+    @geanysignal('project-dialog-create')
+    def on_project_dialog_create(notebook):
+        print("Signal 'project-dialog-create' emitted")
+
+    @geanysignal('project-open')
+    def on_project_open(config):
+        print("Signal 'project-open' emitted")
+
+    @geanysignal('project-save')
+    def on_project_save(config):
+        print("Signal 'project-save' emitted")
+
+    @geanysignal('update-editor-menu')
+    def on_update_editor_menu(word, pos, doc):
+        print("Signal 'update-editor-menu' emitted")

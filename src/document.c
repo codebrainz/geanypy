@@ -721,3 +721,12 @@ init_geany_document(void)
     Py_INCREF(&DocumentType);
     PyModule_AddObject(m, "Document", (PyObject *)&DocumentType);
 }
+
+
+Document *Document_create_new_from_geany_document(GeanyDocument *doc)
+{
+    Document *self;
+    self = (Document *) PyObject_CallObject((PyObject *) &DocumentType, NULL);
+    self->doc = doc;
+    return self;
+}

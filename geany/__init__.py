@@ -24,7 +24,6 @@ import mainwidgets
 import manager
 import msgwindow
 import navqueue
-import plugin
 import project
 import scintilla
 
@@ -32,8 +31,8 @@ from app import App
 from editorprefs import EditorPrefs
 from fileprefs import FilePrefs
 from mainwidgets import MainWidgets
-from plugin import Plugin
 from main import is_realized, locale_init, reload_configuration
+from signalmanager import SignalManager, geanysignal
 
 
 __all__ = [ "Plugin",
@@ -43,7 +42,9 @@ __all__ = [ "Plugin",
             "main_widgets",
             "editor_prefs",
             "app",
-            "file_prefs" ]
+            "file_prefs",
+            "signal_manager",
+            "geanysignal" ]
 
 # Geany's application data fields
 app = App()
@@ -56,3 +57,11 @@ editor_prefs = EditorPrefs()
 
 # Settings relating to how files are handled
 file_prefs = FilePrefs()
+
+# Allow plugins to connect/disconnect from Geany signals
+signal_manager = SignalManager()
+
+
+
+import plugin
+from plugin import Plugin

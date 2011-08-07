@@ -109,6 +109,7 @@ typedef struct
 #endif
 
 PyMODINIT_FUNC init_geany_document(void);
+Document *Document_create_new_from_geany_document(GeanyDocument *doc);
 
 PyMODINIT_FUNC init_geany_filetype(void);
 Filetype *Filetype_create_new_from_geany_filetype(GeanyFiletype *ft);
