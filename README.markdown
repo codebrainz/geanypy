@@ -43,6 +43,11 @@ geany.dialogs.show_msgbox("Hello World")
 
 geany.main_widgets.window.set_title("Hello Window")
 
+def on_document_open(doc):
+    print("Document '%s' was opened" % doc.file_name)
+
+geany.signals.connect('document-open', on_document_open)
+
 ```
 
 Dependencies
@@ -51,7 +56,7 @@ Dependencies
 To build GeanyPy you need the following dependencies:
 
 * Python 2.6+ and development files (I don't think Python 3 will work).
-* Geany 0.21+ and development files (ex, from SVN)
+* Geany 0.21+ and development files (from SVN)
 * PyGTK 2.0 and development files
 
 On Debian/Ubuntu, the (non-Geany) dependencies can be installed like this:
