@@ -1,0 +1,171 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Getting Started &mdash; GeanyPy v1.0 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="GeanyPy v1.0 documentation" href="index.html" />
+    <link rel="next" title="Writing a Plugin - Quick Start Guide" href="quickstart.html" />
+    <link rel="prev" title="Installation" href="install.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="quickstart.html" title="Writing a Plugin - Quick Start Guide"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="install.html" title="Installation"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">GeanyPy v1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="getting-started">
+<h1>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
+<p>Before diving into the details and API docs for programming plugins with
+GeanyPy, it&#8217;s important to note how it works and some features it provides.</p>
+<div class="section" id="what-the-heck-is-geanypy-really">
+<h2>What the heck is GeanyPy, really?<a class="headerlink" href="#what-the-heck-is-geanypy-really" title="Permalink to this headline">¶</a></h2>
+<p>GeanyPy is &#8220;just another Geany plugin&#8221;, really.  Geany sees GeanyPy as any
+other <a class="reference external" href="http://www.geany.org/manual/current/index.html#plugins">plugin</a>, so
+to activate GeanyPy, use Geany&#8217;s
+<a class="reference external" href="http://www.geany.org/manual/current/index.html#plugin-manager">Plugin Manager</a>
+under the Tools menu as you would for any other plugin.</p>
+<p>Once the GeanyPy plugin has been activated, a few elements are added to Geany&#8217;s
+user interface as described below.</p>
+</div>
+<div class="section" id="python-plugin-manager">
+<h2>Python Plugin Manager<a class="headerlink" href="#python-plugin-manager" title="Permalink to this headline">¶</a></h2>
+<p>Under the Tools menu, you will find the Python Plugin Manager, which is meant
+to be similar to Geany&#8217;s own Plugin Manager.  This is where you will activate
+any plugins written in Python.</p>
+<p>The Python Plugin Manager looks in exactly two places for plugins:</p>
+<ol class="arabic simple">
+<li>For system-wide plugins, it will search in PREFIX/share/geany/geanypy/plugins.</li>
+<li>In Geany&#8217;s config directory under your home directory, typically ~/.config/geany/plugins/geanypy/plugins.</li>
+</ol>
+<p>Where <cite>PREFIX</cite> is the prefix used at configure time with Geany/GeanyPy (see
+the previous section, Installation).  Both of these paths may vary depending on
+your platform, but for most *nix systems, the above paths should hold true.</p>
+<p>Any plugins which follow the proper interface found in either of those two
+directories will be listed in the Python Plugin Manager and you will be able
+to activate and deactivate them there.</p>
+</div>
+<div class="section" id="python-console">
+<h2>Python Console<a class="headerlink" href="#python-console" title="Permalink to this headline">¶</a></h2>
+<p>Another pretty cool feature of GeanyPy is the Python Console, which similar
+to the regular Python interactive interpreter console, but it&#8217;s found in the
+Message Window area (bottom) in Geany.  The <cite>geany</cite> Python module used to
+interact with Geany will be pre-imported for you, so you can mess around with
+Geany using the console, without ever having to even write a plugin.</p>
+<p><strong>Credits:</strong> The Python Console was taken, almost in its entirety, from the
+<a class="reference external" href="http://mooedit.sourceforge.net">medit text editor</a>.  Props to the
+author(s) for such a nice <a class="reference external" href="https://bitbucket.org/medit/medit/src/83c24f751493/moo/moopython/plugins/lib/pyconsole.py">piece of source code</a></p>
+</div>
+<div class="section" id="future-plans">
+<h2>Future Plans<a class="headerlink" href="#future-plans" title="Permalink to this headline">¶</a></h2>
+<p>Some time in the near future, there should be support for sending text from
+the active document into the Python Console.  It will also be possible to
+have the Python Console either in a separate window, in the sidebar notebook
+or in the message window notebook.</p>
+<p>Also, either integration with Geany&#8217;s keybindings UI under the preferences
+dialog or a separate but similar UI just for Python plugins will be added.
+Currently using keybindings requires a certain amount of hackery, due to
+Geany expecting all plugins to be shared libraries written in C.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Getting Started</a><ul>
+<li><a class="reference internal" href="#what-the-heck-is-geanypy-really">What the heck is GeanyPy, really?</a></li>
+<li><a class="reference internal" href="#python-plugin-manager">Python Plugin Manager</a></li>
+<li><a class="reference internal" href="#python-console">Python Console</a></li>
+<li><a class="reference internal" href="#future-plans">Future Plans</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="install.html"
+                        title="previous chapter">Installation</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="quickstart.html"
+                        title="next chapter">Writing a Plugin - Quick Start Guide</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/starting.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="quickstart.html" title="Writing a Plugin - Quick Start Guide"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="install.html" title="Installation"
+             >previous</a> |</li>
+        <li><a href="index.html">GeanyPy v1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, Matthew Brush &lt;mbrush@codebrainz.ca&gt;.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>
