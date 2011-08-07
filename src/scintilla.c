@@ -25,6 +25,7 @@
 #include <pygobject.h>
 #include <pygtk/pygtk.h>
 #include <geanyplugin.h>
+#include <Scintilla.h>
 #include <ScintillaWidget.h>
 #include "plugin.h"
 

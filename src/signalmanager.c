@@ -51,7 +51,7 @@ SignalManager *signal_manager_new(GeanyPlugin *geany_plugin)
         return NULL;
     }
 
-    man->py_manager = PyObject_GetAttrString(module, "signal_manager");
+    man->py_manager = PyObject_GetAttrString(module, "signals");
     Py_DECREF(module);
     if (!man->py_manager)
     {
@@ -177,7 +177,12 @@ static void on_document_save(GObject *geany_object, GeanyDocument *doc, SignalMa
 
 static gboolean on_editor_notify(GObject *geany_object, GeanyEditor *editor, SCNotification *nt, SignalManager *man)
 {
-    /* TODO */
+    PyObject *args;
+    args = Py_BuildValue("sOO",
+            "editor-notify",
+            (PyObject *) Editor_create_new_from_geany_editor(editor),
+            (PyObject *) ScintillaNotification_create_new_from_scintilla_notification(nt));
+    PyObject_CallObject(man->py_emit_func, args);
 	return FALSE;
 }
 
@@ -218,23 +223,19 @@ static void on_project_dialog_create(GObject *geany_object, GtkWidget *notebook,
 
 static void on_project_open(GObject *geany_object, GKeyFile *config, SignalManager *man)
 {
-    g_debug("'on_project_open' signal is not implemented in GeanyPy");
-    return;
-    //PyObject *gob, *args;
-    //gob = (PyObject *) pygobject_new(G_OBJECT(config)); /* Is GKeyFile a GObject? */
-    //args = Py_BuildValue("(sO)", "project-open", gob);
-    //PyObject_CallObject(man->py_emit_func, args);
+    PyObject *args, *py_proj;
+    py_proj = (PyObject *) Project_create_new();
+    args = Py_BuildValue("(O)", py_proj);
+    PyObject_CallObject(man->py_emit_func, args);
 }
 
 
 static void on_project_save(GObject *geany_object, GKeyFile *config, SignalManager *man)
 {
-    g_debug("'on_project_save' signal is not implmented in GeanyPy");
-    return;
-    //PyObject *gob, *args;
-    //gob = (PyObject *) pygobject_new(G_OBJECT(config)); /* Is GKeyFile a GObject? */
-    //args = Py_BuildValue("(sO)", "project-open", gob);
-    //PyObject_CallObject(man->py_emit_func, args);
+    PyObject *args, *py_proj;
+    py_proj = (PyObject *) Project_create_new();
+    args = Py_BuildValue("(O)", py_proj);
+    PyObject_CallObject(man->py_emit_func, args);
 }
 
 

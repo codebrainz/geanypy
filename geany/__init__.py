@@ -43,8 +43,7 @@ __all__ = [ "Plugin",
             "editor_prefs",
             "app",
             "file_prefs",
-            "signal_manager",
-            "geanysignal" ]
+            "signals" ]
 
 # Geany's application data fields
 app = App()
@@ -59,9 +58,7 @@ editor_prefs = EditorPrefs()
 file_prefs = FilePrefs()
 
 # Allow plugins to connect/disconnect from Geany signals
-signal_manager = SignalManager()
-
-
+signals = SignalManager()
 
 import plugin
 from plugin import Plugin
