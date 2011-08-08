@@ -16,7 +16,7 @@ to create your own dialogs as well.
 
     :return: A string containing the text the user entered.
 
-.. function:: show_input_numeric(title=None, label_text=None, value=0.0, minimum=0.0, maximum=100.0, step=1.0)
+.. function:: show_input_numeric([title=None[, label_text=None[, value=0.0[, minimum=0.0[, maximum=100.0[, step=1.0]]]]]])
 
     Shows a :class:`gtk.Dialog` to ask the user to enter a numeric value
     using a :class:`gtk.SpinButton`.
@@ -30,7 +30,7 @@ to create your own dialogs as well.
 
     :return: The value entered if the dialog was closed with ok, or :data:`None` if it was cancelled.
 
-.. function:: show_msgbox(text, msgtype=gtk.MESSAGE_INFO)
+.. function:: show_msgbox(text[, msgtype=gtk.MESSAGE_INFO])
 
     Shows a :class:`gtk.Dialog` to show the user a message.
 
