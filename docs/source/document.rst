@@ -128,7 +128,7 @@ This module provides functions for working with documents.
 
 .. attribute:: Document.file_name
 
-    The file name of this document.  This property is read-write.
+    The file name of this document.
 
 .. attribute:: Document.has_bom
 

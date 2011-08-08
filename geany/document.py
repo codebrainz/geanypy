@@ -128,10 +128,6 @@ class Document(object):
     def file_name(self):
         return self._doc._get_file_name()
 
-    @file_name.setter
-    def file_name(self, value):
-        self._doc.rename_file(value)
-
     @property
     def has_bom(self):
         return self._doc._get_has_bom()
