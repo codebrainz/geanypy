@@ -253,104 +253,100 @@ functions are used for creating instances of the <a class="reference internal" h
 </table>
 </dd></dl>
 
+<div class="section" id="document-objects">
+<h2><a class="reference internal" href="#document.Document" title="document.Document"><tt class="xref py py-class docutils literal"><span class="pre">Document</span></tt></a> Objects<a class="headerlink" href="#document-objects" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="document.Document">
 <em class="property">class </em><tt class="descclassname">document.</tt><tt class="descname">Document</tt><a class="headerlink" href="#document.Document" title="Permalink to this definition">¶</a></dt>
 <dd><p>The main class holding information about a specific document.  Unless
 otherwise noted, the attributes are read-only properties.</p>
-</dd></dl>
-
-<div class="section" id="document-objects">
-<h2><a class="reference internal" href="#document.Document" title="document.Document"><tt class="xref py py-class docutils literal"><span class="pre">Document</span></tt></a> Objects<a class="headerlink" href="#document-objects" title="Permalink to this headline">¶</a></h2>
-<p><a class="reference internal" href="#document.Document" title="document.Document"><tt class="xref py py-class docutils literal"><span class="pre">Document</span></tt></a> objects have the following properties and methods:</p>
-<blockquote>
-<div><dl class="attribute">
+<dl class="attribute">
 <dt id="document.Document.basename_for_display">
-<tt class="descclassname">Document.</tt><tt class="descname">basename_for_display</tt><a class="headerlink" href="#document.Document.basename_for_display" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">basename_for_display</tt><a class="headerlink" href="#document.Document.basename_for_display" title="Permalink to this definition">¶</a></dt>
 <dd><p>The last part of the filename for this document, possibly truncated to a maximum length in case the filename is very long.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="document.Document.notebook_page">
-<tt class="descclassname">Document.</tt><tt class="descname">notebook_page</tt><a class="headerlink" href="#document.Document.notebook_page" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">notebook_page</tt><a class="headerlink" href="#document.Document.notebook_page" title="Permalink to this definition">¶</a></dt>
 <dd><p>The page number in the <tt class="xref py py-class docutils literal"><span class="pre">gtk.Notebook</span></tt> containing documents.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="document.Document.status_color">
-<tt class="descclassname">Document.</tt><tt class="descname">status_color</tt><a class="headerlink" href="#document.Document.status_color" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">status_color</tt><a class="headerlink" href="#document.Document.status_color" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the status color of the document, or <tt class="xref py py-data xref docutils literal"><span class="pre">None</span></tt> if the default widget coloring should be used.  The color is red if the document has changes, green if it&#8217;s read-only or <tt class="xref py py-data xref docutils literal"><span class="pre">None</span></tt> if the document is unmodified but writable.  The value is a tuple of the RGB values for red, green, and blue respectively.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="document.Document.encoding">
-<tt class="descclassname">Document.</tt><tt class="descname">encoding</tt><a class="headerlink" href="#document.Document.encoding" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">encoding</tt><a class="headerlink" href="#document.Document.encoding" title="Permalink to this definition">¶</a></dt>
 <dd><p>The encoding of this document.  Must be a valid string representation of an encoding.  This property is read-write.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="document.Document.file_type">
-<tt class="descclassname">Document.</tt><tt class="descname">file_type</tt><a class="headerlink" href="#document.Document.file_type" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">file_type</tt><a class="headerlink" href="#document.Document.file_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>The file type of this document as a <tt class="xref py py-class docutils literal"><span class="pre">Filetype</span></tt> instance.  This property is read-write.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="document.Document.text_changed">
-<tt class="descclassname">Document.</tt><tt class="descname">text_changed</tt><a class="headerlink" href="#document.Document.text_changed" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">text_changed</tt><a class="headerlink" href="#document.Document.text_changed" title="Permalink to this definition">¶</a></dt>
 <dd><p>Whether this document&#8217;s text has been changed since it was last saved.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="document.Document.file_name">
-<tt class="descclassname">Document.</tt><tt class="descname">file_name</tt><a class="headerlink" href="#document.Document.file_name" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">file_name</tt><a class="headerlink" href="#document.Document.file_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>The file name of this document.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="document.Document.has_bom">
-<tt class="descclassname">Document.</tt><tt class="descname">has_bom</tt><a class="headerlink" href="#document.Document.has_bom" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">has_bom</tt><a class="headerlink" href="#document.Document.has_bom" title="Permalink to this definition">¶</a></dt>
 <dd><p>Indicates whether the document&#8217;s file has a byte-order-mark.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="document.Document.has_tags">
-<tt class="descclassname">Document.</tt><tt class="descname">has_tags</tt><a class="headerlink" href="#document.Document.has_tags" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">has_tags</tt><a class="headerlink" href="#document.Document.has_tags" title="Permalink to this definition">¶</a></dt>
 <dd><p>Indicates whether this document supports source code symbols (tags) to show in the sidebar.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="document.Document.index">
-<tt class="descclassname">Document.</tt><tt class="descname">index</tt><a class="headerlink" href="#document.Document.index" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">index</tt><a class="headerlink" href="#document.Document.index" title="Permalink to this definition">¶</a></dt>
 <dd><p>Index of the document in Geany&#8217;s documents array.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="document.Document.is_valid">
-<tt class="descclassname">Document.</tt><tt class="descname">is_valid</tt><a class="headerlink" href="#document.Document.is_valid" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">is_valid</tt><a class="headerlink" href="#document.Document.is_valid" title="Permalink to this definition">¶</a></dt>
 <dd><p>Indicates whether this document is active and all properties are set correctly.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="document.Document.read_only">
-<tt class="descclassname">Document.</tt><tt class="descname">read_only</tt><a class="headerlink" href="#document.Document.read_only" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">read_only</tt><a class="headerlink" href="#document.Document.read_only" title="Permalink to this definition">¶</a></dt>
 <dd><p>Whether the document is in read-only mode.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="document.Document.real_path">
-<tt class="descclassname">Document.</tt><tt class="descname">real_path</tt><a class="headerlink" href="#document.Document.real_path" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">real_path</tt><a class="headerlink" href="#document.Document.real_path" title="Permalink to this definition">¶</a></dt>
 <dd><p>The link-dereferenced, locale-encoded file name for this document.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="document.Document.editor">
-<tt class="descclassname">Document.</tt><tt class="descname">editor</tt><a class="headerlink" href="#document.Document.editor" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">editor</tt><a class="headerlink" href="#document.Document.editor" title="Permalink to this definition">¶</a></dt>
 <dd><p>The <tt class="xref py py-class docutils literal"><span class="pre">Editor</span></tt> instance associated with this document.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="document.Document.close">
-<tt class="descclassname">Document.</tt><tt class="descname">close</tt><big>(</big><big>)</big><a class="headerlink" href="#document.Document.close" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">close</tt><big>(</big><big>)</big><a class="headerlink" href="#document.Document.close" title="Permalink to this definition">¶</a></dt>
 <dd><p>Close this document.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -364,7 +360,7 @@ otherwise noted, the attributes are read-only properties.</p>
 
 <dl class="method">
 <dt id="document.Document.reload">
-<tt class="descclassname">Document.</tt><tt class="descname">reload</tt><big>(</big><span class="optional">[</span><em>forced_enc=None</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#document.Document.reload" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">reload</tt><big>(</big><span class="optional">[</span><em>forced_enc=None</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#document.Document.reload" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reloads this document.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -380,7 +376,7 @@ otherwise noted, the attributes are read-only properties.</p>
 
 <dl class="method">
 <dt id="document.Document.rename">
-<tt class="descclassname">Document.</tt><tt class="descname">rename</tt><big>(</big><em>new_filename</em><big>)</big><a class="headerlink" href="#document.Document.rename" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">rename</tt><big>(</big><em>new_filename</em><big>)</big><a class="headerlink" href="#document.Document.rename" title="Permalink to this definition">¶</a></dt>
 <dd><p>Rename this document to a new file name.  Only the file on disk is actually
 renamed, you still have to call <a class="reference internal" href="#document.Document.save_as" title="document.Document.save_as"><tt class="xref py py-meth docutils literal"><span class="pre">save_as()</span></tt></a> to change the document object.
 It also stops monitoring for file changes to prevent receiving too many file
@@ -397,7 +393,7 @@ change events while renaming.  File monitoring is setup again in <a class="refer
 
 <dl class="method">
 <dt id="document.Document.save">
-<tt class="descclassname">Document.</tt><tt class="descname">save</tt><big>(</big><span class="optional">[</span><em>force=False</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#document.Document.save" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">save</tt><big>(</big><span class="optional">[</span><em>force=False</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#document.Document.save" title="Permalink to this definition">¶</a></dt>
 <dd><p>Saves this documents file on disk.</p>
 <p>Saving may include replacing tabs by spaces, stripping trailing spaces and adding
 a final new line at the end of the file, depending on user preferences.  Then,
@@ -422,7 +418,7 @@ calling this; otherwise call <a class="reference internal" href="dialogs.html#di
 
 <dl class="method">
 <dt id="document.Document.save_as">
-<tt class="descclassname">Document.</tt><tt class="descname">save_as</tt><big>(</big><em>new_filename</em><big>)</big><a class="headerlink" href="#document.Document.save_as" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">save_as</tt><big>(</big><em>new_filename</em><big>)</big><a class="headerlink" href="#document.Document.save_as" title="Permalink to this definition">¶</a></dt>
 <dd><p>Saves the document with a new filename, detecting the filetype.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -436,7 +432,8 @@ calling this; otherwise call <a class="reference internal" href="dialogs.html#di
 </table>
 </dd></dl>
 
-</div></blockquote>
+</dd></dl>
+
 </div>
 </div>
 
@@ -456,7 +453,7 @@ calling this; otherwise call <a class="reference internal" href="dialogs.html#di
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="dialogs.html"
-                        title="previous chapter">The <tt class="docutils literal"><span class="pre">dialogs</span></tt> module</a></p>
+                        title="previous chapter">The <tt class="docutils literal docutils literal"><span class="pre">dialogs</span></tt> module</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/document.txt"
