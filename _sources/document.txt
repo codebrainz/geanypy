@@ -1,7 +1,11 @@
-The :mod:`geany.document` module
-================================
+The :mod:`document` module
+**************************
 
-This module provides functions for working with documents.
+.. module:: document
+    :synopsis: Document-related functions and classes
+
+This module provides functions for working with documents.  Most of the module-level
+functions are used for creating instances of the :class:`Document` object.
 
 .. function:: compare_by_display_name(doc_a, doc_b)
 
@@ -102,109 +106,114 @@ This module provides functions for working with documents.
     The main class holding information about a specific document.  Unless
     otherwise noted, the attributes are read-only properties.
 
-.. attribute:: Document.basename_for_display
+:class:`Document` Objects
+=========================
 
-    The last part of the filename for this document, possibly truncated to a maximum length in case the filename is very long.
+:class:`Document` objects have the following properties and methods:
 
-.. attribute:: Document.notebook_page
+    .. attribute:: Document.basename_for_display
 
-    The page number in the :class:`gtk.Notebook` containing documents.
+        The last part of the filename for this document, possibly truncated to a maximum length in case the filename is very long.
 
-.. attribute:: Document.status_color
+    .. attribute:: Document.notebook_page
 
-    Gets the status color of the document, or :data:`None` if the default widget coloring should be used.  The color is red if the document has changes, green if it's read-only or :data:`None` if the document is unmodified but writable.  The value is a tuple of the RGB values for red, green, and blue respectively.
+        The page number in the :class:`gtk.Notebook` containing documents.
 
-.. attribute:: Document.encoding
+    .. attribute:: Document.status_color
 
-    The encoding of this document.  Must be a valid string representation of an encoding.  This property is read-write.
+        Gets the status color of the document, or :data:`None` if the default widget coloring should be used.  The color is red if the document has changes, green if it's read-only or :data:`None` if the document is unmodified but writable.  The value is a tuple of the RGB values for red, green, and blue respectively.
 
-.. attribute:: Document.file_type
+    .. attribute:: Document.encoding
 
-    The file type of this document as a :class:`Filetype` instance.  This property is read-write.
+        The encoding of this document.  Must be a valid string representation of an encoding.  This property is read-write.
 
-.. attribute:: Document.text_changed
+    .. attribute:: Document.file_type
 
-    Whether this document's text has been changed since it was last saved.
+        The file type of this document as a :class:`Filetype` instance.  This property is read-write.
 
-.. attribute:: Document.file_name
+    .. attribute:: Document.text_changed
 
-    The file name of this document.
+        Whether this document's text has been changed since it was last saved.
 
-.. attribute:: Document.has_bom
+    .. attribute:: Document.file_name
 
-    Indicates whether the document's file has a byte-order-mark.
+        The file name of this document.
 
-.. attribute:: Document.has_tags
+    .. attribute:: Document.has_bom
 
-    Indicates whether this document supports source code symbols (tags) to show in the sidebar.
+        Indicates whether the document's file has a byte-order-mark.
 
-.. attribute:: Document.index
+    .. attribute:: Document.has_tags
 
-    Index of the document in Geany's documents array.
+        Indicates whether this document supports source code symbols (tags) to show in the sidebar.
 
-.. attribute:: Document.is_valid
+    .. attribute:: Document.index
 
-    Indicates whether this document is active and all properties are set correctly.
+        Index of the document in Geany's documents array.
 
-.. attribute:: Document.read_only
+    .. attribute:: Document.is_valid
 
-    Whether the document is in read-only mode.
+        Indicates whether this document is active and all properties are set correctly.
 
-.. attribute:: Document.real_path
+    .. attribute:: Document.read_only
 
-    The link-dereferenced, locale-encoded file name for this document.
+        Whether the document is in read-only mode.
 
-.. attribute:: Document.editor
+    .. attribute:: Document.real_path
 
-    The :class:`Editor` instance associated with this document.
+        The link-dereferenced, locale-encoded file name for this document.
 
-.. method:: Document.close()
+    .. attribute:: Document.editor
 
-    Close this document.
+        The :class:`Editor` instance associated with this document.
 
-    :return: :data:`True` if the document was closed, :data:`False` otherwise.
+    .. method:: Document.close()
 
-.. method:: Document.reload([forced_enc=None])
+        Close this document.
 
-    Reloads this document.
+        :return: :data:`True` if the document was closed, :data:`False` otherwise.
 
-    :param forced_enc: The encoding to use when reloading this document or :data:`None` to auto-detect it.
+    .. method:: Document.reload([forced_enc=None])
 
-    :return: :data:`True` if the document was actually reloaded or :data:`False` otherwise.
+        Reloads this document.
 
-.. method:: Document.rename(new_filename)
+        :param forced_enc: The encoding to use when reloading this document or :data:`None` to auto-detect it.
 
-    Rename this document to a new file name.  Only the file on disk is actually
-    renamed, you still have to call :meth:`save_as` to change the document object.
-    It also stops monitoring for file changes to prevent receiving too many file
-    change events while renaming.  File monitoring is setup again in :meth:`save_as`.
+        :return: :data:`True` if the document was actually reloaded or :data:`False` otherwise.
 
-    :param new_filename: The new filename to rename to.
+    .. method:: Document.rename(new_filename)
 
-.. method:: Document.save([force=False])
+        Rename this document to a new file name.  Only the file on disk is actually
+        renamed, you still have to call :meth:`save_as` to change the document object.
+        It also stops monitoring for file changes to prevent receiving too many file
+        change events while renaming.  File monitoring is setup again in :meth:`save_as`.
 
-    Saves this documents file on disk.
+        :param new_filename: The new filename to rename to.
 
-    Saving may include replacing tabs by spaces, stripping trailing spaces and adding
-    a final new line at the end of the file, depending on user preferences.  Then,
-    the `document-before-save` signal is emitted, allowing plugins to modify the
-    document before it's saved, and the data is actually written to disk.  The
-    file type is set again or auto-detected if it wasn't set yet.  Afterwards,
-    the `document-save` signal is emitted for plugins.  If the file is not modified,
-    this method does nothing unless `force` is set to :data:`True`.
+    .. method:: Document.save([force=False])
 
-    **Note:** You should ensure that :attr:`file_name` is not :data:`None` before
-    calling this; otherwise call :func:`dialogs.show_save_as`.
+        Saves this documents file on disk.
 
-    :param force: Whether to save the document even if it's not modified.
+        Saving may include replacing tabs by spaces, stripping trailing spaces and adding
+        a final new line at the end of the file, depending on user preferences.  Then,
+        the `document-before-save` signal is emitted, allowing plugins to modify the
+        document before it's saved, and the data is actually written to disk.  The
+        file type is set again or auto-detected if it wasn't set yet.  Afterwards,
+        the `document-save` signal is emitted for plugins.  If the file is not modified,
+        this method does nothing unless `force` is set to :data:`True`.
 
-    :return: :data:`True` if the file was saved or :data:`False` if the file could not or should not be saved.
+        **Note:** You should ensure that :attr:`file_name` is not :data:`None` before
+        calling this; otherwise call :func:`dialogs.show_save_as`.
 
-.. method:: Document.save_as(new_filename)
+        :param force: Whether to save the document even if it's not modified.
 
-    Saves the document with a new filename, detecting the filetype.
+        :return: :data:`True` if the file was saved or :data:`False` if the file could not or should not be saved.
 
-    :param new_filename: The new filename.
+    .. method:: Document.save_as(new_filename)
 
-    :return: :data:`True` if the file was saved or :data:`False` if it could not be saved.
+        Saves the document with a new filename, detecting the filetype.
+
+        :param new_filename: The new filename.
+
+        :return: :data:`True` if the file was saved or :data:`False` if it could not be saved.
 

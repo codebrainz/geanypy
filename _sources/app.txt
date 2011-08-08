@@ -1,5 +1,8 @@
-The :mod:`geany.app` module
-===========================
+The :mod:`app` module
+*********************
+
+.. module:: app
+    :synopsis: Application settings
 
 This modules contains a class to access application settings.
 
@@ -11,24 +14,29 @@ the :data:`geany.app` attribute of the :mod:`geany` module.
 
 All members of the :class:`App` are read-only properties.
 
-.. attribute:: App.configdir
+:class:`App` Objects
+====================
 
-    User configuration directory, usually ~/.config/geany.  To store configuration
-    files for your plugin, it's a good idea to use something like this::
+:class:`App` instances have the following properties:
 
-        conf_path = os.path.join(geany.app.configdir, "plugins", "yourplugin",
-                        "yourconfigfile.conf")
+    .. attribute:: App.configdir
 
-.. attribute:: App.debug_mode
+        User configuration directory, usually ~/.config/geany.  To store configuration
+        files for your plugin, it's a good idea to use something like this::
 
-    If True, debug messages should be printed.  For example, if you want to make
-    a :py:func:`print` function that only prints when :attr:`App.debug_mode`
-    is active, you could do something like this::
+            conf_path = os.path.join(geany.app.configdir, "plugins", "yourplugin",
+                            "yourconfigfile.conf")
 
-        def debug_print(message):
-            if geany.app.debug_mode:
-                print(message)
+    .. attribute:: App.debug_mode
 
-.. attribute:: App.project
+        If True, debug messages should be printed.  For example, if you want to make
+        a :py:func:`print` function that only prints when :attr:`App.debug_mode`
+        is active, you could do something like this::
 
-    If not :py:obj:`None`, the currently active project.
+            def debug_print(message):
+                if geany.app.debug_mode:
+                    print(message)
+
+    .. attribute:: App.project
+
+        If not :py:obj:`None`, the a :class:`project.Project` for currently active project.

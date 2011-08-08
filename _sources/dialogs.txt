@@ -1,5 +1,8 @@
-The :mod:`geany.dialogs` module
-===============================
+The :mod:`dialogs` module
+*************************
+
+.. module:: dialogs
+    :synopsis: Showing dialogs to the user
 
 This module contains some help functions to show file-related dialogs,
 miscellaneous dialogs, etc.  You can of course just use the :mod:`gtk` module

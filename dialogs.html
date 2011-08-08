@@ -7,7 +7,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>The geany.dialogs module &mdash; GeanyPy v1.0 documentation</title>
+    <title>The dialogs module &mdash; GeanyPy v1.0 documentation</title>
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
@@ -24,7 +24,8 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="GeanyPy v1.0 documentation" href="index.html" />
     <link rel="up" title="API Documentation" href="api.html" />
-    <link rel="prev" title="The geany.app module" href="app.html" /> 
+    <link rel="next" title="The document module" href="document.html" />
+    <link rel="prev" title="The app module" href="app.html" /> 
   </head>
   <body>
     <div class="related">
@@ -37,7 +38,10 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="app.html" title="The geany.app module"
+          <a href="document.html" title="The document module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="app.html" title="The app module"
              accesskey="P">previous</a> |</li>
         <li><a href="index.html">GeanyPy v1.0 documentation</a> &raquo;</li>
           <li><a href="api.html" accesskey="U">API Documentation</a> &raquo;</li> 
@@ -49,14 +53,14 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="the-geany-dialogs-module">
-<h1>The <tt class="xref py py-mod docutils literal"><span class="pre">geany.dialogs</span></tt> module<a class="headerlink" href="#the-geany-dialogs-module" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-dialogs">
+<span id="the-dialogs-module"></span><h1>The <a class="reference internal" href="#module-dialogs" title="dialogs: Showing dialogs to the user"><tt class="xref py py-mod docutils literal"><span class="pre">dialogs</span></tt></a> module<a class="headerlink" href="#module-dialogs" title="Permalink to this headline">¶</a></h1>
 <p>This module contains some help functions to show file-related dialogs,
 miscellaneous dialogs, etc.  You can of course just use the <tt class="xref py py-mod docutils literal"><span class="pre">gtk</span></tt> module
 to create your own dialogs as well.</p>
 <dl class="function">
-<dt id="show_input">
-<tt class="descname">show_input</tt><big>(</big><span class="optional">[</span><em>title=None</em><span class="optional">[</span>, <em>parent=None</em><span class="optional">[</span>, <em>label_text=None</em><span class="optional">[</span>, <em>default_text=None</em><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#show_input" title="Permalink to this definition">¶</a></dt>
+<dt id="dialogs.show_input">
+<tt class="descclassname">dialogs.</tt><tt class="descname">show_input</tt><big>(</big><span class="optional">[</span><em>title=None</em><span class="optional">[</span>, <em>parent=None</em><span class="optional">[</span>, <em>label_text=None</em><span class="optional">[</span>, <em>default_text=None</em><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#dialogs.show_input" title="Permalink to this definition">¶</a></dt>
 <dd><p>Shows a <tt class="xref py py-class docutils literal"><span class="pre">gtk.Dialog</span></tt> to ask the user for text input.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -78,8 +82,8 @@ to create your own dialogs as well.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="show_input_numeric">
-<tt class="descname">show_input_numeric</tt><big>(</big><span class="optional">[</span><em>title=None</em><span class="optional">[</span>, <em>label_text=None</em><span class="optional">[</span>, <em>value=0.0</em><span class="optional">[</span>, <em>minimum=0.0</em><span class="optional">[</span>, <em>maximum=100.0</em><span class="optional">[</span>, <em>step=1.0</em><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#show_input_numeric" title="Permalink to this definition">¶</a></dt>
+<dt id="dialogs.show_input_numeric">
+<tt class="descclassname">dialogs.</tt><tt class="descname">show_input_numeric</tt><big>(</big><span class="optional">[</span><em>title=None</em><span class="optional">[</span>, <em>label_text=None</em><span class="optional">[</span>, <em>value=0.0</em><span class="optional">[</span>, <em>minimum=0.0</em><span class="optional">[</span>, <em>maximum=100.0</em><span class="optional">[</span>, <em>step=1.0</em><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#dialogs.show_input_numeric" title="Permalink to this definition">¶</a></dt>
 <dd><p>Shows a <tt class="xref py py-class docutils literal"><span class="pre">gtk.Dialog</span></tt> to ask the user to enter a numeric value
 using a <tt class="xref py py-class docutils literal"><span class="pre">gtk.SpinButton</span></tt>.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -104,8 +108,8 @@ using a <tt class="xref py py-class docutils literal"><span class="pre">gtk.Spin
 </dd></dl>
 
 <dl class="function">
-<dt id="show_msgbox">
-<tt class="descname">show_msgbox</tt><big>(</big><em>text</em><span class="optional">[</span>, <em>msgtype=gtk.MESSAGE_INFO</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#show_msgbox" title="Permalink to this definition">¶</a></dt>
+<dt id="dialogs.show_msgbox">
+<tt class="descclassname">dialogs.</tt><tt class="descname">show_msgbox</tt><big>(</big><em>text</em><span class="optional">[</span>, <em>msgtype=gtk.MESSAGE_INFO</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#dialogs.show_msgbox" title="Permalink to this definition">¶</a></dt>
 <dd><p>Shows a <tt class="xref py py-class docutils literal"><span class="pre">gtk.Dialog</span></tt> to show the user a message.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -122,8 +126,8 @@ using a <tt class="xref py py-class docutils literal"><span class="pre">gtk.Spin
 </dd></dl>
 
 <dl class="function">
-<dt id="show_question">
-<tt class="descname">show_question</tt><big>(</big><em>text</em><big>)</big><a class="headerlink" href="#show_question" title="Permalink to this definition">¶</a></dt>
+<dt id="dialogs.show_question">
+<tt class="descclassname">dialogs.</tt><tt class="descname">show_question</tt><big>(</big><em>text</em><big>)</big><a class="headerlink" href="#dialogs.show_question" title="Permalink to this definition">¶</a></dt>
 <dd><p>Shows a <tt class="xref py py-class docutils literal"><span class="pre">gtk.Dialog</span></tt> to ask the user a Yes/No question.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -138,8 +142,8 @@ using a <tt class="xref py py-class docutils literal"><span class="pre">gtk.Spin
 </dd></dl>
 
 <dl class="function">
-<dt id="show_save_as">
-<tt class="descname">show_save_as</tt><big>(</big><big>)</big><a class="headerlink" href="#show_save_as" title="Permalink to this definition">¶</a></dt>
+<dt id="dialogs.show_save_as">
+<tt class="descclassname">dialogs.</tt><tt class="descname">show_save_as</tt><big>(</big><big>)</big><a class="headerlink" href="#dialogs.show_save_as" title="Permalink to this definition">¶</a></dt>
 <dd><p>Shows Geany&#8217;s <cite>Save As</cite> dialog.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -161,7 +165,10 @@ using a <tt class="xref py py-class docutils literal"><span class="pre">gtk.Spin
         <div class="sphinxsidebarwrapper">
   <h4>Previous topic</h4>
   <p class="topless"><a href="app.html"
-                        title="previous chapter">The <tt class="docutils literal docutils literal"><span class="pre">geany.app</span></tt> module</a></p>
+                        title="previous chapter">The <tt class="docutils literal docutils literal docutils literal"><span class="pre">app</span></tt> module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="document.html"
+                        title="next chapter">The <tt class="docutils literal"><span class="pre">document</span></tt> module</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/dialogs.txt"
@@ -194,7 +201,10 @@ using a <tt class="xref py py-class docutils literal"><span class="pre">gtk.Spin
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="app.html" title="The geany.app module"
+          <a href="document.html" title="The document module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="app.html" title="The app module"
              >previous</a> |</li>
         <li><a href="index.html">GeanyPy v1.0 documentation</a> &raquo;</li>
           <li><a href="api.html" >API Documentation</a> &raquo;</li> 
