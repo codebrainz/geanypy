@@ -101,15 +101,13 @@ functions are used for creating instances of the :class:`Document` object.
     :return: A list of :class:`Document` instances, one for each open document.
 
 
+:class:`Document` Objects
+=========================
+
 .. class:: Document
 
     The main class holding information about a specific document.  Unless
     otherwise noted, the attributes are read-only properties.
-
-:class:`Document` Objects
-=========================
-
-:class:`Document` objects have the following properties and methods:
 
     .. attribute:: Document.basename_for_display
 

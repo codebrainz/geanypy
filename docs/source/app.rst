@@ -6,6 +6,9 @@ The :mod:`app` module
 
 This modules contains a class to access application settings.
 
+:class:`App` Objects
+====================
+
 .. class:: App
 
 This class is initialized automatically and by the :mod:`geany` module and
@@ -13,11 +16,6 @@ shouldn't be initalized by users.  An instance of it is available through
 the :data:`geany.app` attribute of the :mod:`geany` module.
 
 All members of the :class:`App` are read-only properties.
-
-:class:`App` Objects
-====================
-
-:class:`App` instances have the following properties:
 
     .. attribute:: App.configdir
 
