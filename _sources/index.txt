@@ -15,6 +15,7 @@ Contents:
     install.rst
     starting.rst
     quickstart.rst
+    api.rst
 
 Indices and tables
 ==================
