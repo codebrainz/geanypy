@@ -167,8 +167,8 @@ class Document(object):
     def close(self):
         return self._doc.close()
 
-    def reload(self):
-        return self._doc.reload_file()
+    def reload(self, forced_enc=None):
+        return self._doc.reload_file(forced_enc)
 
     def rename(self, new_filename):
         return self._doc.rename_file(new_filename)
