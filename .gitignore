@@ -13,7 +13,10 @@
 # Autotools
 .deps/
 .libs/
-Makefile
+/Makefile
+/src/Makefile
+/geany/Makefile
+/plugins/Makefile
 Makefile.in
 /configure
 /aclocal.m4
@@ -35,3 +38,5 @@ Makefile.in
 
 # Project-specific
 /.backup/
+/docs/build/*
+/docs/buildpushdocs.sh
