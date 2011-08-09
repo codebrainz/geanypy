@@ -1,14 +1,6 @@
 #include <Python.h>
-#include <structmember.h>
-#include <gtk/gtk.h>
 #include <geanyplugin.h>
-#include <pygtk/pygtk.h>
 #include "plugin.h"
-
-
-extern GeanyPlugin		*geany_plugin;
-extern GeanyData		*geany_data;
-extern GeanyFunctions	*geany_functions;
 
 
 static PyObject *
@@ -116,9 +108,9 @@ PyMethodDef MsgwinModule_methods[] = {
 
 
 PyMODINIT_FUNC
-init_geany_msgwin(void)
+initmsgwindow(void)
 {
     PyObject *m;
 
-    m = Py_InitModule("_geany_msgwindow", MsgwinModule_methods);
+    m = Py_InitModule("msgwindow", MsgwinModule_methods);
 }

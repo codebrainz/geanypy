@@ -1,12 +1,6 @@
 import geany
-import document
-import editor
-import filetypes
 import project
 import scintilla
-import _geany_document
-import _geany_editor
-import _geany_filetypes
 import _geany_project
 import _geany_scintilla_notification
 from collections import namedtuple
@@ -110,19 +104,7 @@ class SignalManager(object):
 
         new_args = []
         for arg in args:
-            if isinstance(arg, _geany_document.Document):
-                doc = document.Document()
-                doc._doc = arg
-                new_args.append(doc)
-            elif isinstance(arg, _geany_filetypes.Filetype):
-                ft = filetypes.Filetype()
-                ft._ft = arg
-                new_args.append(ft)
-            elif isinstance(arg, _geany_editor.Editor):
-                ed = editor.Editor()
-                ed._editor = arg
-                new_args.append(ed)
-            elif isinstance(arg, _geany_project.Project):
+            if isinstance(arg, _geany_project.Project):
                 proj = project.Project()
                 project._project = arg
                 new_args.append(project)

@@ -8,6 +8,9 @@ This module contains some help functions to show file-related dialogs,
 miscellaneous dialogs, etc.  You can of course just use the :mod:`gtk` module
 to create your own dialogs as well.
 
+.. note:: Most of these dialogs can also easily be created by just using the
+    :class:`gtk.Dialog` or one of its subclasses.
+
 .. function:: show_input([title=None[, parent=None[, label_text=None[, default_text=None]]]])
 
     Shows a :class:`gtk.Dialog` to ask the user for text input.

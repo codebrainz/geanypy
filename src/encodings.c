@@ -1,14 +1,6 @@
 #include <Python.h>
-#include <structmember.h>
-#include <gtk/gtk.h>
 #include <geanyplugin.h>
-#include <pygtk/pygtk.h>
 #include "plugin.h"
-
-
-extern GeanyPlugin		*geany_plugin;
-extern GeanyData		*geany_data;
-extern GeanyFunctions	*geany_functions;
 
 
 static PyObject *
@@ -84,9 +76,11 @@ PyMethodDef EncodingsModule_methods[] = {
 
 
 PyMODINIT_FUNC
-init_geany_encodings(void)
+initencodings(void)
 {
     PyObject *m;
 
-    m = Py_InitModule("_geany_encodings", EncodingsModule_methods);
+    m = Py_InitModule3("encodings", EncodingsModule_methods,
+            "The `encodings` module contains functions for converting "
+            "encodings to UTF8 and other related things.");
 }

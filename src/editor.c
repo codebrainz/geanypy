@@ -26,12 +26,6 @@
 #include "plugin.h"
 
 
-/* Set by Geany when plugin is loaded */
-extern GeanyPlugin		*geany_plugin;
-extern GeanyData		*geany_data;
-extern GeanyFunctions	*geany_functions;
-
-
 static void
 Editor_dealloc(Editor *self)
 {
@@ -74,7 +68,7 @@ Editor_find_snippet(Editor *self, PyObject *args)
 
 
 static PyObject *
-Editor__get_eol_char(Editor *self, PyObject *args)
+Editor_get_eol_char(Editor *self, PyObject *args)
 {
     const gchar *eol_char = editor_get_eol_char(self->editor);
     if (eol_char != NULL)
@@ -84,21 +78,21 @@ Editor__get_eol_char(Editor *self, PyObject *args)
 
 
 static PyObject *
-Editor__get_eol_char_len(Editor *self, PyObject *args)
+Editor_get_eol_char_len(Editor *self, PyObject *args)
 {
     return Py_BuildValue("i", editor_get_eol_char_len(self->editor));
 }
 
 
 static PyObject *
-Editor__get_eol_char_mode(Editor *self, PyObject *args)
+Editor_get_eol_char_mode(Editor *self, PyObject *args)
 {
     return Py_BuildValue("i", editor_get_eol_char_mode(self->editor));
 }
 
 
 static PyObject *
-Editor__get_eol_char_name(Editor *self, PyObject *args)
+Editor_get_eol_char_name(Editor *self, PyObject *args)
 {
     const gchar *eol_char_name = editor_get_eol_char_name(self->editor);
     if (eol_char_name != NULL)
@@ -108,7 +102,7 @@ Editor__get_eol_char_name(Editor *self, PyObject *args)
 
 
 static PyObject *
-Editor__get_indent_prefs(Editor *self, PyObject *args)
+Editor_get_indent_prefs(Editor *self, PyObject *args)
 {
     const GeanyIndentPrefs *indent_prefs;
     IndentPrefs *py_prefs;
@@ -221,7 +215,7 @@ Editor_insert_text_block(Editor *self, PyObject *args)
 
 
 static PyObject *
-Editor__set_indent_type(Editor *self, PyObject *args)
+Editor_set_indent_type(Editor *self, PyObject *args)
 {
     gint indent_type;
     if (PyArg_ParseTuple(args, "i", &indent_type))
@@ -231,7 +225,7 @@ Editor__set_indent_type(Editor *self, PyObject *args)
 
 
 static PyObject *
-Editor__get_scintilla(Editor *self, PyObject *args)
+Editor_get_scintilla(Editor *self, PyObject *args)
 {
     Scintilla *sci;
     if (self->editor != NULL)
@@ -253,13 +247,13 @@ static PyMethodDef Editor_methods[] = {
     { "indicator_set_on_range", (PyCFunction) Editor_indicator_set_on_range, METH_VARARGS },
     { "insert_snippet", (PyCFunction) Editor_insert_snippet, METH_VARARGS },
     { "insert_text_block", (PyCFunction) Editor_insert_text_block, METH_VARARGS },
-    { "_get_eol_char", (PyCFunction) Editor__get_eol_char, METH_VARARGS },
-    { "_get_eol_char_len", (PyCFunction) Editor__get_eol_char_len, METH_VARARGS },
-    { "_get_eol_char_mode", (PyCFunction) Editor__get_eol_char_mode, METH_VARARGS },
-    { "_get_eol_char_name", (PyCFunction) Editor__get_eol_char_name, METH_VARARGS },
-    { "_get_indent_prefs", (PyCFunction) Editor__get_indent_prefs, METH_VARARGS },
-    { "_set_indent_type", (PyCFunction) Editor__set_indent_type, METH_VARARGS },
-    { "_get_scintilla", (PyCFunction) Editor__get_scintilla, METH_VARARGS },
+    { "get_eol_char", (PyCFunction) Editor_get_eol_char, METH_VARARGS },
+    { "get_eol_char_len", (PyCFunction) Editor_get_eol_char_len, METH_VARARGS },
+    { "get_eol_char_mode", (PyCFunction) Editor_get_eol_char_mode, METH_VARARGS },
+    { "get_eol_char_name", (PyCFunction) Editor_get_eol_char_name, METH_VARARGS },
+    { "get_indent_prefs", (PyCFunction) Editor_get_indent_prefs, METH_VARARGS },
+    { "set_indent_type", (PyCFunction) Editor_set_indent_type, METH_VARARGS },
+    { "get_scintilla", (PyCFunction) Editor_get_scintilla, METH_VARARGS },
 	{ NULL }
 };
 
@@ -267,7 +261,7 @@ static PyMethodDef Editor_methods[] = {
 static PyTypeObject EditorType = {
 	PyObject_HEAD_INIT(NULL)
     0,                          /*ob_size*/
-    "_geany_editor.Editor",     /*tp_name*/
+    "geany.editor.Editor",      /*tp_name*/
     sizeof(Editor),             /*tp_basicsize*/
     0,                          /*tp_itemsize*/
     (destructor)Editor_dealloc, /*tp_dealloc*/
@@ -286,7 +280,9 @@ static PyTypeObject EditorType = {
     0,                          /*tp_setattro*/
     0,                          /*tp_as_buffer*/
     Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE, /*tp_flags*/
-    "Geany Editor",             /* tp_doc */
+    "Wrapper class around Geany's `GeanyEditor` structure.  This class "
+    "should not be directly initialized, instead retrieve instances of it "
+    "using through the `Document.get_editor()` method.", /* tp_doc */
     0,		                    /* tp_traverse */
     0,		               	    /* tp_clear */
     0,		                    /* tp_richcompare */
@@ -388,7 +384,7 @@ PyMethodDef EditorModule_methods[] = {
 
 
 PyMODINIT_FUNC
-init_geany_editor(void)
+initeditor(void)
 {
     PyObject *m;
 
@@ -396,7 +392,9 @@ init_geany_editor(void)
     if (PyType_Ready(&EditorType) < 0)
         return;
 
-    m = Py_InitModule("_geany_editor", EditorModule_methods);
+    m = Py_InitModule3("editor", EditorModule_methods,
+            "The `editor` module provides a functions working with "
+            "`Editor` objects.");
 
     Py_INCREF(&EditorType);
     PyModule_AddObject(m, "Editor", (PyObject *)&EditorType);

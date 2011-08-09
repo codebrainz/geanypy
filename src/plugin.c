@@ -48,19 +48,20 @@ GeanyPy_start_interpreter(void)
     Py_Initialize();
 
     /* Import the C modules */
-    init_geany_app();
-    init_geany_dialogs();
-    init_geany_document();
-    init_geany_editor();
-    init_geany_editor_prefs();
-    init_geany_encodings();
-    init_geany_file_prefs();
-    init_geany_filetype();
-    init_geany_highlighting();
-    init_geany_indent_prefs();
-    init_geany_main();
-    init_geany_main_widgets();
-    init_geany_msgwin();
+    initapp();
+    initdialogs();
+    initdocument();
+    initeditor();
+    initeditorprefs();
+    initencodings();
+    initfileprefs();
+    initfiletype();
+    inithighlighting();
+    initindentprefs();
+    initmain();
+    initmainwidgets();
+    initmsgwindow();
+
     init_geany_navqueue();
     init_geany_project();
     init_geany_scintilla();

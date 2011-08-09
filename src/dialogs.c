@@ -1,33 +1,26 @@
 #include <Python.h>
-#include <structmember.h>
 #include <gtk/gtk.h>
-#include <geanyplugin.h>
 #include <pygtk/pygtk.h>
+#include <geanyplugin.h>
 #include "plugin.h"
 
 
-extern GeanyPlugin		*geany_plugin;
-extern GeanyData		*geany_data;
-extern GeanyFunctions	*geany_functions;
-
-
 static PyObject *
-Dialogs_show_input(PyObject *self, PyObject *args)
+Dialogs_show_input(PyObject *self, PyObject *args, PyObject *kwargs)
 {
-    const gchar *title = NULL;
-    const gchar *label_text = NULL;
-    const gchar *default_text = NULL;
-    const gchar *result = NULL;
-    PyObject *py_win_obj;
+    const gchar *title = NULL, *label_text = NULL, *default_text = NULL, *result = NULL;
+    PyObject *py_win_obj = NULL;
     PyGObject *py_win_gobj;
     GtkWindow *win;
+    static gchar *kwlist[] = { "title", "parent", "label_text", "default_text", NULL };
 
-    if (PyArg_ParseTuple(args, "|zOzz", &title, &py_win_obj, &label_text, &default_text))
+    if (PyArg_ParseTupleAndKeywords(args, kwargs, "|zOzz", kwlist,
+        &title, &py_win_obj, &label_text, &default_text))
     {
         if (title == NULL)
             title = "";
 
-        if (py_win_obj != Py_None)
+        if (py_win_obj != NULL && py_win_obj != Py_None)
         {
             py_win_gobj = (PyGObject *) py_win_obj;
             win = GTK_WINDOW((GObject *) py_win_gobj->obj);
@@ -45,13 +38,15 @@ Dialogs_show_input(PyObject *self, PyObject *args)
 
 
 static PyObject *
-Dialogs_show_input_numeric(PyObject *self, PyObject *args)
+Dialogs_show_input_numeric(PyObject *self, PyObject *args, PyObject *kwargs)
 {
     const gchar *title = NULL;
     const gchar *label_text = NULL;
     gdouble value = 0.0, min = 0.0, max = 0.0, step = 0.0;
+    static gchar *kwlist[] = { "title", "label_text", "value", "minimum", "maximum", "step", NULL };
 
-    if (PyArg_ParseTuple(args, "|zzdddd", &title, &label_text, &value, &min, &max, &step))
+    if (PyArg_ParseTupleAndKeywords(args, kwargs, "|zzdddd", kwlist,
+        &title, &label_text, &value, &min, &max, &step))
     {
         if (title == NULL)
             title = "";
@@ -68,12 +63,13 @@ Dialogs_show_input_numeric(PyObject *self, PyObject *args)
 
 
 static PyObject *
-Dialogs_show_msgbox(PyObject *self, PyObject *args)
+Dialogs_show_msgbox(PyObject *self, PyObject *args, PyObject *kwargs)
 {
     gchar *text = NULL;
     gint msgtype = (gint) GTK_MESSAGE_INFO;
+    static gchar *kwlist[] = { "text", "msgtype", NULL };
 
-    if (PyArg_ParseTuple(args, "s|i", &text, &msgtype))
+    if (PyArg_ParseTupleAndKeywords(args, kwargs, "s|i", kwlist, &text, &msgtype))
     {
         if (text != NULL)
         {
@@ -86,11 +82,12 @@ Dialogs_show_msgbox(PyObject *self, PyObject *args)
 
 
 static PyObject *
-Dialogs_show_question(PyObject *self, PyObject *args)
+Dialogs_show_question(PyObject *self, PyObject *args, PyObject *kwargs)
 {
     gchar *text = NULL;
+    static gchar *kwlist[] = { "text", NULL };
 
-    if (PyArg_ParseTuple(args, "s", &text))
+    if (PyArg_ParseTupleAndKeywords(args, kwargs, "s", kwlist, &text))
     {
         if (text != NULL)
         {
@@ -105,7 +102,7 @@ Dialogs_show_question(PyObject *self, PyObject *args)
 
 
 static PyObject *
-Dialogs_show_save_as(PyObject *self, PyObject *args)
+Dialogs_show_save_as(PyObject *self)
 {
     if (dialogs_show_save_as())
         Py_RETURN_TRUE;
@@ -116,19 +113,25 @@ Dialogs_show_save_as(PyObject *self, PyObject *args)
 
 static
 PyMethodDef DialogsModule_methods[] = {
-    { "show_input", (PyCFunction)Dialogs_show_input, METH_VARARGS },
-    { "show_input_numeric", (PyCFunction)Dialogs_show_input_numeric, METH_VARARGS },
-    { "show_msgbox", (PyCFunction)Dialogs_show_msgbox, METH_VARARGS },
-    { "show_question", (PyCFunction)Dialogs_show_question, METH_VARARGS },
-    { "show_save_as", (PyCFunction)Dialogs_show_save_as, METH_VARARGS },
+    { "show_input", (PyCFunction)Dialogs_show_input, METH_VARARGS | METH_KEYWORDS,
+        "Ask the user for text input" },
+    { "show_input_numeric", (PyCFunction)Dialogs_show_input_numeric, METH_VARARGS | METH_KEYWORDS,
+        "Shows an input box to enter a numerical value using a `gtk.SpinButton`." },
+    { "show_msgbox", (PyCFunction)Dialogs_show_msgbox, METH_VARARGS | METH_KEYWORDS,
+        "Shows a message box of the `msgtype` with `text`." },
+    { "show_question", (PyCFunction)Dialogs_show_question, METH_VARARGS | METH_KEYWORDS,
+        "Shows a question message box with `text` and Yes/No buttons." },
+    { "show_save_as", (PyCFunction)Dialogs_show_save_as, METH_NOARGS,
+        "Shows the Save As dialog for the current notebook page." },
     { NULL }
 };
 
 
 PyMODINIT_FUNC
-init_geany_dialogs(void)
+initdialogs(void)
 {
     PyObject *m;
 
-    m = Py_InitModule("_geany_dialogs", DialogsModule_methods);
+    m = Py_InitModule3("dialogs", DialogsModule_methods,
+            "The `dialogs` module contains various dialog helper functions.");
 }

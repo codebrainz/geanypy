@@ -1,13 +1,7 @@
 #include <Python.h>
 #include <structmember.h>
-#include <gtk/gtk.h>
 #include <geanyplugin.h>
 #include "plugin.h"
-
-
-extern GeanyPlugin		*geany_plugin;
-extern GeanyData		*geany_data;
-extern GeanyFunctions	*geany_functions;
 
 
 static void
@@ -27,7 +21,7 @@ Filetype_init(Filetype *self, PyObject *args, PyObject *kwds)
 
 
 static PyObject *
-Filetype__get_display_name(Filetype *self, PyObject *args)
+Filetype_get_display_name(Filetype *self, PyObject *args)
 {
     const gchar *ft_name = NULL;
 
@@ -43,7 +37,7 @@ Filetype__get_display_name(Filetype *self, PyObject *args)
 
 
 static PyObject *
-Filetype__get_extension(Filetype *self, PyObject *args)
+Filetype_get_extension(Filetype *self, PyObject *args)
 {
     if (self->ft->extension != NULL)
         return PyString_FromString(self->ft->extension);
@@ -52,7 +46,7 @@ Filetype__get_extension(Filetype *self, PyObject *args)
 
 
 static PyObject *
-Filetype__get_index(Filetype *self, PyObject *args)
+Filetype_get_index(Filetype *self, PyObject *args)
 {
     PyObject *res;
 
@@ -64,7 +58,7 @@ Filetype__get_index(Filetype *self, PyObject *args)
 
 
 static PyObject *
-Filetype__get_lang_id(Filetype *self, PyObject *args)
+Filetype_get_lang_id(Filetype *self, PyObject *args)
 {
     PyObject *res;
 
@@ -75,7 +69,7 @@ Filetype__get_lang_id(Filetype *self, PyObject *args)
 }
 
 static PyObject *
-Filetype__get_name(Filetype *self, PyObject *args)
+Filetype_get_name(Filetype *self, PyObject *args)
 {
     if (self->ft->name != NULL)
         return PyString_FromString(self->ft->name);
@@ -83,7 +77,7 @@ Filetype__get_name(Filetype *self, PyObject *args)
 }
 
 static PyObject *
-Filetype__get_patterns(Filetype *self, PyObject *args)
+Filetype_get_patterns(Filetype *self, PyObject *args)
 {
     gchar **patterns;
     gint i, len;
@@ -106,7 +100,7 @@ Filetype__get_patterns(Filetype *self, PyObject *args)
 
 
 static PyObject *
-Filetype__get_title(Filetype *self, PyObject *args)
+Filetype_get_title(Filetype *self, PyObject *args)
 {
     if (self->ft->title != NULL)
         return PyString_FromString(self->ft->title);
@@ -115,30 +109,24 @@ Filetype__get_title(Filetype *self, PyObject *args)
 
 
 static PyMethodDef Filetype_methods[] = {
-    { "_get_display_name", (PyCFunction)Filetype__get_display_name, METH_VARARGS },
-    { "_get_extension", (PyCFunction)Filetype__get_extension, METH_VARARGS },
-    { "_get_index", (PyCFunction)Filetype__get_index, METH_VARARGS },
-    { "_get_lang_id", (PyCFunction)Filetype__get_lang_id, METH_VARARGS },
-    { "_get_name", (PyCFunction)Filetype__get_name, METH_VARARGS },
-    { "_get_patterns", (PyCFunction)Filetype__get_patterns, METH_VARARGS },
-    { "_get_title", (PyCFunction)Filetype__get_title, METH_VARARGS },
+    { "get_display_name", (PyCFunction)Filetype_get_display_name, METH_VARARGS },
+    { "get_extension", (PyCFunction)Filetype_get_extension, METH_VARARGS },
+    { "get_index", (PyCFunction)Filetype_get_index, METH_VARARGS },
+    { "get_lang_id", (PyCFunction)Filetype_get_lang_id, METH_VARARGS },
+    { "get_name", (PyCFunction)Filetype_get_name, METH_VARARGS },
+    { "get_patterns", (PyCFunction)Filetype_get_patterns, METH_VARARGS },
+    { "get_title", (PyCFunction)Filetype_get_title, METH_VARARGS },
 	{ NULL }
 };
 
 
-static PyMemberDef Filetype_members[] = {
-	//{"active_profile", T_STRING, offsetof(Document, active_profile), 0,
-		//"The profile used by Zen Coding when performing actions."},
-	//{"context", T_LONG, offsetof(Document, context), 0,
-		//"The current editor context used by Zen Coding when performing actions."},
-	{ NULL }
-};
+static PyMemberDef Filetype_members[] = { { NULL } };
 
 
 static PyTypeObject FiletypeType = {
 	PyObject_HEAD_INIT(NULL)
     0,                         /*ob_size*/
-    "_geany_filetypes.Filetype",  /*tp_name*/
+    "geany.filetype.Filetype",  /*tp_name*/
     sizeof(Filetype),         /*tp_basicsize*/
     0,                         /*tp_itemsize*/
     (destructor)Filetype_dealloc, /*tp_dealloc*/
@@ -157,7 +145,10 @@ static PyTypeObject FiletypeType = {
     0,                         /*tp_setattro*/
     0,                         /*tp_as_buffer*/
     Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE, /*tp_flags*/
-    "Geany filetype",          /* tp_doc */
+    "Wrapper class around Geany's `GeanyFiletype` structure.  This class "
+    "should not be directly initialized, instead retrieve instances of it "
+    "using the module level functions (ex. `filetype.detect_from_file()`) "
+    "or from an accessor method on a `Document` object.", /* tp_doc */
     0,		                   /* tp_traverse */
     0,		               	   /* tp_clear */
     0,		                   /* tp_richcompare */
@@ -288,7 +279,7 @@ PyMethodDef FiletypeModule_methods[] = {
 
 
 PyMODINIT_FUNC
-init_geany_filetype(void)
+initfiletype(void)
 {
     PyObject *m;
 
@@ -296,7 +287,9 @@ init_geany_filetype(void)
     if (PyType_Ready(&FiletypeType) < 0)
         return;
 
-    m = Py_InitModule("_geany_filetypes", FiletypeModule_methods);
+    m = Py_InitModule3("filetype", FiletypeModule_methods,
+            "The `filetype` module provides a functions for working with and "
+            "getting instances of `Filetype` objects.");
 
     Py_INCREF(&FiletypeType);
     PyModule_AddObject(m, "Filetype", (PyObject *)&FiletypeType);

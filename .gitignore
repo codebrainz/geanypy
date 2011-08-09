@@ -40,3 +40,5 @@ Makefile.in
 /.backup/
 /docs/build/*
 /docs/buildpushdocs.sh
+/lib/
+/libs/

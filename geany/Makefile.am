@@ -1,23 +1,10 @@
 geanypy_sources				=	__init__.py \
-								dialogs.py \
-								document.py \
-								filetypes.py \
-								indentprefs.py \
-								editorprefs.py \
-								editor.py \
-								mainwidgets.py \
 								project.py \
-								app.py \
-								fileprefs.py \
 								scintilla.py \
 								console.py \
 								manager.py \
 								loader.py \
 								plugin.py \
-								encodings.py \
-								highlighting.py \
-								main.py \
-								msgwindow.py \
 								navqueue.py \
 								signalmanager.py
 geanypy_objects				=	$(geanypy_sources:.py=.pyc)

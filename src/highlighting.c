@@ -1,14 +1,7 @@
 #include <Python.h>
 #include <structmember.h>
-#include <gtk/gtk.h>
 #include <geanyplugin.h>
 #include "plugin.h"
-
-
-/* Set by Geany when plugin is loaded */
-extern GeanyPlugin		*geany_plugin;
-extern GeanyData		*geany_data;
-extern GeanyFunctions	*geany_functions;
 
 
 static void
@@ -26,8 +19,9 @@ LexerStyle_init(LexerStyle *self, PyObject *args, PyObject *kwds)
 }
 
 
+/* TODO: convert result to an RGB tuple */
 static PyObject *
-LexerStyle__get_background(LexerStyle *self, PyObject *args)
+LexerStyle_get_background(LexerStyle *self, PyObject *args)
 {
     if (self->lexer_style != NULL)
         return Py_BuildValue("i", self->lexer_style->background);
@@ -35,8 +29,18 @@ LexerStyle__get_background(LexerStyle *self, PyObject *args)
 }
 
 
+/* TODO: convert result to an RGB tuple */
 static PyObject *
-LexerStyle__get_bold(LexerStyle *self, PyObject *args)
+LexerStyle_get_foreground(LexerStyle *self, PyObject *args)
+{
+    if (self->lexer_style != NULL)
+        return Py_BuildValue("i", self->lexer_style->foreground);
+    Py_RETURN_NONE;
+}
+
+
+static PyObject *
+LexerStyle_get_bold(LexerStyle *self, PyObject *args)
 {
     if (self->lexer_style != NULL)
     {
@@ -50,16 +54,7 @@ LexerStyle__get_bold(LexerStyle *self, PyObject *args)
 
 
 static PyObject *
-LexerStyle__get_foreground(LexerStyle *self, PyObject *args)
-{
-    if (self->lexer_style != NULL)
-        return Py_BuildValue("i", self->lexer_style->foreground);
-    Py_RETURN_NONE;
-}
-
-
-static PyObject *
-LexerStyle__get_italic(LexerStyle *self, PyObject *args)
+LexerStyle_get_italic(LexerStyle *self, PyObject *args)
 {
     if (self->lexer_style != NULL)
     {
@@ -73,10 +68,10 @@ LexerStyle__get_italic(LexerStyle *self, PyObject *args)
 
 
 static PyMethodDef LexerStyle_methods[] = {
-    { "_get_background", (PyCFunction) LexerStyle__get_background, METH_VARARGS },
-    { "_get_bold", (PyCFunction) LexerStyle__get_bold, METH_VARARGS },
-    { "_get_foreground", (PyCFunction) LexerStyle__get_foreground, METH_VARARGS },
-    { "_get_italic", (PyCFunction) LexerStyle__get_italic, METH_VARARGS },
+    { "get_background", (PyCFunction) LexerStyle_get_background, METH_VARARGS },
+    { "get_foreground", (PyCFunction) LexerStyle_get_foreground, METH_VARARGS },
+    { "get_bold", (PyCFunction) LexerStyle_get_bold, METH_VARARGS },
+    { "get_italic", (PyCFunction) LexerStyle_get_italic, METH_VARARGS },
 	{ NULL }
 };
 
@@ -84,7 +79,7 @@ static PyMethodDef LexerStyle_methods[] = {
 static PyTypeObject LexerStyleType = {
 	PyObject_HEAD_INIT(NULL)
     0,                          /*ob_size*/
-    "_geany_highlighting.LexerStyle",     /*tp_name*/
+    "geany.highlighting.LexerStyle",     /*tp_name*/
     sizeof(Editor),             /*tp_basicsize*/
     0,                          /*tp_itemsize*/
     (destructor)LexerStyle_dealloc, /*tp_dealloc*/
@@ -103,7 +98,9 @@ static PyTypeObject LexerStyleType = {
     0,                          /*tp_setattro*/
     0,                          /*tp_as_buffer*/
     Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE, /*tp_flags*/
-    "Geany lexer style",             /* tp_doc */
+    "Wrapper class around Geany's `GeanyLexerStyle` structure.  This class "
+    "should not be directly initialized, instead retrieve instances of it "
+    "using the module's functions (ex. `highlighting.get_style()`).", /* tp_doc */
     0,		                    /* tp_traverse */
     0,		               	    /* tp_clear */
     0,		                    /* tp_richcompare */
@@ -231,7 +228,7 @@ PyMethodDef EditorModule_methods[] = {
 
 
 PyMODINIT_FUNC
-init_geany_highlighting(void)
+inithighlighting(void)
 {
     PyObject *m;
 
@@ -239,7 +236,9 @@ init_geany_highlighting(void)
     if (PyType_Ready(&LexerStyleType) < 0)
         return;
 
-    m = Py_InitModule("_geany_highlighting", EditorModule_methods);
+    m = Py_InitModule3("highlighting", EditorModule_methods,
+            "The `highlighting` module provides a functions for working "
+            "with syntax highlighting.");
 
     Py_INCREF(&LexerStyleType);
     PyModule_AddObject(m, "LexerStyle", (PyObject *)&LexerStyleType);

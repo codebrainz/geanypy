@@ -21,15 +21,8 @@
 
 #include <Python.h>
 #include <structmember.h>
-#include <gtk/gtk.h>
 #include <geanyplugin.h>
 #include "plugin.h"
-
-
-/* Set by Geany when plugin is loaded */
-extern GeanyPlugin		*geany_plugin;
-extern GeanyData		*geany_data;
-extern GeanyFunctions	*geany_functions;
 
 
 static void
@@ -40,7 +33,7 @@ App_dealloc(App *self)
 
 
 static int
-App_init(App *self, PyObject *args, PyObject *kwds)
+App_init(App *self)
 {
     self->app = geany_data->app;
 	return 0;
@@ -48,16 +41,34 @@ App_init(App *self, PyObject *args, PyObject *kwds)
 
 
 static PyObject *
-App__get_configdir(App *self, PyObject *args)
+App_get_configdir(App *self)
 {
-    if (self->app != NULL)
+    if (self->app != NULL && self->app->configdir != NULL)
         return PyString_FromString(self->app->configdir);
     Py_RETURN_NONE;
 }
 
 
 static PyObject *
-App__get_debug_mode(App *self, PyObject *args)
+App_get_datadir(App *self)
+{
+    if (self->app != NULL && self->app->datadir != NULL)
+        return PyString_FromString(self->app->datadir);
+    Py_RETURN_NONE;
+}
+
+
+static PyObject *
+App_get_docdir(App *self)
+{
+    if (self->app != NULL && self->app->docdir != NULL)
+        return PyString_FromString(self->app->docdir);
+    Py_RETURN_NONE;
+}
+
+
+static PyObject *
+App_get_debug_mode(App *self)
 {
     if (self->app != NULL)
     {
@@ -71,7 +82,7 @@ App__get_debug_mode(App *self, PyObject *args)
 
 
 static PyObject *
-App__get_project(App *self, PyObject *args)
+App_get_project(App *self)
 {
     Project *proj;
     proj = Project_create_new();
@@ -82,9 +93,16 @@ App__get_project(App *self, PyObject *args)
 
 
 static PyMethodDef App_methods[] = {
-	{ "_get_configdir", (PyCFunction) App__get_configdir, METH_VARARGS },
-    { "_get_debug_mode", (PyCFunction) App__get_debug_mode, METH_VARARGS },
-    { "_get_project", (PyCFunction) App__get_project, METH_VARARGS },
+	{ "get_configdir", (PyCFunction) App_get_configdir, METH_NOARGS,
+        "User configuration directory, usually `~/.config/geany`."},
+    { "get_datadir", (PyCFunction) App_get_datadir, METH_NOARGS,
+        "Directory where Geany stores its data." },
+    { "get_docdir", (PyCFunction) App_get_docdir, METH_NOARGS,
+        "Directory where Geany stores its documentation." },
+    { "get_debug_mode", (PyCFunction) App_get_debug_mode, METH_NOARGS,
+        "Whether debug messages should be printed or not." },
+    { "get_project", (PyCFunction) App_get_project, METH_NOARGS,
+        "Currently active project or `None`." },
 	{ NULL }
 };
 
@@ -92,10 +110,10 @@ static PyMethodDef App_methods[] = {
 static PyTypeObject AppType = {
 	PyObject_HEAD_INIT(NULL)
     0,                          /*ob_size*/
-    "_geany_app.App",  /*tp_name*/
-    sizeof(App),        /*tp_basicsize*/
+    "geany.app.App",            /*tp_name*/
+    sizeof(App),                /*tp_basicsize*/
     0,                          /*tp_itemsize*/
-    (destructor)App_dealloc, /*tp_dealloc*/
+    (destructor)App_dealloc,    /*tp_dealloc*/
     0,                          /*tp_print*/
     0,                          /*tp_getattr*/
     0,                          /*tp_setattr*/
@@ -111,14 +129,16 @@ static PyTypeObject AppType = {
     0,                          /*tp_setattro*/
     0,                          /*tp_as_buffer*/
     Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE, /*tp_flags*/
-    "Geany App", /* tp_doc */
+    "Wrapper class around Geany's `GeanyApp` structure.  This class should not "
+    "be directly initialized, instead access a single instance of it through "
+    "`geany.app`.",         /* tp_doc */
     0,		                    /* tp_traverse */
     0,		               	    /* tp_clear */
     0,		                    /* tp_richcompare */
     0,		                    /* tp_weaklistoffset */
     0,		                    /* tp_iter */
     0,		                    /* tp_iternext */
-    App_methods,        /* tp_methods */
+    App_methods,                /* tp_methods */
     0,                          /* tp_members */
     0,                          /* tp_getset */
     0,                          /* tp_base */
@@ -126,20 +146,17 @@ static PyTypeObject AppType = {
     0,                          /* tp_descr_get */
     0,                          /* tp_descr_set */
     0,                          /* tp_dictoffset */
-    (initproc)App_init, /* tp_init */
+    (initproc)App_init,         /* tp_init */
     0,                          /* tp_alloc */
     0,                          /* tp_new */
 };
 
 
-static
-PyMethodDef AppModule_methods[] = {
-    { NULL }
-};
+static PyMethodDef AppModule_methods[] = { { NULL } };
 
 
 PyMODINIT_FUNC
-init_geany_app(void)
+initapp(void)
 {
     PyObject *m;
 
@@ -147,7 +164,9 @@ init_geany_app(void)
     if (PyType_Ready(&AppType) < 0)
         return;
 
-    m = Py_InitModule("_geany_app", AppModule_methods);
+    m = Py_InitModule3("app", AppModule_methods,
+            "The `app` module provides a single wrapper class around a  "
+            "`GeanyApp` structure.");
 
     Py_INCREF(&AppType);
     PyModule_AddObject(m, "App", (PyObject *)&AppType);

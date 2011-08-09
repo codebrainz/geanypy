@@ -27,6 +27,13 @@ extern "C" {
 #endif
 
 
+
+/* Set by Geany when plugin is loaded */
+extern GeanyPlugin		*geany_plugin;
+extern GeanyData		*geany_data;
+extern GeanyFunctions	*geany_functions;
+
+
 typedef struct
 {
 	PyObject_HEAD
@@ -115,28 +122,31 @@ typedef struct
 #define PyMODINIT_FUNC void
 #endif
 
-PyMODINIT_FUNC init_geany_document(void);
+
+PyMODINIT_FUNC initapp(void);
+PyMODINIT_FUNC initdialogs(void);
+PyMODINIT_FUNC initdocument(void);
+PyMODINIT_FUNC initeditor(void);
+PyMODINIT_FUNC initeditorprefs(void);
+PyMODINIT_FUNC initencodings(void);
+PyMODINIT_FUNC initfileprefs(void);
+PyMODINIT_FUNC initfiletype(void);
+PyMODINIT_FUNC inithighlighting(void);
+PyMODINIT_FUNC initindentprefs(void);
+PyMODINIT_FUNC initmain(void);
+PyMODINIT_FUNC initmainwidgets(void);
+PyMODINIT_FUNC initmsgwindow(void);
+
+
 Document *Document_create_new_from_geany_document(GeanyDocument *doc);
-
-PyMODINIT_FUNC init_geany_filetype(void);
-Filetype *Filetype_create_new_from_geany_filetype(GeanyFiletype *ft);
-
-PyMODINIT_FUNC init_geany_dialogs(void);
-
-PyMODINIT_FUNC init_geany_editor_prefs(void);
-PyMODINIT_FUNC init_geany_indent_prefs(void);
-IndentPrefs *IndentPrefs_create_new_from_geany_indent_prefs(GeanyIndentPrefs *indent_prefs);
-PyMODINIT_FUNC init_geany_editor(void);
 Editor *Editor_create_new_from_geany_editor(GeanyEditor *editor);
+Filetype *Filetype_create_new_from_geany_filetype(GeanyFiletype *ft);
+IndentPrefs *IndentPrefs_create_new_from_geany_indent_prefs(GeanyIndentPrefs *indent_prefs);
 
-PyMODINIT_FUNC init_geany_main_widgets(void);
+
 
 PyMODINIT_FUNC init_geany_project(void);
 Project *Project_create_new(void);
-
-PyMODINIT_FUNC init_geany_app(void);
-
-PyMODINIT_FUNC init_geany_file_prefs(void);
 
 PyMODINIT_FUNC init_geany_scintilla(void);
 Scintilla *Scintilla_create_new_from_scintilla(ScintillaObject *sci);
@@ -144,13 +154,9 @@ Scintilla *Scintilla_create_new_from_scintilla(ScintillaObject *sci);
 PyMODINIT_FUNC init_geany_scintilla_notification(void);
 ScintillaNotification *ScintillaNotification_create_new_from_scintilla_notification(SCNotification *notif);
 
-PyMODINIT_FUNC init_geany_encodings(void);
 
-PyMODINIT_FUNC init_geany_highlighting(void);
 
-PyMODINIT_FUNC init_geany_main(void);
 
-PyMODINIT_FUNC init_geany_msgwin(void);
 
 PyMODINIT_FUNC init_geany_navqueue(void);
 

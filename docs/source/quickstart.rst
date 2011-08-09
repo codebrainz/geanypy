@@ -13,16 +13,16 @@ obviously written in Python.
 The Plugin Interface
 ====================
 
-The first thing any plugin will want to do is to import the `geany` module::
+The first thing any plugin will want to do is to import the :mod:`geany` module::
 
     import geany
 
 **Note:** Due to the way the Geany plugin framework works, importing the
-`geany` module will certain fail if you just try running it standalone, outside
+:mod:`geany` module will certain fail if you just try running it standalone, outside
 of Geany/GeanyPy.
 
 After that, you create a regular Python class which inherits from the
-`geany.Plugin` class::
+:class:`geany.Plugin` class::
 
     import geany
 
@@ -30,7 +30,7 @@ After that, you create a regular Python class which inherits from the
         pass
 
 This will allow GeanyPy's Python Plugin Manager to locate the plugin as a
-GeanyPy plugin.  If it doesn't inherit from `geany.Plugin` it will not be
+GeanyPy plugin.  If it doesn't inherit from :class:`geany.Plugin` it will not be
 detected.
 
 There are a few more parts of the interface that must be implemented in order
@@ -46,7 +46,7 @@ for the plugin to be detected by GeanyPy::
         __plugin_author__ = "Your Name <your email address>"
 
 These allow the Python Plugin Manager to glean information about your plugin
-which will be shown in the managers plugin list.  All but the `__plugin_name__`
+which will be shown in the managers plugin list.  All but the :attr:`__plugin_name__`
 attributes are optional, though recommended.
 
 The next thing that's needed is an entry-point to the plugin.  Since Python
@@ -66,7 +66,7 @@ entry-point::
             do_stuff_when_loaded()
 
 If you have some de-initialization code that needs to be run, you can add
-a `cleanup` method to the class that is guaranteed to be called when your
+a :meth:`cleanup` method to the class that is guaranteed to be called when your
 plugin is unloaded, however it's optional::
 
     import geany
