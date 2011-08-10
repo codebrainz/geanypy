@@ -27,6 +27,10 @@ extern "C" {
 #endif
 
 
+#ifndef PyMODINIT_FUNC
+#define PyMODINIT_FUNC void
+#endif
+
 
 /* Set by Geany when plugin is loaded */
 extern GeanyPlugin		*geany_plugin;
@@ -34,25 +38,11 @@ extern GeanyData		*geany_data;
 extern GeanyFunctions	*geany_functions;
 
 
-typedef struct
-{
-	PyObject_HEAD
-	GeanyFiletype *ft;
-} Filetype;
+#include "app.h"
+#include "project.h"
 
 
-typedef struct
-{
-	PyObject_HEAD
-	GeanyDocument *doc;
-} Document;
 
-
-typedef struct
-{
-	PyObject_HEAD
-	GeanyEditor *editor;
-} Editor;
 
 
 typedef struct
@@ -79,29 +69,9 @@ typedef struct
 typedef struct
 {
 	PyObject_HEAD
-	GeanyProject *project;
-} Project;
-
-
-typedef struct
-{
-	PyObject_HEAD
-	GeanyApp *app;
-} App;
-
-
-typedef struct
-{
-	PyObject_HEAD
 	GeanyFilePrefs *file_prefs;
 } FilePrefs;
 
-
-typedef struct
-{
-	PyObject_HEAD
-	ScintillaObject *sci;
-} Scintilla;
 
 
 typedef struct
@@ -117,15 +87,6 @@ typedef struct
 	const GeanyLexerStyle *lexer_style;
 } LexerStyle;
 
-
-#ifndef PyMODINIT_FUNC
-#define PyMODINIT_FUNC void
-#endif
-
-
-PyMODINIT_FUNC initapp(void);
-PyMODINIT_FUNC initdialogs(void);
-PyMODINIT_FUNC initdocument(void);
 PyMODINIT_FUNC initeditor(void);
 PyMODINIT_FUNC initeditorprefs(void);
 PyMODINIT_FUNC initencodings(void);
@@ -143,10 +104,6 @@ Editor *Editor_create_new_from_geany_editor(GeanyEditor *editor);
 Filetype *Filetype_create_new_from_geany_filetype(GeanyFiletype *ft);
 IndentPrefs *IndentPrefs_create_new_from_geany_indent_prefs(GeanyIndentPrefs *indent_prefs);
 
-
-
-PyMODINIT_FUNC init_geany_project(void);
-Project *Project_create_new(void);
 
 PyMODINIT_FUNC init_geany_scintilla(void);
 Scintilla *Scintilla_create_new_from_scintilla(ScintillaObject *sci);

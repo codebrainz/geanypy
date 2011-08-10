@@ -1,8 +1,11 @@
 #include <Python.h>
-#include <gtk/gtk.h>
 #include <pygtk/pygtk.h>
 #include <geanyplugin.h>
-#include "plugin.h"
+
+
+extern GeanyPlugin		*geany_plugin;
+extern GeanyData		*geany_data;
+extern GeanyFunctions	*geany_functions;
 
 
 static PyObject *
@@ -43,7 +46,8 @@ Dialogs_show_input_numeric(PyObject *self, PyObject *args, PyObject *kwargs)
     const gchar *title = NULL;
     const gchar *label_text = NULL;
     gdouble value = 0.0, min = 0.0, max = 0.0, step = 0.0;
-    static gchar *kwlist[] = { "title", "label_text", "value", "minimum", "maximum", "step", NULL };
+    static gchar *kwlist[] = { "title", "label_text", "value", "minimum",
+        "maximum", "step", NULL };
 
     if (PyArg_ParseTupleAndKeywords(args, kwargs, "|zzdddd", kwlist,
         &title, &label_text, &value, &min, &max, &step))
@@ -116,7 +120,7 @@ PyMethodDef DialogsModule_methods[] = {
     { "show_input", (PyCFunction)Dialogs_show_input, METH_VARARGS | METH_KEYWORDS,
         "Ask the user for text input" },
     { "show_input_numeric", (PyCFunction)Dialogs_show_input_numeric, METH_VARARGS | METH_KEYWORDS,
-        "Shows an input box to enter a numerical value using a `gtk.SpinButton`." },
+        "Shows an input box to enter a numerical value using a :class:`gtk.SpinButton`." },
     { "show_msgbox", (PyCFunction)Dialogs_show_msgbox, METH_VARARGS | METH_KEYWORDS,
         "Shows a message box of the `msgtype` with `text`." },
     { "show_question", (PyCFunction)Dialogs_show_question, METH_VARARGS | METH_KEYWORDS,
@@ -133,5 +137,5 @@ initdialogs(void)
     PyObject *m;
 
     m = Py_InitModule3("dialogs", DialogsModule_methods,
-            "The `dialogs` module contains various dialog helper functions.");
+            "The :mod:`dialogs` module contains various dialog helper functions.");
 }

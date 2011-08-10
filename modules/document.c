@@ -1,53 +1,105 @@
-/*
- * document.c - see Geany's document.h
- *
- * Copyright 2011 Matthew Brush <mbrush@codebrainz.ca>
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
- * MA 02110-1301, USA.
- */
-
 #include <Python.h>
 #include <structmember.h>
 #include <geanyplugin.h>
-#include "plugin.h"
+
+
+extern GeanyPlugin		*geany_plugin;
+extern GeanyData		*geany_data;
+extern GeanyFunctions	*geany_functions;
+
+
+#define _GeanyDocument_FromPyObject(ft) ((GeanyDocument *) PyLong_AsVoidPtr(ft))
+#define _GeanyDocument_ToPyObject(ft) ((PyObject *) PyLong_FromVoidPtr((void *)(ft)))
+
+
+typedef struct
+{
+	PyObject_HEAD
+	GeanyDocument *doc;
+    PyObject *ft;
+    PyObject *editor;
+} Document;
+
+
+static PyTypeObject DocumentType;
+
+
+static PyObject *
+Document_new(GeanyDocument *doc)
+{
+    PyObject *l, *p;
+    if (l = PyLong_FromVoidPtr((void *) doc))
+    {
+        p = PyObject_CallObject((PyObject *) &DocumentType, l);
+        Py_DECREF(l);
+        return p;
+    }
+    Py_RETURN_NONE;
+}
+
+
+static GeanyFiletype *
+GeanyFiletype_FromPyFiletype(PyObject *obj)
+{
+    GeanyFiletype *ft = NULL;
+    PyObject *ptr_func, *pylong;
+
+    if (obj == NULL || obj == Py_None)
+        return ft;
+
+    ptr_func = PyObject_GetAttrString(obj, "_get_pointer");
+
+    if (ptr_func != NULL)
+    {
+        if (PyCallable_Check(ptr_func))
+        {
+            pylong = PyObject_CallObject(ptr_func, NULL);
+            if (pylong != NULL && pylong != Py_None)
+            {
+                ft = (GeanyFiletype *) PyLong_AsVoidPtr(pylong);
+                Py_DECREF(pylong);
+            }
+        }
+        Py_DECREF(ptr_func);
+    }
+
+    return ft;
+}
 
 
 static void
 Document_dealloc(Document *self)
 {
+    Py_XDECREF(self->ft);
 	self->ob_type->tp_free((PyObject *) self);
 }
 
 
-static PyObject *
-Document_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
+static int
+Document_init(Document *self, PyObject *args)
 {
-	Document *self;
-	self = (Document *)type->tp_alloc(type, 0);
-	if (self != NULL)
-		self->doc = NULL;
-	return (PyObject *) self;
+    PyObject *pylong;
+
+    self->doc = NULL;
+    self->ft = NULL;
+    self->editor = NULL;
+
+    if (PyArg_ParseTuple(args, "l", &pylong))
+    {
+        self->doc = (GeanyDocument *) PyLong_AsVoidPtr(pylong);
+        return 0;
+    }
+
+	return -1;
 }
 
 
-static int
-Document_init(Document *self, PyObject *args, PyObject *kwds)
+static PyObject *
+Document_get_pointer(Document *self)
 {
-    self->doc = NULL;
-	return 0;
+    if (self->doc == NULL)
+        Py_RETURN_NONE;
+    return PyLong_FromVoidPtr((void *) self->doc);
 }
 
 
@@ -78,11 +130,7 @@ Document_get_basename_for_display(Document *self)
 static PyObject*
 Document_get_notebook_page(Document *self)
 {
-    gint res;
-
-    res = document_get_notebook_page(self->doc);
-
-    return Py_BuildValue("i", res);
+    return Py_BuildValue("i", document_get_notebook_page(self->doc));
 }
 
 
@@ -97,7 +145,6 @@ Document_get_status_color(Document *self)
         Py_RETURN_NONE;
 
     return Py_BuildValue("iii", color->red, color->green, color->blue);
-
 }
 
 
@@ -207,14 +254,23 @@ Document_get_encoding(Document *self)
 static PyObject*
 Document_set_filetype(Document *self, PyObject *ft)
 {
-    Filetype *filetype = NULL;
+    PyObject *ptr_func, *pylong;
+    GeanyFiletype *gft;
 
-    if (ft != NULL && ft != Py_None)
+    if (ft != Py_None && PyObject_HasAttrString(ft, "_get_pointer"))
     {
-        filetype = (Filetype *) ft;
-        if (filetype->ft != NULL)
-            document_set_filetype(self->doc, filetype->ft);
+        ptr_func = PyObject_GetAttrString(ft, "_get_pointer");
+        if (ptr_func && PyCallable_Check(ptr_func))
+        {
+            pylong = PyObject_CallObject(ptr_func, NULL);
+            gft = (GeanyFiletype *) PyLong_AsVoidPtr(pylong);
+            if (gft != NULL)
+                document_set_filetype(self->doc, gft);
+            Py_DECREF(pylong);
+            Py_DECREF(ptr_func);
+        }
     }
+
     Py_RETURN_NONE;
 }
 
@@ -222,8 +278,41 @@ Document_set_filetype(Document *self, PyObject *ft)
 static PyObject*
 Document_get_filetype(Document *self)
 {
-    if (DOC_VALID(self->doc))
-        return (PyObject *) Filetype_create_new_from_geany_filetype(self->doc->file_type);
+    PyObject *mod, *cls, *pylong, *ptr_func;
+
+    if (!DOC_VALID(self->doc))
+        Py_RETURN_NONE;
+
+    if (self->ft == NULL)
+    {
+        if (mod = PyImport_ImportModule("filetype"))
+        {
+            cls = PyObject_GetAttrString(mod, "Filetype");
+            Py_DECREF(mod);
+
+            if (cls)
+            {
+                pylong = PyLong_FromVoidPtr((void *) self->doc->file_type);
+                self->ft = PyObject_CallObject(cls, pylong);
+                Py_DECREF(cls);
+                Py_DECREF(pylong);
+                return self->ft;
+            }
+        }
+    }
+    else
+    {
+        ptr_func = PyObject_GetAttrString(self->ft, "_set_pointer");
+        if (ptr_func)
+        {
+            pylong = PyLong_FromVoidPtr((void *) self->doc->file_type);
+            PyObject_CallObject(ptr_func, pylong);
+            Py_DECREF(ptr_func);
+            Py_DECREF(pylong);
+            return self->ft;
+        }
+    }
+
     Py_RETURN_NONE;
 }
 
@@ -231,10 +320,9 @@ Document_get_filetype(Document *self)
 static PyObject*
 Document_set_text_changed(Document *self, PyObject *args)
 {
-    gint changed;
+    gint changed = 0;
     if (DOC_VALID(self->doc))
     {
-        changed = self->doc->changed;
         if (PyArg_ParseTuple(args, "i", &changed))
             document_set_text_changed(self->doc, changed);
     }
@@ -343,17 +431,57 @@ Document_get_real_path(Document *self)
 static PyObject *
 Document_get_editor(Document *self)
 {
-    Editor *editor;
-    if (DOC_VALID(self->doc) && self->doc->editor != NULL)
+    PyObject *pylong;
+
+    if (!DOC_VALID(self->doc) || self->doc->editor == NULL)
+        Py_RETURN_NONE;
+
+    if (self->editor == NULL)
     {
-        editor = Editor_create_new_from_geany_editor(self->doc->editor);
-        return (PyObject *) editor;
+        PyObject *mod, *cls;
+
+        if (mod = PyImport_ImportModule("editor"))
+        {
+            cls = PyObject_GetAttrString(mod, "Editor");
+            Py_DECREF(mod);
+            if (cls && PyCallable_Check(cls))
+            {
+                pylong = PyLong_FromVoidPtr((GeanyEditor *) self->doc->editor);
+                self->editor = PyObject_CallObject(cls, pylong);
+                Py_DECREF(cls);
+                Py_DECREF(pylong);
+                return self->editor;
+            }
+            else if (PyErr_Occurred())
+                PyErr_Print();
+        }
+        else if (PyErr_Occurred())
+            PyErr_Print();
+
+        Py_RETURN_NONE;
     }
-    Py_RETURN_NONE;
+    else
+    {
+        /* Update the GeanyEditor pointer in case it changed. */
+        PyObject *ptr_func;
+        pylong = PyLong_FromVoidPtr((GeanyEditor *) self->doc->editor);
+        ptr_func = PyObject_GetAttrString(self->editor, "_set_pointer");
+        if (ptr_func)
+        {
+            if (PyCallable_Check(ptr_func))
+            {
+                PyObject_CallObject(ptr_func, pylong);
+                Py_DECREF(pylong);
+                Py_DECREF(ptr_func);
+            }
+        }
+        return self->editor;
+    }
 }
 
 
 static PyMethodDef Document_methods[] = {
+    { "_get_pointer", (PyCFunction) Document_get_pointer, METH_NOARGS },
     { "close", (PyCFunction)Document_close, METH_NOARGS },
     { "reload_file", (PyCFunction)Document_reload_file, METH_VARARGS | METH_KEYWORDS },
     { "rename_file", (PyCFunction)Document_rename_file, METH_VARARGS | METH_KEYWORDS },
@@ -375,7 +503,7 @@ static PyMethodDef Document_methods[] = {
     { "get_is_valid", (PyCFunction)Document_get_is_valid, METH_NOARGS },
     { "get_read_only", (PyCFunction)Document_get_readonly, METH_NOARGS },
     { "get_real_path", (PyCFunction)Document_get_real_path, METH_NOARGS },
-    { "get_editor", (PyCFunction)Document_get_editor, METH_NOARGS },
+    /*{ "get_editor", (PyCFunction)Document_get_editor, METH_NOARGS },*/
 	{NULL}
 };
 
@@ -424,7 +552,7 @@ static PyTypeObject DocumentType = {
     0,                          /* tp_dictoffset */
     (initproc)Document_init,    /* tp_init */
     0,                          /* tp_alloc */
-    Document_new,               /* tp_new */
+    0,                          /* tp_new */
 
 };
 
@@ -484,8 +612,9 @@ Document_find_by_filename(PyObject *self, PyObject *args, PyObject *kwargs)
     {
         doc = document_find_by_filename(fn);
         if (DOC_VALID(doc))
-            return (PyObject *) Document_create_new_from_geany_document(doc);
+            return Document_new(doc);
     }
+
     Py_RETURN_NONE;
 }
 
@@ -501,8 +630,9 @@ Document_find_by_real_path(PyObject *self, PyObject *args, PyObject *kwargs)
     {
         doc = document_find_by_real_path(fn);
         if (DOC_VALID(doc))
-            return (PyObject *) Document_create_new_from_geany_document(doc);
+            return Document_new(doc);
     }
+
     Py_RETURN_NONE;
 }
 
@@ -514,7 +644,7 @@ Document_get_current(PyObject *self)
 
     doc = document_get_current();
     if (DOC_VALID(doc))
-        return (PyObject *) Document_create_new_from_geany_document(doc);
+        return Document_new(doc);
 
     Py_RETURN_NONE;
 }
@@ -531,8 +661,9 @@ Document_get_from_page(PyObject *self, PyObject *args, PyObject *kwargs)
     {
         doc = document_get_from_page(page_num);
         if (DOC_VALID(doc))
-            return (PyObject *) Document_create_new_from_geany_document(doc);
+            return Document_new(doc);
     }
+
     Py_RETURN_NONE;
 }
 
@@ -548,8 +679,9 @@ Document_get_from_index(PyObject *self, PyObject *args, PyObject *kwargs)
     {
         doc = document_index(idx);
         if (DOC_VALID(doc))
-            return (PyObject *) Document_create_new_from_geany_document(doc);
+            return Document_new(doc);
     }
+
     Py_RETURN_NONE;
 }
 
@@ -559,7 +691,6 @@ Document_new_file(PyObject *self, PyObject *args, PyObject *kwargs)
 {
     gchar *filename = NULL;
     gchar *initial_text = NULL;
-    Filetype *filetype = NULL;
     PyObject *py_ft = NULL;
     GeanyDocument *doc;
     GeanyFiletype *ft = NULL;
@@ -568,15 +699,10 @@ Document_new_file(PyObject *self, PyObject *args, PyObject *kwargs)
     if (PyArg_ParseTupleAndKeywords(args, kwargs, "|zOz", kwlist,
         &filename, &py_ft, &initial_text))
     {
-        if (py_ft != NULL  && py_ft != Py_None)
-        {
-            filetype = (Filetype *) py_ft;
-            if (filetype->ft != NULL)
-                ft = filetype->ft;
-        }
+        ft = GeanyFiletype_FromPyFiletype(py_ft);
         doc = document_new_file(filename, ft, initial_text);
         if (DOC_VALID(doc))
-            return (PyObject *) Document_create_new_from_geany_document(doc);
+            return Document_new(doc);
     }
     Py_RETURN_NONE;
 }
@@ -587,73 +713,21 @@ Document_open_file(PyObject *self, PyObject *args, PyObject *kwargs)
 {
     gchar *filename = NULL, *forced_encoding = NULL;
     gint read_only = 0;
+    PyObject *py_ft = NULL;
     GeanyDocument *doc;
     GeanyFiletype *ft = NULL;
-    Filetype *filetype = NULL;
-    PyObject *py_ft = NULL;
     static gchar *kwlist[] = { "filename", "read_only", "filetype", "forced_enc", NULL };
 
     if (PyArg_ParseTupleAndKeywords(args, kwargs, "s|iOz", kwlist,
         &filename, &read_only, &py_ft, &forced_encoding))
     {
-        if (py_ft != NULL && py_ft != Py_None)
-        {
-            filetype = (Filetype *) py_ft;
-            if (filetype->ft != NULL)
-                ft = filetype->ft;
-        }
+        ft = GeanyFiletype_FromPyFiletype(py_ft);
         doc = document_open_file(filename, read_only, ft, forced_encoding);
         if (DOC_VALID(doc))
-            return (PyObject *) Document_create_new_from_geany_document(doc);
+            return Document_new(doc);
     }
     Py_RETURN_NONE;
 }
-
-
-/*
-static PyObject *
-Document_open_files(PyObject *self, PyObject *args, PyObject *kwargs)
-{
-    gint read_only = 0;
-    const gchar *forced_enc = NULL;
-    GeanyDocument *doc;
-    GeanyFiletype *ft = NULL;
-    Filetype *filetype = NULL;
-    PyObject *list, *item, *py_ft;
-    Py_ssize_t list_len, i;
-    static gchar *kwlist[] = { "filenames", "read_only", "filetype", "forced_enc", NULL };
-
-    if (PyArg_ParseTupleAndKeywords(args, kwargs, "O|iOz", kwlist,
-        &list, &read_only, &py_ft, &forced_enc))
-    {
-        if (!PyList_Check(list))
-            Py_RETURN_FALSE;
-
-        if (py_ft != NULL && py_ft != Py_None)
-        {
-            filetype = (Filetype *) py_ft;
-            if (filetype->ft != NULL)
-                ft = filetype->ft;
-        }
-
-        list_len = PyList_Size(list);
-        for (i = 0; i < list_len; i++)
-        {
-            item = PyList_GetItem(list, i);
-            if (PyString_Check(item))
-            {
-                Py_XDECREF(
-                    Document_open_file(self,
-                        Py_BuildValue("OiOz", item, read_only, ft, forced_enc),
-                        Py_BuildValue("{}")
-                    )
-                );
-            }
-        }
-    }
-
-}
-*/
 
 
 static PyObject*
@@ -688,7 +762,7 @@ Document_get_documents_list(PyObject *module)
     for (i = 0; i < geany_data->documents_array->len; i++)
     {
         doc = g_ptr_array_index(geany_data->documents_array, i);
-        PyList_Append(list, (PyObject *) Document_create_new_from_geany_document(doc));
+        PyList_Append(list, (PyObject *) Document_new(doc));
     }
 
     return list;
@@ -728,13 +802,4 @@ initdocument(void)
 
     Py_INCREF(&DocumentType);
     PyModule_AddObject(m, "Document", (PyObject *)&DocumentType);
-}
-
-
-Document *Document_create_new_from_geany_document(GeanyDocument *doc)
-{
-    Document *self;
-    self = (Document *) PyObject_CallObject((PyObject *) &DocumentType, NULL);
-    self->doc = doc;
-    return self;
 }

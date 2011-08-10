@@ -1,38 +1,30 @@
-/*
- * scintilla.c - see Geany's sciwrappers.h and Scintilla's ScintillaWidget.h
- *
- * Copyright 2011 Matthew Brush <mbrush@codebrainz.ca>
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
- * MA 02110-1301, USA.
- */
-
 #include <Python.h>
 #include <structmember.h>
-#include <gtk/gtk.h>
 #include <pygobject.h>
 #include <pygtk/pygtk.h>
 #include <geanyplugin.h>
+
+#ifndef GTK
+#  define GTK
+#endif
 #include <Scintilla.h>
 #include <ScintillaWidget.h>
-#include "plugin.h"
+#define SCINTILLA_TYPE_OBJECT   scintilla_get_type()
+
+#define _ScintillaObject_FromPyObject(sci) ((ScintillaObject *) PyLong_AsVoidPtr(sci))
+#define _ScintillaObject_ToPyObject(sci) ((PyObject *) PyLong_FromVoidPtr((void *)(sci)))
 
 
 extern GeanyPlugin		*geany_plugin;
 extern GeanyData		*geany_data;
 extern GeanyFunctions	*geany_functions;
+
+
+typedef struct
+{
+	PyObject_HEAD
+	ScintillaObject *sci;
+} Scintilla;
 
 
 static void
@@ -43,10 +35,30 @@ Scintilla_dealloc(Scintilla *self)
 
 
 static int
-Scintilla_init(Scintilla *self, PyObject *args, PyObject *kwds)
+Scintilla_init(Scintilla *self, PyObject *ptr)
 {
-    self->sci = NULL;
+    if (ptr != NULL && ptr != Py_None)
+        self->sci = _ScintillaObject_FromPyObject(ptr);
+
 	return 0;
+}
+
+
+static PyObject *
+Scintilla_get_pointer(Scintilla *self)
+{
+    if (self->sci == NULL)
+        Py_RETURN_NONE;
+    return _ScintillaObject_ToPyObject(self->sci);
+}
+
+
+static PyObject *
+Scintilla_set_pointer(Scintilla *self, PyObject *ptr)
+{
+    if (ptr != NULL && ptr != Py_None)
+        self->sci = _ScintillaObject_FromPyObject(ptr);
+    Py_RETURN_NONE;
 }
 
 
@@ -761,6 +773,12 @@ Scintilla_send_message(Scintilla *self, PyObject *args)
 
 
 static PyMethodDef Scintilla_methods[] = {
+    /* Private methods */
+    { "_get_pointer", (PyCFunction) Scintilla_get_pointer, METH_NOARGS },
+    { "_set_pointer", (PyCFunction) Scintilla_set_pointer, METH_O },
+
+
+    /* Public methods */
     { "delete_marker_at_line", (PyCFunction) Scintilla_delete_marker_at_line, METH_VARARGS },
     { "end_undo_action", (PyCFunction) Scintilla_end_undo_action, METH_VARARGS },
     { "ensure_line_is_visible", (PyCFunction) Scintilla_ensure_line_is_visible, METH_VARARGS },
@@ -819,7 +837,7 @@ static PyMemberDef Scintilla_members[] = {
 static PyTypeObject ScintillaType = {
 	PyObject_HEAD_INIT(NULL)
     0,                          /*ob_size*/
-    "_geany_scintilla.Scintilla",  /*tp_name*/
+    "geany.scintilla.Scintilla",  /*tp_name*/
     sizeof(Scintilla),          /*tp_basicsize*/
     0,                          /*tp_itemsize*/
     (destructor)Scintilla_dealloc, /*tp_dealloc*/
@@ -872,17 +890,8 @@ init_geany_scintilla(void)
     if (PyType_Ready(&ScintillaType) < 0)
         return;
 
-    m = Py_InitModule("_geany_scintilla", ScintillaModule_methods);
+    m = Py_InitModule("scintilla", ScintillaModule_methods);
 
     Py_INCREF(&ScintillaType);
     PyModule_AddObject(m, "Scintilla", (PyObject *)&ScintillaType);
-}
-
-
-Scintilla *Scintilla_create_new_from_scintilla(ScintillaObject *sci)
-{
-    Scintilla *self;
-    self = (Scintilla *) PyObject_CallObject((PyObject *) &ScintillaType, NULL);
-    self->sci = sci;
-    return self;
 }
