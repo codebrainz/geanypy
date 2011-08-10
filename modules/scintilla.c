@@ -22,9 +22,270 @@ extern GeanyFunctions	*geany_functions;
 
 typedef struct
 {
+    PyObject_HEAD
+    SCNotification *notif;
+} Notification;
+
+
+typedef struct
+{
 	PyObject_HEAD
 	ScintillaObject *sci;
 } Scintilla;
+
+
+static void
+Notification_dealloc(Notification *self)
+{
+	self->ob_type->tp_free((PyObject *) self);
+}
+
+
+static int
+Notification_init(Notification *self)
+{
+    self->notif = NULL;
+	return 0;
+}
+
+
+static PyObject *
+Notification_get_header_hwnd_from(Notification *self)
+{
+    return PyLong_FromVoidPtr(self->notif->nmhdr.hwndFrom);
+}
+
+
+static PyObject *
+Notification_get_header_id_from(Notification *self)
+{
+    return PyLong_FromLong(self->notif->nmhdr.idFrom);
+}
+
+
+static PyObject *
+Notification_get_header_code(Notification *self)
+{
+    return Py_BuildValue("I", self->notif->nmhdr.code);
+}
+
+
+static PyObject *
+Notification_get_position(Notification *self)
+{
+    return Py_BuildValue("i", self->notif->position);
+}
+
+
+static PyObject *
+Notification_get_ch(Notification *self)
+{
+    return Py_BuildValue("c", self->notif->ch);
+}
+
+static PyObject *
+Notification_get_modifiers(Notification *self)
+{
+    return Py_BuildValue("i", self->notif->modifiers);
+}
+
+
+static PyObject *
+Notification_get_modification_type(Notification *self)
+{
+    return Py_BuildValue("i", self->notif->modificationType);
+}
+
+
+static PyObject *
+Notification_get_text(Notification *self)
+{
+    return Py_BuildValue("s", self->notif->text);
+}
+
+
+static PyObject *
+Notification_get_length(Notification *self)
+{
+    return Py_BuildValue("i", self->notif->length);
+}
+
+
+static PyObject *
+Notification_get_lines_added(Notification *self)
+{
+    return Py_BuildValue("i", self->notif->linesAdded);
+}
+
+
+static PyObject *
+Notification_get_message(Notification *self)
+{
+    return Py_BuildValue("i", self->notif->message);
+}
+
+
+static PyObject *
+Notification_get_w_param(Notification *self)
+{
+    return Py_BuildValue("l", self->notif->wParam);
+}
+
+
+static PyObject *
+Notification_get_l_param(Notification *self)
+{
+    return Py_BuildValue("l", self->notif->lParam);
+}
+
+
+static PyObject *
+Notification_get_line(Notification *self)
+{
+    return Py_BuildValue("i", self->notif->line);
+}
+
+
+static PyObject *
+Notification_get_fold_level_now(Notification *self)
+{
+    return Py_BuildValue("i", self->notif->foldLevelNow);
+}
+
+
+
+static PyObject *
+Notification_get_fold_level_prev(Notification *self)
+{
+    return Py_BuildValue("i", self->notif->foldLevelPrev);
+}
+
+
+static PyObject *
+Notification_get_margin(Notification *self)
+{
+    return Py_BuildValue("i", self->notif->margin);
+}
+
+
+static PyObject *
+Notification_get_list_type(Notification *self)
+{
+    return Py_BuildValue("i", self->notif->listType);
+}
+
+
+static PyObject *
+Notification_get_x(Notification *self)
+{
+    return Py_BuildValue("i", self->notif->x);
+}
+
+
+static PyObject *
+Notification_get_y(Notification *self)
+{
+    return Py_BuildValue("i", self->notif->y);
+}
+
+
+static PyObject *
+Notification_get_token(Notification *self)
+{
+    return Py_BuildValue("i", self->notif->token);
+}
+
+
+static PyObject *
+Notification_get_annotation_lines_added(Notification *self)
+{
+    return Py_BuildValue("i", self->notif->annotationLinesAdded);
+}
+
+
+static PyObject *
+Notification_get_updated(Notification *self)
+{
+    return Py_BuildValue("i", self->notif->updated);
+}
+
+
+static PyMethodDef Notification_methods[] = {
+    { "get_header_hwnd_from", (PyCFunction) Notification_get_header_hwnd_from, METH_NOARGS },
+    { "get_header_id_from", (PyCFunction) Notification_get_header_id_from, METH_NOARGS },
+    { "get_header_code", (PyCFunction) Notification_get_header_code, METH_NOARGS },
+    { "get_position", (PyCFunction) Notification_get_position, METH_NOARGS },
+    { "get_ch", (PyCFunction) Notification_get_ch, METH_NOARGS },
+    { "get_modifiers", (PyCFunction) Notification_get_modifiers, METH_NOARGS },
+    { "get_modification_type", (PyCFunction) Notification_get_modification_type, METH_NOARGS },
+    { "get_text", (PyCFunction) Notification_get_text, METH_NOARGS },
+    { "get_length", (PyCFunction) Notification_get_length, METH_NOARGS },
+    { "get_lines_added", (PyCFunction) Notification_get_lines_added, METH_NOARGS },
+    { "get_message", (PyCFunction) Notification_get_message, METH_NOARGS },
+    { "get_w_param", (PyCFunction) Notification_get_w_param, METH_NOARGS },
+    { "get_l_param", (PyCFunction) Notification_get_l_param, METH_NOARGS },
+    { "get_line", (PyCFunction) Notification_get_line, METH_NOARGS },
+    { "get_fold_level_now", (PyCFunction) Notification_get_fold_level_now, METH_NOARGS },
+    { "get_fold_level_prev", (PyCFunction) Notification_get_fold_level_prev, METH_NOARGS },
+	{ "get_margin", (PyCFunction) Notification_get_margin, METH_NOARGS },
+    { "get_list_type", (PyCFunction) Notification_get_list_type, METH_NOARGS },
+    { "get_x", (PyCFunction) Notification_get_x, METH_NOARGS },
+    { "get_y", (PyCFunction) Notification_get_y, METH_NOARGS },
+    { "get_token", (PyCFunction) Notification_get_token, METH_NOARGS },
+    { "get_annotation_lines_added", (PyCFunction) Notification_get_annotation_lines_added, METH_NOARGS },
+    { "get_updated", (PyCFunction) Notification_get_updated, METH_NOARGS },
+    { NULL }
+};
+
+
+static PyMemberDef Notification_members[] = {
+	{ NULL }
+};
+
+
+
+static PyTypeObject NotificationType = {
+	PyObject_HEAD_INIT(NULL)
+    0,                          /*ob_size*/
+    "geany.scintilla.Notification",  /*tp_name*/
+    sizeof(Scintilla),          /*tp_basicsize*/
+    0,                          /*tp_itemsize*/
+    (destructor)Notification_dealloc, /*tp_dealloc*/
+    0,                          /*tp_print*/
+    0,                          /*tp_getattr*/
+    0,                          /*tp_setattr*/
+    0,                          /*tp_compare*/
+    0,                          /*tp_repr*/
+    0,                          /*tp_as_number*/
+    0,                          /*tp_as_sequence*/
+    0,                          /*tp_as_mapping*/
+    0,                          /*tp_hash */
+    0,                          /*tp_call*/
+    0,                          /*tp_str*/
+    0,                          /*tp_getattro*/
+    0,                          /*tp_setattro*/
+    0,                          /*tp_as_buffer*/
+    Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE, /*tp_flags*/
+    "Geany scintilla notification",          /* tp_doc */
+    0,		                    /* tp_traverse */
+    0,		               	    /* tp_clear */
+    0,		                    /* tp_richcompare */
+    0,		                    /* tp_weaklistoffset */
+    0,		                    /* tp_iter */
+    0,		                    /* tp_iternext */
+    Notification_methods,          /* tp_methods */
+    Notification_members,          /* tp_members */
+    0,                          /* tp_getset */
+    0,                          /* tp_base */
+    0,                          /* tp_dict */
+    0,                          /* tp_descr_get */
+    0,                          /* tp_descr_set */
+    0,                          /* tp_dictoffset */
+    (initproc)Notification_init,   /* tp_init */
+    0,                          /* tp_alloc */
+    0,                          /* tp_new */
+
+};
 
 
 static void
@@ -888,6 +1149,10 @@ initscintilla(void)
 {
     PyObject *m;
 
+    NotificationType.tp_new = PyType_GenericNew;
+    if (PyType_Ready(&NotificationType) < 0)
+        return;
+
     ScintillaType.tp_new = PyType_GenericNew;
     if (PyType_Ready(&ScintillaType) < 0)
         return;
@@ -895,6 +1160,9 @@ initscintilla(void)
     m = Py_InitModule3("scintilla", ScintillaModule_methods,
             "The :mod:`scintilla` module provides a functions working with "
             ":class:`Scintilla` objects.");
+
+    Py_INCREF(&NotificationType);
+    PyModule_AddObject(m, "Notification", (PyObject *)&NotificationType);
 
     Py_INCREF(&ScintillaType);
     PyModule_AddObject(m, "Scintilla", (PyObject *)&ScintillaType);

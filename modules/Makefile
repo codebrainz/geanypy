@@ -107,13 +107,6 @@ filetype_la_OBJECTS = $(am_filetype_la_OBJECTS)
 filetype_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(filetype_la_LDFLAGS) $(LDFLAGS) -o $@
-indentprefs_la_DEPENDENCIES = $(am__DEPENDENCIES_1)
-am_indentprefs_la_OBJECTS = indentprefs_la-indentprefs.lo
-indentprefs_la_OBJECTS = $(am_indentprefs_la_OBJECTS)
-indentprefs_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
-	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
-	$(AM_CFLAGS) $(CFLAGS) $(indentprefs_la_LDFLAGS) $(LDFLAGS) -o \
-	$@
 project_la_DEPENDENCIES = $(am__DEPENDENCIES_1)
 am_project_la_OBJECTS = project_la-project.lo
 project_la_OBJECTS = $(am_project_la_OBJECTS)
@@ -154,12 +147,12 @@ am__v_GEN_ = $(am__v_GEN_$(AM_DEFAULT_VERBOSITY))
 am__v_GEN_0 = @echo "  GEN   " $@;
 SOURCES = $(app_la_SOURCES) $(dialogs_la_SOURCES) \
 	$(document_la_SOURCES) $(editor_la_SOURCES) \
-	$(filetype_la_SOURCES) $(indentprefs_la_SOURCES) \
-	$(project_la_SOURCES) $(scintilla_la_SOURCES)
+	$(filetype_la_SOURCES) $(project_la_SOURCES) \
+	$(scintilla_la_SOURCES)
 DIST_SOURCES = $(app_la_SOURCES) $(dialogs_la_SOURCES) \
 	$(document_la_SOURCES) $(editor_la_SOURCES) \
-	$(filetype_la_SOURCES) $(indentprefs_la_SOURCES) \
-	$(project_la_SOURCES) $(scintilla_la_SOURCES)
+	$(filetype_la_SOURCES) $(project_la_SOURCES) \
+	$(scintilla_la_SOURCES)
 DATA = $(geanypy_DATA)
 ETAGS = etags
 CTAGS = ctags
@@ -305,7 +298,6 @@ geanypy_LTLIBRARIES = app.la \
 							document.la \
 							editor.la \
 							filetype.la \
-							indentprefs.la \
 							project.la \
 							scintilla.la
 
@@ -337,10 +329,6 @@ scintilla_la_CPPFLAGS = $(PyGtkPluginCflags)
 scintilla_la_LIBADD = $(PyGtkPluginLibs)
 scintilla_la_LDFLAGS = $(PyModule)
 scintilla_la_SOURCES = scintilla.c
-indentprefs_la_CPPFLAGS = $(PyPluginCflags)
-indentprefs_la_LIBADD = $(PyPluginLibs)
-indentprefs_la_LDFLAGS = $(PyModule)
-indentprefs_la_SOURCES = indentprefs.c
 EXTRA_DIST = $(PySources)
 CLEANFILES = $(PyObjects)
 .SUFFIXES = .pyc .py
@@ -419,8 +407,6 @@ editor.la: $(editor_la_OBJECTS) $(editor_la_DEPENDENCIES)
 	$(AM_V_CCLD)$(editor_la_LINK) -rpath $(geanypydir) $(editor_la_OBJECTS) $(editor_la_LIBADD) $(LIBS)
 filetype.la: $(filetype_la_OBJECTS) $(filetype_la_DEPENDENCIES) 
 	$(AM_V_CCLD)$(filetype_la_LINK) -rpath $(geanypydir) $(filetype_la_OBJECTS) $(filetype_la_LIBADD) $(LIBS)
-indentprefs.la: $(indentprefs_la_OBJECTS) $(indentprefs_la_DEPENDENCIES) 
-	$(AM_V_CCLD)$(indentprefs_la_LINK) -rpath $(geanypydir) $(indentprefs_la_OBJECTS) $(indentprefs_la_LIBADD) $(LIBS)
 project.la: $(project_la_OBJECTS) $(project_la_DEPENDENCIES) 
 	$(AM_V_CCLD)$(project_la_LINK) -rpath $(geanypydir) $(project_la_OBJECTS) $(project_la_LIBADD) $(LIBS)
 scintilla.la: $(scintilla_la_OBJECTS) $(scintilla_la_DEPENDENCIES) 
@@ -437,7 +423,6 @@ include ./$(DEPDIR)/dialogs_la-dialogs.Plo
 include ./$(DEPDIR)/document_la-document.Plo
 include ./$(DEPDIR)/editor_la-editor.Plo
 include ./$(DEPDIR)/filetype_la-filetype.Plo
-include ./$(DEPDIR)/indentprefs_la-indentprefs.Plo
 include ./$(DEPDIR)/project_la-project.Plo
 include ./$(DEPDIR)/scintilla_la-scintilla.Plo
 
@@ -504,14 +489,6 @@ filetype_la-filetype.lo: filetype.c
 #	source='filetype.c' object='filetype_la-filetype.lo' libtool=yes \
 #	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
 #	$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(filetype_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o filetype_la-filetype.lo `test -f 'filetype.c' || echo '$(srcdir)/'`filetype.c
-
-indentprefs_la-indentprefs.lo: indentprefs.c
-	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(indentprefs_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT indentprefs_la-indentprefs.lo -MD -MP -MF $(DEPDIR)/indentprefs_la-indentprefs.Tpo -c -o indentprefs_la-indentprefs.lo `test -f 'indentprefs.c' || echo '$(srcdir)/'`indentprefs.c
-	$(AM_V_at)$(am__mv) $(DEPDIR)/indentprefs_la-indentprefs.Tpo $(DEPDIR)/indentprefs_la-indentprefs.Plo
-#	$(AM_V_CC) \
-#	source='indentprefs.c' object='indentprefs_la-indentprefs.lo' libtool=yes \
-#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
-#	$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(indentprefs_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o indentprefs_la-indentprefs.lo `test -f 'indentprefs.c' || echo '$(srcdir)/'`indentprefs.c
 
 project_la-project.lo: project.c
 	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(project_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT project_la-project.lo -MD -MP -MF $(DEPDIR)/project_la-project.Tpo -c -o project_la-project.lo `test -f 'project.c' || echo '$(srcdir)/'`project.c

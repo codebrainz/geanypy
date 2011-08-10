@@ -69,12 +69,6 @@ typedef struct
 
 
 
-typedef struct
-{
-    PyObject_HEAD
-    SCNotification *notif;
-} ScintillaNotification;
-
 
 typedef struct
 {
