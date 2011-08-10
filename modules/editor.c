@@ -16,6 +16,8 @@ typedef struct
 {
 	PyObject_HEAD
 	GeanyEditor *editor;
+    PyObject *sci;
+    PyObject *indent_prefs;
 } Editor;
 
 
@@ -38,6 +40,7 @@ Editor_new(GeanyDocument *doc)
 static void
 Editor_dealloc(Editor *self)
 {
+    Py_XDECREF(self->sci);
 	self->ob_type->tp_free((PyObject *) self);
 }
 
@@ -46,6 +49,7 @@ static int
 Editor_init(Editor *self, PyObject *ptr)
 {
     self->editor = NULL;
+    self->sci = NULL;
     if (ptr != NULL && ptr != Py_None)
         self->editor = _GeanyEditor_FromPyObject(ptr);
 	return 0;
@@ -130,21 +134,61 @@ Editor_get_eol_char_name(Editor *self)
 }
 
 
-/*
 static PyObject *
 Editor_get_indent_prefs(Editor *self)
 {
-    const GeanyIndentPrefs *indent_prefs;
-    IndentPrefs *py_prefs;
-    indent_prefs = editor_get_indent_prefs(self->editor);
-    if (indent_prefs != NULL)
+    PyObject *pylong;
+    const GeanyIndentPrefs *ip;
+
+    if (self->editor == NULL)
+        Py_RETURN_NONE;
+
+    ip = editor_get_indent_prefs(self->editor);
+    if (ip == NULL)
+        Py_RETURN_NONE;
+
+    if (self->indent_prefs == NULL)
     {
-        py_prefs = IndentPrefs_create_new_from_geany_indent_prefs((GeanyIndentPrefs *)indent_prefs);
-        return (PyObject *) py_prefs;
+        PyObject *mod, *cls;
+
+        if (mod = PyImport_ImportModule("indentprefs"))
+        {
+            cls = PyObject_GetAttrString(mod, "IndentPrefs");
+            Py_DECREF(mod);
+            if (cls && PyCallable_Check(cls))
+            {
+                pylong = PyLong_FromVoidPtr((GeanyIndentPrefs *) ip);
+                self->indent_prefs = PyObject_CallObject(cls, pylong);
+                Py_DECREF(cls);
+                Py_DECREF(pylong);
+                return self->indent_prefs;
+            }
+            else if (PyErr_Occurred())
+                PyErr_Print();
+        }
+        else if (PyErr_Occurred())
+            PyErr_Print();
+
+        Py_RETURN_NONE;
     }
-    Py_RETURN_NONE;
+    else
+    {
+        /* Update the GeanyIndentPrefs pointer in case it changed. */
+        PyObject *ptr_func;
+        pylong = PyLong_FromVoidPtr((GeanyIndentPrefs *) ip);
+        ptr_func = PyObject_GetAttrString(self->indent_prefs, "_set_pointer");
+        if (ptr_func)
+        {
+            if (PyCallable_Check(ptr_func))
+            {
+                PyObject_CallObject(ptr_func, pylong);
+                Py_DECREF(pylong);
+                Py_DECREF(ptr_func);
+            }
+        }
+        return self->indent_prefs;
+    }
 }
-*/
 
 
 static PyObject *
@@ -259,19 +303,56 @@ Editor_set_indent_type(Editor *self, PyObject *args)
 }
 
 
-/*
 static PyObject *
 Editor_get_scintilla(Editor *self, PyObject *args)
 {
-    Scintilla *sci;
-    if (self->editor != NULL)
+    PyObject *pylong;
+
+    if (self->editor == NULL && self->editor->sci == NULL)
+        Py_RETURN_NONE;
+
+    if (self->sci == NULL)
     {
-        sci = Scintilla_create_new_from_scintilla(self->editor->sci);
-        return (PyObject *) sci;
+        PyObject *mod, *cls;
+
+        if (mod = PyImport_ImportModule("scintilla"))
+        {
+            cls = PyObject_GetAttrString(mod, "Scintilla");
+            Py_DECREF(mod);
+            if (cls && PyCallable_Check(cls))
+            {
+                pylong = PyLong_FromVoidPtr((ScintillaObject *) self->editor->sci);
+                self->sci = PyObject_CallObject(cls, pylong);
+                Py_DECREF(cls);
+                Py_DECREF(pylong);
+                return self->sci;
+            }
+            else if (PyErr_Occurred())
+                PyErr_Print();
+        }
+        else if (PyErr_Occurred())
+            PyErr_Print();
+
+        Py_RETURN_NONE;
     }
-    Py_RETURN_NONE;
+    else
+    {
+        /* Update the ScintillaObject pointer in case it changed. */
+        PyObject *ptr_func;
+        pylong = PyLong_FromVoidPtr((ScintillaObject *) self->editor->sci);
+        ptr_func = PyObject_GetAttrString(self->sci, "_set_pointer");
+        if (ptr_func)
+        {
+            if (PyCallable_Check(ptr_func))
+            {
+                PyObject_CallObject(ptr_func, pylong);
+                Py_DECREF(pylong);
+                Py_DECREF(ptr_func);
+            }
+        }
+        return self->sci;
+    }
 }
-*/
 
 
 static PyMethodDef Editor_methods[] = {
@@ -293,9 +374,9 @@ static PyMethodDef Editor_methods[] = {
     { "get_eol_char_len", (PyCFunction) Editor_get_eol_char_len, METH_VARARGS },
     { "get_eol_char_mode", (PyCFunction) Editor_get_eol_char_mode, METH_VARARGS },
     { "get_eol_char_name", (PyCFunction) Editor_get_eol_char_name, METH_VARARGS },
-    /*{ "get_indent_prefs", (PyCFunction) Editor_get_indent_prefs, METH_VARARGS },*/
+    { "get_indent_prefs", (PyCFunction) Editor_get_indent_prefs, METH_VARARGS },
     { "set_indent_type", (PyCFunction) Editor_set_indent_type, METH_VARARGS },
-    /*{ "get_scintilla", (PyCFunction) Editor_get_scintilla, METH_VARARGS },*/
+    { "get_scintilla", (PyCFunction) Editor_get_scintilla, METH_VARARGS },
 	{ NULL }
 };
 
@@ -398,21 +479,37 @@ Editor__get_default_eol_char_name(PyObject *module)
 }
 
 
-/*
 static PyObject *
 Editor__get_default_indent_prefs(PyObject *module, PyObject *args)
 {
-    const GeanyIndentPrefs *indent_prefs;
-    IndentPrefs *py_prefs;
-    indent_prefs = editor_get_indent_prefs(NULL);
-    if (indent_prefs != NULL)
+    PyObject *mod, *cls, *inst, *pylong;
+    const GeanyIndentPrefs *ip;
+
+    ip = editor_get_indent_prefs(NULL);
+    if (ip == NULL)
+        Py_RETURN_NONE;
+
+    if (mod = PyImport_ImportModule("indentprefs"))
     {
-        py_prefs = IndentPrefs_create_new_from_geany_indent_prefs((GeanyIndentPrefs *)indent_prefs);
-        return (PyObject *) py_prefs;
+        cls = PyObject_GetAttrString(mod, "IndentPrefs");
+        Py_DECREF(mod);
+        if (cls && PyCallable_Check(cls))
+        {
+            pylong = PyLong_FromVoidPtr((GeanyIndentPrefs *) ip);
+            inst = PyObject_CallObject(cls, pylong);
+            Py_DECREF(cls);
+            Py_DECREF(pylong);
+            return inst;
+        }
+        else if (PyErr_Occurred())
+            PyErr_Print();
     }
+    else if (PyErr_Occurred())
+        PyErr_Print();
+
     Py_RETURN_NONE;
 }
-*/
+
 
 
 static
@@ -422,7 +519,7 @@ PyMethodDef EditorModule_methods[] = {
     { "get_default_eol_char_len", (PyCFunction) Editor__get_default_eol_char_len, METH_NOARGS },
     { "get_default_eol_char_mode", (PyCFunction) Editor__get_default_eol_char_mode, METH_NOARGS },
     { "get_default_eol_char_name", (PyCFunction) Editor__get_default_eol_char_name, METH_NOARGS },
-    /*{ "get_default_indent_prefs", (PyCFunction) Editor__get_default_indent_prefs, METH_NOARGS },*/
+    { "get_default_indent_prefs", (PyCFunction) Editor__get_default_indent_prefs, METH_NOARGS },
     { NULL }
 };
 

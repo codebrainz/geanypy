@@ -71,6 +71,7 @@ static void
 Document_dealloc(Document *self)
 {
     Py_XDECREF(self->ft);
+    Py_XDECREF(self->editor);
 	self->ob_type->tp_free((PyObject *) self);
 }
 

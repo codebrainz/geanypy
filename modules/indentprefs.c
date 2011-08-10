@@ -1,28 +1,14 @@
-/*
- * indentprefs.c - See Geany's editor.h
- *
- * Copyright 2011 Matthew Brush <mbrush@codebrainz.ca>
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
- * MA 02110-1301, USA.
- */
-
 #include <Python.h>
 #include <structmember.h>
 #include <geanyplugin.h>
-#include "plugin.h"
+
+
+typedef struct
+{
+	PyObject_HEAD
+	GeanyIndentPrefs *indent_prefs;
+} IndentPrefs;
+
 
 
 static void
@@ -37,6 +23,23 @@ IndentPrefs_init(IndentPrefs *self, PyObject *args, PyObject *kwds)
 {
     self->indent_prefs = NULL;
 	return 0;
+}
+
+
+static PyObject *
+IndentPrefs_get_pointer(IndentPrefs *self)
+{
+    if (self->indent_prefs == NULL)
+        Py_RETURN_NONE;
+    return PyLong_FromVoidPtr((void *) self->indent_prefs);
+}
+
+
+static PyObject *
+IndentPrefs_set_pointer(IndentPrefs *self, PyObject *ptr)
+{
+    if (ptr != NULL && ptr != Py_None)
+        self->indent_prefs = (GeanyIndentPrefs *) PyLong_AsVoidPtr(ptr);
 }
 
 
@@ -95,12 +98,17 @@ IndentPrefs_get_detect_width(IndentPrefs *self, PyObject *args)
 
 
 static PyMethodDef IndentPrefs_methods[] = {
-    { "get_width", (PyCFunction)IndentPrefs_get_width, METH_VARARGS },
-    { "get_type", (PyCFunction)IndentPrefs_get_type, METH_VARARGS },
-    { "get_hard_tab_width", (PyCFunction)IndentPrefs_get_hard_tab_width, METH_VARARGS },
-    { "get_auto_indent_mode", (PyCFunction)IndentPrefs_get_auto_indent_mode, METH_VARARGS },
-    { "get_detect_type", (PyCFunction)IndentPrefs_get_detect_type, METH_VARARGS },
-    { "get_detect_width", (PyCFunction)IndentPrefs_get_detect_width, METH_VARARGS },
+    /* Private members */
+    { "_get_pointer", (PyCFunction) IndentPrefs_get_pointer, METH_NOARGS },
+    { "_set_pointer", (PyCFunction) IndentPrefs_set_pointer, METH_O },
+
+    /* Public members */
+    { "get_width", (PyCFunction) IndentPrefs_get_width, METH_VARARGS },
+    { "get_type", (PyCFunction) IndentPrefs_get_type, METH_VARARGS },
+    { "get_hard_tab_width", (PyCFunction) IndentPrefs_get_hard_tab_width, METH_VARARGS },
+    { "get_auto_indent_mode", (PyCFunction) IndentPrefs_get_auto_indent_mode, METH_VARARGS },
+    { "get_detect_type", (PyCFunction) IndentPrefs_get_detect_type, METH_VARARGS },
+    { "get_detect_width", (PyCFunction) IndentPrefs_get_detect_width, METH_VARARGS },
     { NULL }
 };
 
@@ -127,7 +135,10 @@ static PyTypeObject IndentPrefsType = {
     0,                          /*tpsetattro*/
     0,                          /*tp_as_buffer*/
     Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE, /*tp_flags*/
-    "Geany indent prefs",          /* tp_doc */
+    "Wrapper class around Geany's :c:type:`IndentPrefs` structure. "
+    "This class should not be directly initialized, instead retrieve instances "
+    "of it using through the :func:`Editor.get_indent_prefs` method, or "
+    ":func:`editor.get_default_indent_prefs`.",          /* tp_doc */
     0,		                    /* tp_traverse */
     0,		               	    /* tp_clear */
     0,		                    /* tp_richcompare */
@@ -163,17 +174,10 @@ initindentprefs(void)
     if (PyType_Ready(&IndentPrefsType) < 0)
         return;
 
-    m = Py_InitModule("indentprefs", IndentPrefsModule_methods);
+    m = Py_InitModule3("indentprefs", IndentPrefsModule_methods,
+            "The :mod:`indentprefs` module provides a functions working with "
+            ":class:`IndentPrefs` objects.");
 
     Py_INCREF(&IndentPrefsType);
     PyModule_AddObject(m, "IndentPrefs", (PyObject *)&IndentPrefsType);
-}
-
-
-IndentPrefs *IndentPrefs_create_new_from_geany_indent_prefs(GeanyIndentPrefs *indent_prefs)
-{
-    IndentPrefs *self;
-    self = (IndentPrefs *) PyObject_CallObject((PyObject *) &IndentPrefsType, NULL);
-    self->indent_prefs = indent_prefs;
-    return self;
 }

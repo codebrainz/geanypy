@@ -9,7 +9,7 @@
 #endif
 #include <Scintilla.h>
 #include <ScintillaWidget.h>
-#define SCINTILLA_TYPE_OBJECT   scintilla_get_type()
+
 
 #define _ScintillaObject_FromPyObject(sci) ((ScintillaObject *) PyLong_AsVoidPtr(sci))
 #define _ScintillaObject_ToPyObject(sci) ((PyObject *) PyLong_FromVoidPtr((void *)(sci)))
@@ -62,11 +62,10 @@ Scintilla_set_pointer(Scintilla *self, PyObject *ptr)
 }
 
 
-static ScintillaObject *
-Scintilla_object_from_pyobject_self(Scintilla *self)
+static PyObject *
+Scintilla_get_widget(Scintilla *self)
 {
-    Scintilla *sci = (Scintilla *) self;
-    return sci->sci;
+    return (PyObject *) pygobject_new(G_OBJECT(self->sci));
 }
 
 
@@ -758,11 +757,11 @@ Scintilla_start_undo_action(Scintilla *self, PyObject *args)
 static PyObject *
 Scintilla_send_message(Scintilla *self, PyObject *args)
 {
-    gint msg;
+    guint msg;
     glong uptr = 0, sptr = 0, ret;
     if (self->sci != NULL)
     {
-        if (PyArg_ParseTuple(args, "i|ll", &msg, &uptr, &sptr))
+        if (PyArg_ParseTuple(args, "I|ll", &msg, &uptr, &sptr))
         {
             ret = scintilla_send_message(self->sci, msg, uptr, sptr);
             return Py_BuildValue("l", ret);
@@ -779,6 +778,7 @@ static PyMethodDef Scintilla_methods[] = {
 
 
     /* Public methods */
+    { "get_widget", (PyCFunction) Scintilla_get_widget, METH_NOARGS },
     { "delete_marker_at_line", (PyCFunction) Scintilla_delete_marker_at_line, METH_VARARGS },
     { "end_undo_action", (PyCFunction) Scintilla_end_undo_action, METH_VARARGS },
     { "ensure_line_is_visible", (PyCFunction) Scintilla_ensure_line_is_visible, METH_VARARGS },
@@ -856,7 +856,9 @@ static PyTypeObject ScintillaType = {
     0,                          /*tp_setattro*/
     0,                          /*tp_as_buffer*/
     Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE, /*tp_flags*/
-    "Geany scintilla",          /* tp_doc */
+    "Wrapper class around Scintilla's :c:type:`ScintillaObject` structure. "
+    "This class should not be directly initialized, instead retrieve instances "
+    "of it using through the :func:`Editor.get_scintilla()` method.", /* tp_doc */
     0,		                    /* tp_traverse */
     0,		               	    /* tp_clear */
     0,		                    /* tp_richcompare */
@@ -882,7 +884,7 @@ static PyMethodDef ScintillaModule_methods[] = { { NULL } };
 
 
 PyMODINIT_FUNC
-init_geany_scintilla(void)
+initscintilla(void)
 {
     PyObject *m;
 
@@ -890,7 +892,9 @@ init_geany_scintilla(void)
     if (PyType_Ready(&ScintillaType) < 0)
         return;
 
-    m = Py_InitModule("scintilla", ScintillaModule_methods);
+    m = Py_InitModule3("scintilla", ScintillaModule_methods,
+            "The :mod:`scintilla` module provides a functions working with "
+            ":class:`Scintilla` objects.");
 
     Py_INCREF(&ScintillaType);
     PyModule_AddObject(m, "Scintilla", (PyObject *)&ScintillaType);

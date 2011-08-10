@@ -14,6 +14,7 @@ geanypy_LTLIBRARIES		= app.la \
 							document.la \
 							editor.la \
 							filetype.la \
+							indentprefs.la \
 							project.la \
 							scintilla.la
 
@@ -52,6 +53,11 @@ scintilla_la_CPPFLAGS	= $(PyGtkPluginCflags)
 scintilla_la_LIBADD		= $(PyGtkPluginLibs)
 scintilla_la_LDFLAGS	= $(PyModule)
 scintilla_la_SOURCES	= scintilla.c
+
+indentprefs_la_CPPFLAGS	= $(PyPluginCflags)
+indentprefs_la_LIBADD	= $(PyPluginLibs)
+indentprefs_la_LDFLAGS	= $(PyModule)
+indentprefs_la_SOURCES	= indentprefs.c
 
 
 EXTRA_DIST				= $(PySources)

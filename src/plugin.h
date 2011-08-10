@@ -52,11 +52,6 @@ typedef struct
 } EditorPrefs;
 
 
-typedef struct
-{
-	PyObject_HEAD
-	GeanyIndentPrefs *indent_prefs;
-} IndentPrefs;
 
 
 typedef struct
