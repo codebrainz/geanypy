@@ -3,14 +3,7 @@
 #include <pygtk/pygtk.h>
 #include <geanyplugin.h>
 
-
-extern GeanyPlugin		*geany_plugin;
-extern GeanyData		*geany_data;
-extern GeanyFunctions	*geany_functions;
-
-
-#define _GeanyFiletype_FromPyObject(ft) ((GeanyFiletype *) PyLong_AsVoidPtr(ft))
-#define _GeanyFiletype_ToPyObject(ft) ((PyObject *) PyLong_FromVoidPtr((void *)(ft)))
+#include "modules-common.h"
 
 
 typedef struct
@@ -56,7 +49,7 @@ Filetype_init(Filetype *self, PyObject *args)
 
     if (PyArg_ParseTuple(args, "l", &pylong))
     {
-        self->ft = _GeanyFiletype_FromPyObject(pylong);
+        self->ft = GET_POINTER(pylong, GeanyFiletype);
         return 0;
     }
 
@@ -73,7 +66,7 @@ Filetype_get_pointer(Filetype *self)
 {
     if (self->ft == NULL)
         Py_RETURN_NONE;
-    return _GeanyFiletype_ToPyObject(self->ft);
+    return _StructPointer_ToPyObject(self->ft);
 }
 
 
@@ -85,7 +78,7 @@ static PyObject *
 Filetype_set_pointer(Filetype *self, PyObject *ptr)
 {
     if (ptr != NULL && ptr != Py_None)
-        self->ft = _GeanyFiletype_FromPyObject(ptr);
+        self->ft = GET_POINTER(ptr, GeanyFiletype);
     Py_RETURN_NONE;
 }
 

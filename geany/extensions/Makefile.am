@@ -13,7 +13,14 @@ geanypy_LTLIBRARIES		= app.la \
 							dialogs.la \
 							document.la \
 							editor.la \
+							encodings.la \
+							fileprefs.la \
 							filetype.la \
+							highlighting.la \
+							main.la \
+							mainwidgets.la \
+							msgwindow.la \
+							navqueue.la \
 							project.la \
 							scintilla.la
 
@@ -52,6 +59,41 @@ scintilla_la_CPPFLAGS	= $(PyGtkPluginCflags)
 scintilla_la_LIBADD		= $(PyGtkPluginLibs)
 scintilla_la_LDFLAGS	= $(PyModule)
 scintilla_la_SOURCES	= scintilla.c
+
+encodings_la_CPPFLAGS	= $(PyPluginCflags)
+encodings_la_LIBADD		= $(PyPluginLibs)
+encodings_la_LDFLAGS	= $(PyModule)
+encodings_la_SOURCES	= encodings.c
+
+fileprefs_la_CPPFLAGS	= $(PyPluginCflags)
+fileprefs_la_LIBADD		= $(PyPluginLibs)
+fileprefs_la_LDFLAGS	= $(PyModule)
+fileprefs_la_SOURCES	= fileprefs.c
+
+highlighting_la_CPPFLAGS= $(PyPluginCflags)
+highlighting_la_LIBADD	= $(PyPluginLibs)
+highlighting_la_LDFLAGS	= $(PyModule)
+highlighting_la_SOURCES	= highlighting.c
+
+main_la_CPPFLAGS		= $(PyPluginCflags)
+main_la_LIBADD			= $(PyPluginLibs)
+main_la_LDFLAGS			= $(PyModule)
+main_la_SOURCES			= main.c
+
+mainwidgets_la_CPPFLAGS	= $(PyGtkPluginCflags)
+mainwidgets_la_LIBADD	= $(PyGtkPluginLibs)
+mainwidgets_la_LDFLAGS	= $(PyModule)
+mainwidgets_la_SOURCES	= mainwidgets.c
+
+msgwindow_la_CPPFLAGS	= $(PyPluginCflags)
+msgwindow_la_LIBADD		= $(PyPluginLibs)
+msgwindow_la_LDFLAGS	= $(PyModule)
+msgwindow_la_SOURCES	= msgwindow.c
+
+navqueue_la_CPPFLAGS	= $(PyPluginCflags)
+navqueue_la_LIBADD		= $(PyPluginLibs)
+navqueue_la_LDFLAGS		= $(PyModule)
+navqueue_la_SOURCES		= navqueue.c
 
 
 EXTRA_DIST				= $(PySources)

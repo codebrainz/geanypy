@@ -1,6 +1,7 @@
 #include <Python.h>
 #include <geanyplugin.h>
-#include "plugin.h"
+
+#include "modules-common.h"
 
 
 static PyObject *

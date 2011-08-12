@@ -34,8 +34,8 @@ AC_DEFINE_UNQUOTED(
 AC_CONFIG_FILES([
     Makefile
 	src/Makefile
-    modules/Makefile
 	geany/Makefile
+    geany/extensions/Makefile
     plugins/Makefile
 ])
 AC_OUTPUT

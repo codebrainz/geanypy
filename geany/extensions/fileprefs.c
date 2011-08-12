@@ -1,7 +1,15 @@
 #include <Python.h>
 #include <structmember.h>
 #include <geanyplugin.h>
-#include "plugin.h"
+
+#include "modules-common.h"
+
+
+typedef struct
+{
+	PyObject_HEAD
+	GeanyFilePrefs *file_prefs;
+} FilePrefs;
 
 
 static void
@@ -239,9 +247,7 @@ static PyMethodDef FilePrefs_methods[] = {
 };
 
 
-static PyMemberDef FilePrefs_members[] = {
-	{ NULL }
-};
+static PyMemberDef FilePrefs_members[] = { { NULL } };
 
 
 static PyTypeObject FilePrefsType = {

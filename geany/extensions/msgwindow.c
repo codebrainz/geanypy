@@ -1,6 +1,7 @@
 #include <Python.h>
 #include <geanyplugin.h>
-#include "plugin.h"
+
+#include "modules-common.h"
 
 
 static PyObject *
@@ -33,7 +34,6 @@ Msgwin_msg_add(PyObject *module, PyObject *args)
 {
     gint msg_color = COLOR_BLACK, line = -1;
     PyObject *obj = NULL;
-    Document *py_doc = NULL;
     GeanyDocument *doc = NULL;
     gchar *msg = NULL;
 
@@ -43,10 +43,9 @@ Msgwin_msg_add(PyObject *module, PyObject *args)
             doc = NULL;
         else
         {
-            py_doc = (Document *) obj;
-            doc = py_doc->doc;
+            doc = GET_POINTER(obj, GeanyDocument);
+            msgwin_msg_add(msg_color, line, doc, "%s", msg);
         }
-        msgwin_msg_add(msg_color, line, doc, "%s", msg);
     }
 
     Py_RETURN_NONE;

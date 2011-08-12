@@ -2,10 +2,7 @@
 #include <structmember.h>
 #include <geanyplugin.h>
 
-
-extern GeanyPlugin		*geany_plugin;
-extern GeanyData		*geany_data;
-extern GeanyFunctions	*geany_functions;
+#include "modules-common.h"
 
 
 typedef struct

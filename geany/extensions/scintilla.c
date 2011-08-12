@@ -10,14 +10,7 @@
 #include <Scintilla.h>
 #include <ScintillaWidget.h>
 
-
-#define _ScintillaObject_FromPyObject(sci) ((ScintillaObject *) PyLong_AsVoidPtr(sci))
-#define _ScintillaObject_ToPyObject(sci) ((PyObject *) PyLong_FromVoidPtr((void *)(sci)))
-
-
-extern GeanyPlugin		*geany_plugin;
-extern GeanyData		*geany_data;
-extern GeanyFunctions	*geany_functions;
+#include "modules-common.h"
 
 
 typedef struct
@@ -299,7 +292,7 @@ static int
 Scintilla_init(Scintilla *self, PyObject *ptr)
 {
     if (ptr != NULL && ptr != Py_None)
-        self->sci = _ScintillaObject_FromPyObject(ptr);
+        self->sci = GET_POINTER(ptr, ScintillaObject);
 
 	return 0;
 }
@@ -310,7 +303,7 @@ Scintilla_get_pointer(Scintilla *self)
 {
     if (self->sci == NULL)
         Py_RETURN_NONE;
-    return _ScintillaObject_ToPyObject(self->sci);
+    return _StructPointer_ToPyObject(self->sci);
 }
 
 
@@ -318,7 +311,7 @@ static PyObject *
 Scintilla_set_pointer(Scintilla *self, PyObject *ptr)
 {
     if (ptr != NULL && ptr != Py_None)
-        self->sci = _ScintillaObject_FromPyObject(ptr);
+        self->sci = GET_POINTER(ptr, ScintillaObject);
     Py_RETURN_NONE;
 }
 

@@ -1,7 +1,14 @@
 #include <Python.h>
-#include <structmember.h>
 #include <geanyplugin.h>
-#include "plugin.h"
+
+#include "modules-common.h"
+
+
+typedef struct
+{
+	PyObject_HEAD
+	const GeanyLexerStyle *lexer_style;
+} LexerStyle;
 
 
 static void
@@ -80,7 +87,7 @@ static PyTypeObject LexerStyleType = {
 	PyObject_HEAD_INIT(NULL)
     0,                          /*ob_size*/
     "geany.highlighting.LexerStyle",     /*tp_name*/
-    sizeof(Editor),             /*tp_basicsize*/
+    sizeof(LexerStyle),             /*tp_basicsize*/
     0,                          /*tp_itemsize*/
     (destructor)LexerStyle_dealloc, /*tp_dealloc*/
     0,                          /*tp_print*/
@@ -198,17 +205,17 @@ Highlighting_is_string_style(PyObject *module, PyObject *args)
 static PyObject *
 Highlighting_set_styles(PyObject *module, PyObject *args)
 {
-    PyObject *py_sci, *py_ft;
-    Scintilla *sci;
-    Filetype *ft;
+    PyObject *py_sci, *py_ft, *ptr_func, *pylong;
+    ScintillaObject *sci;
+    GeanyFiletype *ft;
 
     if (PyArg_ParseTuple(args, "OO", &py_sci, &py_ft))
     {
         if (py_sci != Py_None && py_ft != Py_None)
         {
-            sci = (Scintilla *) py_sci;
-            ft = (Filetype *) py_ft;
-            highlighting_set_styles(sci->sci, ft->ft);
+            sci = GET_POINTER(py_sci, ScintillaObject);
+            ft = GET_POINTER(py_ft, GeanyFiletype);
+            highlighting_set_styles(sci, ft);
         }
     }
 
@@ -217,7 +224,7 @@ Highlighting_set_styles(PyObject *module, PyObject *args)
 
 
 static
-PyMethodDef EditorModule_methods[] = {
+PyMethodDef HighlightingModule_methods[] = {
     { "get_style", (PyCFunction) Highlighting_get_style, METH_VARARGS },
     { "is_code_style", (PyCFunction) Highlighting_is_code_style, METH_VARARGS },
     { "is_comment_style", (PyCFunction) Highlighting_is_comment_style, METH_VARARGS },
@@ -236,7 +243,7 @@ inithighlighting(void)
     if (PyType_Ready(&LexerStyleType) < 0)
         return;
 
-    m = Py_InitModule3("highlighting", EditorModule_methods,
+    m = Py_InitModule3("highlighting", HighlightingModule_methods,
             "The `highlighting` module provides a functions for working "
             "with syntax highlighting.");
 

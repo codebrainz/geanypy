@@ -42,68 +42,7 @@ extern GeanyFunctions	*geany_functions;
 #include "project.h"
 
 
-
-
-
-typedef struct
-{
-	PyObject_HEAD
-	GeanyEditorPrefs *editor_prefs;
-} EditorPrefs;
-
-
-
-
-typedef struct
-{
-	PyObject_HEAD
-	GeanyMainWidgets *main_widgets;
-} MainWidgets;
-
-
-typedef struct
-{
-	PyObject_HEAD
-	GeanyFilePrefs *file_prefs;
-} FilePrefs;
-
-
-
-
-typedef struct
-{
-	PyObject_HEAD
-	const GeanyLexerStyle *lexer_style;
-} LexerStyle;
-
-PyMODINIT_FUNC initeditor(void);
-PyMODINIT_FUNC initeditorprefs(void);
-PyMODINIT_FUNC initencodings(void);
-PyMODINIT_FUNC initfileprefs(void);
-PyMODINIT_FUNC initfiletype(void);
-PyMODINIT_FUNC inithighlighting(void);
-PyMODINIT_FUNC initindentprefs(void);
-PyMODINIT_FUNC initmain(void);
-PyMODINIT_FUNC initmainwidgets(void);
 PyMODINIT_FUNC initmsgwindow(void);
-
-
-Document *Document_create_new_from_geany_document(GeanyDocument *doc);
-Editor *Editor_create_new_from_geany_editor(GeanyEditor *editor);
-Filetype *Filetype_create_new_from_geany_filetype(GeanyFiletype *ft);
-IndentPrefs *IndentPrefs_create_new_from_geany_indent_prefs(GeanyIndentPrefs *indent_prefs);
-
-
-PyMODINIT_FUNC init_geany_scintilla(void);
-Scintilla *Scintilla_create_new_from_scintilla(ScintillaObject *sci);
-
-PyMODINIT_FUNC init_geany_scintilla_notification(void);
-ScintillaNotification *ScintillaNotification_create_new_from_scintilla_notification(SCNotification *notif);
-
-
-
-
-
 PyMODINIT_FUNC init_geany_navqueue(void);
 
 
