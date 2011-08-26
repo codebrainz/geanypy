@@ -1,4 +1,4 @@
-AC_PREREQ([2.67])
+AC_PREREQ([2.62])
 
 # Initialize build system tools
 AC_INIT([geanypy], [0.01], [mbrush@codebrainz.ca])
