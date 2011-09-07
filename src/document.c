@@ -21,7 +21,6 @@
 
 #include <Python.h>
 #include <structmember.h>
-#include <gtk/gtk.h>
 #include <geanyplugin.h>
 #include "plugin.h"
 
@@ -39,15 +38,13 @@ Document_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
 	Document *self;
 	self = (Document *)type->tp_alloc(type, 0);
 	if (self != NULL)
-	{
 		self->doc = NULL;
-	}
 	return (PyObject *) self;
 }
 
 
 static int
-Document_init(Document *self, PyObject *args, PyObject *kwds)
+Document_init(Document *self)
 {
     self->doc = NULL;
 	return 0;
@@ -55,7 +52,7 @@ Document_init(Document *self, PyObject *args, PyObject *kwds)
 
 
 static PyObject*
-Document_close(Document *self, PyObject *args)
+Document_close(Document *self)
 {
     if (document_close(self->doc))
         Py_RETURN_TRUE;
@@ -65,7 +62,7 @@ Document_close(Document *self, PyObject *args)
 
 
 static PyObject*
-Document__get_basename_for_display(Document *self, PyObject *args)
+Document__get_basename_for_display(Document *self)
 {
     gchar *res;
 
@@ -79,7 +76,7 @@ Document__get_basename_for_display(Document *self, PyObject *args)
 
 
 static PyObject*
-Document__get_notebook_page(Document *self, PyObject *args)
+Document__get_notebook_page(Document *self)
 {
     gint res;
 
@@ -90,7 +87,7 @@ Document__get_notebook_page(Document *self, PyObject *args)
 
 
 static PyObject*
-Document__get_status_color(Document *self, PyObject *args)
+Document__get_status_color(Document *self)
 {
     const GdkColor *color;
 
@@ -105,11 +102,12 @@ Document__get_status_color(Document *self, PyObject *args)
 
 
 static PyObject*
-Document_reload_file(Document *self, PyObject *args)
+Document_reload_file(Document *self, PyObject *args, PyObject *kwargs)
 {
     gchar *forced_enc = NULL;
+    static gchar *kwlist[] = { "forced_enc", NULL };
 
-    if (PyArg_ParseTuple(args, "|z", &forced_enc))
+    if (PyArg_ParseTupleAndKeywords(args, kwargs, "|z", kwlist, &forced_enc))
     {
         if (document_reload_file(self->doc, forced_enc))
             Py_RETURN_TRUE;
@@ -122,11 +120,12 @@ Document_reload_file(Document *self, PyObject *args)
 
 
 static PyObject*
-Document_rename_file(Document *self, PyObject *args)
+Document_rename_file(Document *self, PyObject *args, PyObject *kwargs)
 {
     gchar *new_fn = NULL;
+    static gchar *kwlist[] = { "new_filename", NULL };
 
-    if (PyArg_ParseTuple(args, "s", &new_fn))
+    if (PyArg_ParseTupleAndKeywords(args, kwargs, "s", kwlist, &new_fn))
     {
         if (new_fn != NULL)
             document_rename_file(self->doc, new_fn);
@@ -142,14 +141,15 @@ Document_rename_file(Document *self, PyObject *args)
 
 
 static PyObject*
-Document_save_file(Document *self, PyObject *args)
+Document_save_file(Document *self, PyObject *args, PyObject *kwargs)
 {
     gboolean result;
     gint force = 0;
+    static gchar *kwlist[] = { "force", NULL };
 
-    if (PyArg_ParseTuple(args, "|i", &force))
+    if (PyArg_ParseTupleAndKeywords(args, kwargs, "|i", kwlist, &force))
     {
-        result = document_save_file(self->doc, force);
+        result = document_save_file(self->doc, (gboolean) force);
         if (result)
             Py_RETURN_TRUE;
         else
@@ -160,12 +160,13 @@ Document_save_file(Document *self, PyObject *args)
 
 
 static PyObject*
-Document_save_file_as(Document *self, PyObject *args)
+Document_save_file_as(Document *self, PyObject *args, PyObject *kwargs)
 {
     gboolean result;
     gchar *filename = NULL;
+    static gchar *kwlist[] = { "new_filename", NULL };
 
-    if (PyArg_ParseTuple(args, "s", &filename))
+    if (PyArg_ParseTupleAndKeywords(args, kwargs, "s", kwlist, &filename))
     {
         if (filename != NULL)
         {
@@ -195,7 +196,7 @@ Document__set_encoding(Document *self, PyObject *args)
 
 
 static PyObject*
-Document__get_encoding(Document *self, PyObject *args)
+Document__get_encoding(Document *self)
 {
     if (DOC_VALID(self->doc))
         return PyString_FromString(self->doc->encoding);
@@ -204,26 +205,22 @@ Document__get_encoding(Document *self, PyObject *args)
 
 
 static PyObject*
-Document__set_filetype(Document *self, PyObject *args)
+Document__set_filetype(Document *self, PyObject *ft)
 {
-    PyObject *py_ft = NULL;
     Filetype *filetype = NULL;
 
-    if (PyArg_ParseTuple(args, "O", &py_ft))
+    if (ft != NULL && ft != Py_None)
     {
-        if (py_ft != Py_None)
-        {
-            filetype = (Filetype *) py_ft;
-            if (filetype->ft != NULL)
-                document_set_filetype(self->doc, filetype->ft);
-        }
+		filetype = (Filetype *) ft;
+        if (filetype->ft != NULL)
+			document_set_filetype(self->doc, filetype->ft);
     }
     Py_RETURN_NONE;
 }
 
 
 static PyObject*
-Document__get_filetype(Document *self, PyObject *args)
+Document__get_filetype(Document *self)
 {
     if (DOC_VALID(self->doc))
         return (PyObject *) Filetype_create_new_from_geany_filetype(self->doc->file_type);
@@ -246,7 +243,7 @@ Document__set_text_changed(Document *self, PyObject *args)
 
 
 static PyObject*
-Document__get_text_changed(Document *self, PyObject *args)
+Document__get_text_changed(Document *self)
 {
     if (DOC_VALID(self->doc))
     {
@@ -260,7 +257,7 @@ Document__get_text_changed(Document *self, PyObject *args)
 
 
 static PyObject*
-Document__get_file_name(Document *self, PyObject *args)
+Document__get_file_name(Document *self)
 {
     if (DOC_VALID(self->doc) && self->doc->file_name != NULL)
         return PyString_FromString(self->doc->file_name);
@@ -269,7 +266,7 @@ Document__get_file_name(Document *self, PyObject *args)
 
 
 static PyObject*
-Document__get_has_bom(Document *self, PyObject *args)
+Document__get_has_bom(Document *self)
 {
     if (DOC_VALID(self->doc))
     {
@@ -283,7 +280,7 @@ Document__get_has_bom(Document *self, PyObject *args)
 
 
 static PyObject*
-Document__get_has_tags(Document *self, PyObject *args)
+Document__get_has_tags(Document *self)
 {
     if (DOC_VALID(self->doc))
     {
@@ -297,7 +294,7 @@ Document__get_has_tags(Document *self, PyObject *args)
 
 
 static PyObject*
-Document__get_index(Document *self, PyObject *args)
+Document__get_index(Document *self)
 {
     if (DOC_VALID(self->doc))
         return Py_BuildValue("i", self->doc->index);
@@ -307,7 +304,7 @@ Document__get_index(Document *self, PyObject *args)
 
 
 static PyObject*
-Document__get_is_valid(Document *self, PyObject *args)
+Document__get_is_valid(Document *self)
 {
     if (DOC_VALID(self->doc))
     {
@@ -321,7 +318,7 @@ Document__get_is_valid(Document *self, PyObject *args)
 
 
 static PyObject*
-Document__get_readonly(Document *self, PyObject *args)
+Document__get_readonly(Document *self)
 {
     if (DOC_VALID(self->doc))
     {
@@ -335,7 +332,7 @@ Document__get_readonly(Document *self, PyObject *args)
 
 
 static PyObject*
-Document__get_real_path(Document *self, PyObject *args)
+Document__get_real_path(Document *self)
 {
     if (DOC_VALID(self->doc))
         return PyString_FromString(self->doc->real_path);
@@ -344,7 +341,7 @@ Document__get_real_path(Document *self, PyObject *args)
 
 
 static PyObject *
-Document__get_editor(Document *self, PyObject *args)
+Document__get_editor(Document *self)
 {
     Editor *editor;
     if (DOC_VALID(self->doc) && self->doc->editor != NULL)
@@ -357,28 +354,28 @@ Document__get_editor(Document *self, PyObject *args)
 
 
 static PyMethodDef Document_methods[] = {
-    { "close", (PyCFunction)Document_close, METH_VARARGS },
-    { "_get_basename_for_display", (PyCFunction)Document__get_basename_for_display, METH_VARARGS },
-    { "_get_notebook_page", (PyCFunction)Document__get_notebook_page, METH_VARARGS },
-    { "_get_status_color", (PyCFunction)Document__get_status_color, METH_VARARGS },
-    { "reload_file", (PyCFunction)Document_reload_file, METH_VARARGS },
-    { "rename_file", (PyCFunction)Document_rename_file, METH_VARARGS },
-    { "save_file", (PyCFunction)Document_save_file, METH_VARARGS },
-    { "save_file_as", (PyCFunction)Document_save_file_as, METH_VARARGS },
+    { "close", (PyCFunction)Document_close, METH_NOARGS },
+    { "_get_basename_for_display", (PyCFunction)Document__get_basename_for_display, METH_NOARGS },
+    { "_get_notebook_page", (PyCFunction)Document__get_notebook_page, METH_NOARGS },
+    { "_get_status_color", (PyCFunction)Document__get_status_color, METH_NOARGS },
+    { "reload_file", (PyCFunction)Document_reload_file, METH_KEYWORDS },
+    { "rename_file", (PyCFunction)Document_rename_file, METH_KEYWORDS },
+    { "save_file", (PyCFunction)Document_save_file, METH_KEYWORDS },
+    { "save_file_as", (PyCFunction)Document_save_file_as, METH_KEYWORDS },
     { "_set_encoding", (PyCFunction)Document__set_encoding, METH_VARARGS },
-    { "_get_encoding", (PyCFunction)Document__get_encoding, METH_VARARGS },
-    { "_set_file_type", (PyCFunction)Document__set_filetype, METH_VARARGS },
-    { "_get_file_type", (PyCFunction)Document__get_filetype, METH_VARARGS },
+    { "_get_encoding", (PyCFunction)Document__get_encoding, METH_NOARGS },
+    { "_set_file_type", (PyCFunction)Document__set_filetype, METH_O },
+    { "_get_file_type", (PyCFunction)Document__get_filetype, METH_NOARGS },
     { "_set_text_changed", (PyCFunction)Document__set_text_changed, METH_VARARGS },
-    { "_get_text_changed", (PyCFunction)Document__get_text_changed, METH_VARARGS },
-    { "_get_file_name", (PyCFunction)Document__get_file_name, METH_VARARGS },
-    { "_get_has_bom", (PyCFunction)Document__get_has_bom, METH_VARARGS },
-    { "_get_has_tags", (PyCFunction)Document__get_has_tags, METH_VARARGS },
-    { "_get_index", (PyCFunction)Document__get_index, METH_VARARGS },
-    { "_get_is_valid", (PyCFunction)Document__get_is_valid, METH_VARARGS },
-    { "_get_read_only", (PyCFunction)Document__get_readonly, METH_VARARGS },
-    { "_get_real_path", (PyCFunction)Document__get_real_path, METH_VARARGS },
-    { "_get_editor", (PyCFunction)Document__get_editor, METH_VARARGS },
+    { "_get_text_changed", (PyCFunction)Document__get_text_changed, METH_NOARGS },
+    { "_get_file_name", (PyCFunction)Document__get_file_name, METH_NOARGS },
+    { "_get_has_bom", (PyCFunction)Document__get_has_bom, METH_NOARGS },
+    { "_get_has_tags", (PyCFunction)Document__get_has_tags, METH_NOARGS },
+    { "_get_index", (PyCFunction)Document__get_index, METH_NOARGS },
+    { "_get_is_valid", (PyCFunction)Document__get_is_valid, METH_NOARGS },
+    { "_get_read_only", (PyCFunction)Document__get_readonly, METH_NOARGS },
+    { "_get_real_path", (PyCFunction)Document__get_real_path, METH_NOARGS },
+    { "_get_editor", (PyCFunction)Document__get_editor, METH_NOARGS },
 	{NULL}
 };
 
