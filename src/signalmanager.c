@@ -8,10 +8,6 @@
 #include "plugin.h"
 #include "signalmanager.h"
 
-extern GeanyPlugin      *geany_plugin;
-extern GeanyData        *geany_data;
-extern GeanyFunctions   *geany_functions;
-
 
 static void signal_manager_connect_signals(SignalManager *man);
 

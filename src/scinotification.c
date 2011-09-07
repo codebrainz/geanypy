@@ -7,11 +7,6 @@
 #include "plugin.h"
 
 
-extern GeanyPlugin		*geany_plugin;
-extern GeanyData		*geany_data;
-extern GeanyFunctions	*geany_functions;
-
-
 static void
 ScintillaNotification_dealloc(ScintillaNotification *self)
 {

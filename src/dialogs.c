@@ -6,11 +6,6 @@
 #include "plugin.h"
 
 
-extern GeanyPlugin		*geany_plugin;
-extern GeanyData		*geany_data;
-extern GeanyFunctions	*geany_functions;
-
-
 static PyObject *
 Dialogs_show_input(PyObject *self, PyObject *args)
 {

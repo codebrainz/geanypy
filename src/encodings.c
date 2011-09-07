@@ -6,11 +6,6 @@
 #include "plugin.h"
 
 
-extern GeanyPlugin		*geany_plugin;
-extern GeanyData		*geany_data;
-extern GeanyFunctions	*geany_functions;
-
-
 static PyObject *
 Encodings_convert_to_utf8(PyObject *module, PyObject *args)
 {

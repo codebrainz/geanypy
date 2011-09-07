@@ -6,11 +6,6 @@
 #include "plugin.h"
 
 
-extern GeanyPlugin		*geany_plugin;
-extern GeanyData		*geany_data;
-extern GeanyFunctions	*geany_functions;
-
-
 static PyObject *
 Main_is_realized(PyObject *module, PyObject *args)
 {

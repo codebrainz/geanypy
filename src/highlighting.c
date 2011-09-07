@@ -5,12 +5,6 @@
 #include "plugin.h"
 
 
-/* Set by Geany when plugin is loaded */
-extern GeanyPlugin		*geany_plugin;
-extern GeanyData		*geany_data;
-extern GeanyFunctions	*geany_functions;
-
-
 static void
 LexerStyle_dealloc(LexerStyle *self)
 {
