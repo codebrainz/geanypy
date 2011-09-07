@@ -10,15 +10,15 @@ class App(object):
 
     @property
     def configdir(self):
-        return self._app._get_configdir()
+        return self._app.get_configdir()
 
     @property
     def debug_mode(self):
-        return self._app._get_debug_mode()
+        return self._app.get_debug_mode()
 
     @property
     def project(self):
-        _proj = self._app._get_project()
+        _proj = self._app.get_project()
         if _proj is not None and _proj._get_is_open():
             proj = project.Project()
             proj._project = _proj
