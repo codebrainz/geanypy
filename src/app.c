@@ -24,6 +24,7 @@
 #include <geanyplugin.h>
 #include "plugin.h"
 #include "app.h"
+#include "project.h"
 
 
 static void

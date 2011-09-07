@@ -59,12 +59,12 @@ GeanyPy_start_interpreter(void)
     init_geany_main_widgets();
     init_geany_msgwin();
     init_geany_navqueue();
-    init_geany_project();
     init_geany_scintilla();
     init_geany_scintilla_notification();
 
     init_geany_app();
     init_geany_document();
+    init_geany_project();
 
     /* Bindings that don't need/have wrappers in Python code. */
     initdialogs();

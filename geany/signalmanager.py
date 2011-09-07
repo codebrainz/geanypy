@@ -7,7 +7,7 @@ import scintilla
 import _document as c_document
 import _geany_editor
 import _geany_filetypes
-import _geany_project
+import _project as c_project
 import _geany_scintilla_notification
 from collections import namedtuple
 
@@ -122,7 +122,7 @@ class SignalManager(object):
                 ed = editor.Editor()
                 ed._editor = arg
                 new_args.append(ed)
-            elif isinstance(arg, _geany_project.Project):
+            elif isinstance(arg, c_project.Project):
                 proj = project.Project()
                 project._project = arg
                 new_args.append(project)

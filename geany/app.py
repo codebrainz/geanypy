@@ -51,6 +51,6 @@ class App(object):
 		currently open.
 		"""
 		_proj = self._app.get_project()
-		if _proj is not None and _proj._get_is_open():
+		if _proj is not None and _proj.get_is_open():
 			return  project.Project(_proj)
 		return None

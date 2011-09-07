@@ -63,13 +63,6 @@ typedef struct
 typedef struct
 {
 	PyObject_HEAD
-	GeanyProject *project;
-} Project;
-
-
-typedef struct
-{
-	PyObject_HEAD
 	ScintillaObject *sci;
 } Scintilla;
 
@@ -104,9 +97,6 @@ PyMODINIT_FUNC init_geany_editor(void);
 Editor *Editor_create_new_from_geany_editor(GeanyEditor *editor);
 
 PyMODINIT_FUNC init_geany_main_widgets(void);
-
-PyMODINIT_FUNC init_geany_project(void);
-Project *Project_create_new(void);
 
 
 PyMODINIT_FUNC init_geany_scintilla(void);
