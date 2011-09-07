@@ -128,7 +128,7 @@ static PyTypeObject AppType = {
 static PyMethodDef AppModule_methods[] = { { NULL } };
 
 
-PyMODINIT_FUNC initgeany_app(void)
+PyMODINIT_FUNC init_geany_app(void)
 {
 	PyObject *m;
 

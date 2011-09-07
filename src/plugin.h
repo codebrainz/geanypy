@@ -106,6 +106,9 @@ typedef struct
 #define PyMODINIT_FUNC void
 #endif
 
+
+PyMODINIT_FUNC init_geany_app(void);
+
 PyMODINIT_FUNC init_geany_document(void);
 Document *Document_create_new_from_geany_document(GeanyDocument *doc);
 
@@ -124,7 +127,6 @@ PyMODINIT_FUNC init_geany_main_widgets(void);
 PyMODINIT_FUNC init_geany_project(void);
 Project *Project_create_new(void);
 
-PyMODINIT_FUNC initgeany_app(void);
 
 PyMODINIT_FUNC init_geany_scintilla(void);
 Scintilla *Scintilla_create_new_from_scintilla(ScintillaObject *sci);

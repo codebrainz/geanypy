@@ -4,7 +4,7 @@ import editor
 import filetypes
 import project
 import scintilla
-import _geany_document
+import _document as c_document
 import _geany_editor
 import _geany_filetypes
 import _geany_project
@@ -110,7 +110,7 @@ class SignalManager(object):
 
         new_args = []
         for arg in args:
-            if isinstance(arg, _geany_document.Document):
+            if isinstance(arg, c_document.Document):
                 doc = document.Document()
                 doc._doc = arg
                 new_args.append(doc)

@@ -51,7 +51,7 @@ Document_close(Document *self)
 
 
 static PyObject*
-Document__get_basename_for_display(Document *self)
+Document_get_basename_for_display(Document *self)
 {
 	gchar *res;
 
@@ -65,7 +65,7 @@ Document__get_basename_for_display(Document *self)
 
 
 static PyObject*
-Document__get_notebook_page(Document *self)
+Document_get_notebook_page(Document *self)
 {
 	gint res;
 
@@ -76,7 +76,7 @@ Document__get_notebook_page(Document *self)
 
 
 static PyObject*
-Document__get_status_color(Document *self)
+Document_get_status_color(Document *self)
 {
 	const GdkColor *color;
 
@@ -171,7 +171,7 @@ Document_save_file_as(Document *self, PyObject *args, PyObject *kwargs)
 
 
 static PyObject*
-Document__set_encoding(Document *self, PyObject *args)
+Document_set_encoding(Document *self, PyObject *args)
 {
 	gchar *encoding = NULL;
 
@@ -185,7 +185,7 @@ Document__set_encoding(Document *self, PyObject *args)
 
 
 static PyObject*
-Document__get_encoding(Document *self)
+Document_get_encoding(Document *self)
 {
 	if (DOC_VALID(self->doc))
 		return PyString_FromString(self->doc->encoding);
@@ -194,7 +194,7 @@ Document__get_encoding(Document *self)
 
 
 static PyObject*
-Document__set_filetype(Document *self, PyObject *ft)
+Document_set_filetype(Document *self, PyObject *ft)
 {
 	Filetype *filetype = NULL;
 
@@ -209,7 +209,7 @@ Document__set_filetype(Document *self, PyObject *ft)
 
 
 static PyObject*
-Document__get_filetype(Document *self)
+Document_get_filetype(Document *self)
 {
 	if (DOC_VALID(self->doc))
 		return (PyObject *) Filetype_create_new_from_geany_filetype(self->doc->file_type);
@@ -218,7 +218,7 @@ Document__get_filetype(Document *self)
 
 
 static PyObject*
-Document__set_text_changed(Document *self, PyObject *args)
+Document_set_text_changed(Document *self, PyObject *args)
 {
 	gint changed;
 	if (DOC_VALID(self->doc))
@@ -232,7 +232,7 @@ Document__set_text_changed(Document *self, PyObject *args)
 
 
 static PyObject*
-Document__get_text_changed(Document *self)
+Document_get_text_changed(Document *self)
 {
 	if (DOC_VALID(self->doc))
 	{
@@ -246,7 +246,7 @@ Document__get_text_changed(Document *self)
 
 
 static PyObject*
-Document__get_file_name(Document *self)
+Document_get_file_name(Document *self)
 {
 	if (DOC_VALID(self->doc) && self->doc->file_name != NULL)
 		return PyString_FromString(self->doc->file_name);
@@ -255,7 +255,7 @@ Document__get_file_name(Document *self)
 
 
 static PyObject*
-Document__get_has_bom(Document *self)
+Document_get_has_bom(Document *self)
 {
 	if (DOC_VALID(self->doc))
 	{
@@ -269,7 +269,7 @@ Document__get_has_bom(Document *self)
 
 
 static PyObject*
-Document__get_has_tags(Document *self)
+Document_get_has_tags(Document *self)
 {
 	if (DOC_VALID(self->doc))
 	{
@@ -283,7 +283,7 @@ Document__get_has_tags(Document *self)
 
 
 static PyObject*
-Document__get_index(Document *self)
+Document_get_index(Document *self)
 {
 	if (DOC_VALID(self->doc))
 		return Py_BuildValue("i", self->doc->index);
@@ -293,7 +293,7 @@ Document__get_index(Document *self)
 
 
 static PyObject*
-Document__get_is_valid(Document *self)
+Document_get_is_valid(Document *self)
 {
 	if (DOC_VALID(self->doc))
 	{
@@ -307,7 +307,7 @@ Document__get_is_valid(Document *self)
 
 
 static PyObject*
-Document__get_readonly(Document *self)
+Document_get_readonly(Document *self)
 {
 	if (DOC_VALID(self->doc))
 	{
@@ -321,7 +321,7 @@ Document__get_readonly(Document *self)
 
 
 static PyObject*
-Document__get_real_path(Document *self)
+Document_get_real_path(Document *self)
 {
 	if (DOC_VALID(self->doc))
 		return PyString_FromString(self->doc->real_path);
@@ -330,7 +330,7 @@ Document__get_real_path(Document *self)
 
 
 static PyObject *
-Document__get_editor(Document *self)
+Document_get_editor(Document *self)
 {
 	Editor *editor;
 	if (DOC_VALID(self->doc) && self->doc->editor != NULL)
@@ -343,28 +343,28 @@ Document__get_editor(Document *self)
 
 
 static PyMethodDef Document_methods[] = {
-	{ "close",						(PyCFunction)Document_close, METH_NOARGS },
-	{ "_get_basename_for_display",	(PyCFunction)Document__get_basename_for_display,	METH_NOARGS },
-	{ "_get_notebook_page",			(PyCFunction)Document__get_notebook_page,			METH_NOARGS },
-	{ "_get_status_color",			(PyCFunction)Document__get_status_color,			METH_NOARGS },
-	{ "reload_file",				(PyCFunction)Document_reload_file,					METH_KEYWORDS },
-	{ "rename_file",				(PyCFunction)Document_rename_file,					METH_KEYWORDS },
-	{ "save_file",					(PyCFunction)Document_save_file,					METH_KEYWORDS },
-	{ "save_file_as",				(PyCFunction)Document_save_file_as,					METH_KEYWORDS },
-	{ "_set_encoding",				(PyCFunction)Document__set_encoding,				METH_VARARGS },
-	{ "_get_encoding",				(PyCFunction)Document__get_encoding,				METH_NOARGS },
-	{ "_set_file_type",				(PyCFunction)Document__set_filetype,				METH_O },
-	{ "_get_file_type",				(PyCFunction)Document__get_filetype,				METH_NOARGS },
-	{ "_set_text_changed",			(PyCFunction)Document__set_text_changed,			METH_VARARGS },
-	{ "_get_text_changed",			(PyCFunction)Document__get_text_changed,			METH_NOARGS },
-	{ "_get_file_name",				(PyCFunction)Document__get_file_name,				METH_NOARGS },
-	{ "_get_has_bom",				(PyCFunction)Document__get_has_bom,					METH_NOARGS },
-	{ "_get_has_tags",				(PyCFunction)Document__get_has_tags,				METH_NOARGS },
-	{ "_get_index",					(PyCFunction)Document__get_index,					METH_NOARGS },
-	{ "_get_is_valid",				(PyCFunction)Document__get_is_valid,				METH_NOARGS },
-	{ "_get_read_only",				(PyCFunction)Document__get_readonly,				METH_NOARGS },
-	{ "_get_real_path",				(PyCFunction)Document__get_real_path,				METH_NOARGS },
-	{ "_get_editor",				(PyCFunction)Document__get_editor,					METH_NOARGS },
+	{ "close",						(PyCFunction)Document_close, 					METH_NOARGS },
+	{ "get_basename_for_display",	(PyCFunction)Document_get_basename_for_display,	METH_NOARGS },
+	{ "get_notebook_page",			(PyCFunction)Document_get_notebook_page,			METH_NOARGS },
+	{ "get_status_color",			(PyCFunction)Document_get_status_color,			METH_NOARGS },
+	{ "reload_file",				(PyCFunction)Document_reload_file,				METH_KEYWORDS },
+	{ "rename_file",				(PyCFunction)Document_rename_file,				METH_KEYWORDS },
+	{ "save_file",					(PyCFunction)Document_save_file,				METH_KEYWORDS },
+	{ "save_file_as",				(PyCFunction)Document_save_file_as,				METH_KEYWORDS },
+	{ "set_encoding",				(PyCFunction)Document_set_encoding,				METH_VARARGS },
+	{ "get_encoding",				(PyCFunction)Document_get_encoding,				METH_NOARGS },
+	{ "set_file_type",				(PyCFunction)Document_set_filetype,				METH_O },
+	{ "get_file_type",				(PyCFunction)Document_get_filetype,				METH_NOARGS },
+	{ "set_text_changed",			(PyCFunction)Document_set_text_changed,			METH_VARARGS },
+	{ "get_text_changed",			(PyCFunction)Document_get_text_changed,			METH_NOARGS },
+	{ "get_file_name",				(PyCFunction)Document_get_file_name,				METH_NOARGS },
+	{ "get_has_bom",				(PyCFunction)Document_get_has_bom,				METH_NOARGS },
+	{ "get_has_tags",				(PyCFunction)Document_get_has_tags,				METH_NOARGS },
+	{ "get_index",					(PyCFunction)Document_get_index,					METH_NOARGS },
+	{ "get_is_valid",				(PyCFunction)Document_get_is_valid,				METH_NOARGS },
+	{ "get_read_only",				(PyCFunction)Document_get_readonly,				METH_NOARGS },
+	{ "get_real_path",				(PyCFunction)Document_get_real_path,				METH_NOARGS },
+	{ "get_editor",					(PyCFunction)Document_get_editor,					METH_NOARGS },
 	{ NULL }
 };
 
@@ -375,7 +375,7 @@ static PyMemberDef Document_members[] = { {NULL} };
 static PyTypeObject DocumentType = {
 	PyObject_HEAD_INIT(NULL)
 	0,											/* ob_size */
-	"_geany_document.Document",					/* tp_name */
+	"geany_document.Document",					/* tp_name */
 	sizeof(Document),							/* tp_basicsize */
 	0,											/* tp_itemsize */
 	(destructor)Document_dealloc,				/* tp_dealloc */
@@ -616,7 +616,7 @@ PyMODINIT_FUNC init_geany_document(void)
 	if (PyType_Ready(&DocumentType) < 0)
 		return;
 
-	m = Py_InitModule("_geany_document", DocumentModule_methods);
+	m = Py_InitModule("_document", DocumentModule_methods);
 
 	Py_INCREF(&DocumentType);
 	PyModule_AddObject(m, "Document", (PyObject *)&DocumentType);
