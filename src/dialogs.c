@@ -122,10 +122,9 @@ PyMethodDef DialogsModule_methods[] = {
 };
 
 
-PyMODINIT_FUNC
-init_geany_dialogs(void)
+PyMODINIT_FUNC initdialogs(void)
 {
     PyObject *m;
 
-    m = Py_InitModule("_geany_dialogs", DialogsModule_methods);
+    m = Py_InitModule("dialogs", DialogsModule_methods);
 }
