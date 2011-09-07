@@ -51,13 +51,6 @@ typedef struct
 typedef struct
 {
 	PyObject_HEAD
-	GeanyEditorPrefs *editor_prefs;
-} EditorPrefs;
-
-
-typedef struct
-{
-	PyObject_HEAD
 	GeanyIndentPrefs *indent_prefs;
 } IndentPrefs;
 
@@ -81,13 +74,6 @@ typedef struct
 	PyObject_HEAD
 	GeanyApp *app;
 } App;
-
-
-typedef struct
-{
-	PyObject_HEAD
-	GeanyFilePrefs *file_prefs;
-} FilePrefs;
 
 
 typedef struct
@@ -123,7 +109,6 @@ Filetype *Filetype_create_new_from_geany_filetype(GeanyFiletype *ft);
 
 PyMODINIT_FUNC init_geany_dialogs(void);
 
-PyMODINIT_FUNC init_geany_editor_prefs(void);
 PyMODINIT_FUNC init_geany_indent_prefs(void);
 IndentPrefs *IndentPrefs_create_new_from_geany_indent_prefs(GeanyIndentPrefs *indent_prefs);
 PyMODINIT_FUNC init_geany_editor(void);
@@ -135,8 +120,6 @@ PyMODINIT_FUNC init_geany_project(void);
 Project *Project_create_new(void);
 
 PyMODINIT_FUNC init_geany_app(void);
-
-PyMODINIT_FUNC init_geany_file_prefs(void);
 
 PyMODINIT_FUNC init_geany_scintilla(void);
 Scintilla *Scintilla_create_new_from_scintilla(ScintillaObject *sci);
