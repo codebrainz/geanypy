@@ -2,8 +2,6 @@ geanyplugin_LTLIBRARIES		=	geanypy.la
 geanyplugindir				=	$(libdir)/geany
 
 geanypy_la_LDFLAGS			=	-module -avoid-version -Wl,--export-dynamic
-# FIXME: How to stop AC_CONFIG_HEADERS from defining -DHAVE_CONFIG_H on it's
-#        own?  I undef'd it here for now since it causes geany.h:30 to fail.
 geanypy_la_CPPFLAGS			=	@GEANY_CFLAGS@ @PYGTK_CFLAGS@ @PYTHON_CPPFLAGS@ \
 								-DGEANYPY_PYTHON_DIR="\"$(libdir)/geany/geanypy\"" \
 								-DGEANYPY_PLUGIN_DIR="\"$(datadir)/geany/geanypy/plugins\"" \
@@ -15,13 +13,11 @@ geanypy_la_SOURCES			=	plugin.c \
 								dialogs.c \
 								document.c \
 								filetypes.c \
-								editorprefs.c \
 								indentprefs.c \
 								editor.c \
 								mainwidgets.c \
 								project.c \
 								app.c \
-								fileprefs.c \
 								scintilla.c \
 								scinotification.c \
 								encodings.c \

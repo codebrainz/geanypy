@@ -12,9 +12,7 @@ import console
 import dialogs
 import document
 import editor
-import editorprefs
 import encodings
-import fileprefs
 import filetypes
 import highlighting
 import indentprefs
@@ -28,8 +26,6 @@ import project
 import scintilla
 
 from app import App
-from editorprefs import EditorPrefs
-from fileprefs import FilePrefs
 from mainwidgets import MainWidgets
 from main import is_realized, locale_init, reload_configuration
 from signalmanager import SignalManager
@@ -40,9 +36,7 @@ __all__ = [ "Plugin",
             "locale_init",
             "reload_configuration",
             "main_widgets",
-            "editor_prefs",
             "app",
-            "file_prefs",
             "signals" ]
 
 # Geany's application data fields
@@ -50,12 +44,6 @@ app = App()
 
 # Import GTK+ widgets that are part of Geany's UI
 main_widgets = MainWidgets()
-
-# Settings that will by used by Editors
-editor_prefs = EditorPrefs()
-
-# Settings relating to how files are handled
-file_prefs = FilePrefs()
 
 # Allow plugins to connect/disconnect from Geany signals
 signals = SignalManager()

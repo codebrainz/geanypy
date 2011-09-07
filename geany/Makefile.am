@@ -3,12 +3,10 @@ geanypy_sources				=	__init__.py \
 								document.py \
 								filetypes.py \
 								indentprefs.py \
-								editorprefs.py \
 								editor.py \
 								mainwidgets.py \
 								project.py \
 								app.py \
-								fileprefs.py \
 								scintilla.py \
 								console.py \
 								manager.py \

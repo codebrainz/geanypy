@@ -1,6 +1,5 @@
 import _geany_editor
 import indentprefs
-import editorprefs
 import scintilla
 
 

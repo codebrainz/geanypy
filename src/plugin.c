@@ -52,9 +52,7 @@ GeanyPy_start_interpreter(void)
     init_geany_dialogs();
     init_geany_document();
     init_geany_editor();
-    init_geany_editor_prefs();
     init_geany_encodings();
-    init_geany_file_prefs();
     init_geany_filetype();
     init_geany_highlighting();
     init_geany_indent_prefs();
