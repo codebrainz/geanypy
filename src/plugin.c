@@ -13,6 +13,8 @@
 #include "plugin.h"
 #include "signalmanager.h"
 
+#include "app.h"
+
 
 GeanyPlugin		*geany_plugin;
 GeanyData		*geany_data;

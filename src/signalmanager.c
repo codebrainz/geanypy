@@ -7,6 +7,7 @@
 #include <ScintillaWidget.h>
 #include "plugin.h"
 #include "signalmanager.h"
+#include "document.h"
 
 
 static void signal_manager_connect_signals(SignalManager *man);

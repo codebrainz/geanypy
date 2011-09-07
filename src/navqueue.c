@@ -4,6 +4,7 @@
 #include <geanyplugin.h>
 #include <pygtk/pygtk.h>
 #include "plugin.h"
+#include "document.h"
 
 
 static PyObject *

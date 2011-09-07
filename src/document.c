@@ -23,6 +23,7 @@
 #include <structmember.h>
 #include <geanyplugin.h>
 #include "plugin.h"
+#include "document.h"
 
 
 static void

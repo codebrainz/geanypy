@@ -42,13 +42,6 @@ typedef struct
 typedef struct
 {
 	PyObject_HEAD
-	GeanyDocument *doc;
-} Document;
-
-
-typedef struct
-{
-	PyObject_HEAD
 	GeanyEditor *editor;
 } Editor;
 
@@ -77,13 +70,6 @@ typedef struct
 typedef struct
 {
 	PyObject_HEAD
-	GeanyApp *app;
-} App;
-
-
-typedef struct
-{
-	PyObject_HEAD
 	ScintillaObject *sci;
 } Scintilla;
 
@@ -106,11 +92,6 @@ typedef struct
 #define PyMODINIT_FUNC void
 #endif
 
-
-PyMODINIT_FUNC init_geany_app(void);
-
-PyMODINIT_FUNC init_geany_document(void);
-Document *Document_create_new_from_geany_document(GeanyDocument *doc);
 
 PyMODINIT_FUNC init_geany_filetype(void);
 Filetype *Filetype_create_new_from_geany_filetype(GeanyFiletype *ft);
