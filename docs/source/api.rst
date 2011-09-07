@@ -31,16 +31,6 @@ contains some stuff in it's :mod:`__init__` file, acting like a module itself.
     An instance of :class:`mainwidgets.MainWidgets` to provide access to
     Geany's important GTK+ widgets.
 
-.. data:: editor_prefs
-
-    An instance of :class:`editorprefs.EditorPrefs` to provide access to
-    the default preferences used when creating a new editor window.
-
-.. data:: file_prefs
-
-    An instance of :class:`fileprefs.FilePrefs` to provide access to the
-    file and IO related settings used by Geany.
-
 .. data:: signals
 
     An instance of :class:`signalmanager.SignalManager` which manages the
