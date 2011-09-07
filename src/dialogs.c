@@ -24,6 +24,7 @@
 #include <gtk/gtk.h>
 #include <pygtk/pygtk.h>
 #include "plugin.h"
+#include "dialogs.h"
 
 
 static PyObject *
@@ -134,16 +135,16 @@ Dialogs_show_save_as(PyObject *self)
 
 static
 PyMethodDef DialogsModule_methods[] = {
-    { "show_input", (PyCFunction)Dialogs_show_input, METH_KEYWORDS },
-    { "show_input_numeric", (PyCFunction)Dialogs_show_input_numeric, METH_KEYWORDS },
-    { "show_msgbox", (PyCFunction)Dialogs_show_msgbox, METH_KEYWORDS },
-    { "show_question", (PyCFunction)Dialogs_show_question, METH_KEYWORDS },
-    { "show_save_as", (PyCFunction)Dialogs_show_save_as, METH_NOARGS },
+    { "show_input",			(PyCFunction) Dialogs_show_input,			METH_KEYWORDS },
+    { "show_input_numeric",	(PyCFunction) Dialogs_show_input_numeric,	METH_KEYWORDS },
+    { "show_msgbox",		(PyCFunction) Dialogs_show_msgbox,			METH_KEYWORDS },
+    { "show_question",		(PyCFunction) Dialogs_show_question,		METH_KEYWORDS },
+    { "show_save_as",		(PyCFunction) Dialogs_show_save_as,			METH_NOARGS },
     { NULL }
 };
 
 
-PyMODINIT_FUNC initdialogs(void)
+PyMODINIT_FUNC init_geany_dialogs(void)
 {
     PyObject *m;
 

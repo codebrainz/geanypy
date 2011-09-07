@@ -14,6 +14,9 @@
 #include "signalmanager.h"
 
 #include "app.h"
+#include "dialogs.h"
+#include "document.h"
+#include "project.h"
 
 
 GeanyPlugin		*geany_plugin;
@@ -63,11 +66,9 @@ GeanyPy_start_interpreter(void)
     init_geany_scintilla_notification();
 
     init_geany_app();
+    init_geany_dialogs();
     init_geany_document();
     init_geany_project();
-
-    /* Bindings that don't need/have wrappers in Python code. */
-    initdialogs();
 
     /* Adjust Python path to find wrapper package (geany) */
     init_code = g_strdup_printf(

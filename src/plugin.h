@@ -89,7 +89,7 @@ typedef struct
 PyMODINIT_FUNC init_geany_filetype(void);
 Filetype *Filetype_create_new_from_geany_filetype(GeanyFiletype *ft);
 
-PyMODINIT_FUNC initdialogs(void);
+PyMODINIT_FUNC init_dialogs(void);
 
 PyMODINIT_FUNC init_geany_indent_prefs(void);
 IndentPrefs *IndentPrefs_create_new_from_geany_indent_prefs(GeanyIndentPrefs *indent_prefs);
