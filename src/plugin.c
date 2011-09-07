@@ -48,7 +48,6 @@ GeanyPy_start_interpreter(void)
     Py_Initialize();
 
     /* Import the C modules */
-    init_geany_app();
     init_geany_document();
     init_geany_editor();
     init_geany_encodings();
@@ -62,6 +61,8 @@ GeanyPy_start_interpreter(void)
     init_geany_project();
     init_geany_scintilla();
     init_geany_scintilla_notification();
+
+    initgeany_app();
 
     /* Bindings that don't need/have wrappers in Python code. */
     initdialogs();

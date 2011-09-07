@@ -1,5 +1,5 @@
 /*
- * app.c - See Geany's app.h
+ * app.c - See Geany's app.h and GeanyPy's app.py.
  *
  * Copyright 2011 Matthew Brush <mbrush@codebrainz.ca>
  *
@@ -21,7 +21,6 @@
 
 #include <Python.h>
 #include <structmember.h>
-#include <gtk/gtk.h>
 #include <geanyplugin.h>
 #include "plugin.h"
 
@@ -42,7 +41,7 @@ App_init(App *self)
 
 
 static PyObject *
-App_get_configdir(App *self)
+App_get_config_dir(App *self)
 {
 	if (self->app != NULL)
 		return PyString_FromString(self->app->configdir);
@@ -76,7 +75,7 @@ App_get_project(App *self)
 
 
 static PyMethodDef App_methods[] = {
-	{ "get_configdir",	(PyCFunction) App_get_configdir,	METH_NOARGS },
+	{ "get_config_dir",	(PyCFunction) App_get_config_dir,	METH_NOARGS },
 	{ "get_debug_mode",	(PyCFunction) App_get_debug_mode,	METH_NOARGS },
 	{ "get_project",	(PyCFunction) App_get_project,		METH_NOARGS },
 	{ NULL }
@@ -86,7 +85,7 @@ static PyMethodDef App_methods[] = {
 static PyTypeObject AppType = {
 	PyObject_HEAD_INIT(NULL)
 	0,											/* ob_size */
-	"_geany_app.App",							/* tp_name */
+	"geany._app.App",							/* tp_name */
 	sizeof(App),								/* tp_basicsize */
 	0,											/* tp_itemsize */
 	(destructor)App_dealloc,					/* tp_dealloc */
@@ -129,7 +128,7 @@ static PyTypeObject AppType = {
 static PyMethodDef AppModule_methods[] = { { NULL } };
 
 
-PyMODINIT_FUNC init_geany_app(void)
+PyMODINIT_FUNC initgeany_app(void)
 {
 	PyObject *m;
 
@@ -137,7 +136,7 @@ PyMODINIT_FUNC init_geany_app(void)
 	if (PyType_Ready(&AppType) < 0)
 		return;
 
-	m = Py_InitModule("_geany_app", AppModule_methods);
+	m = Py_InitModule("_app", AppModule_methods);
 
 	Py_INCREF(&AppType);
 	PyModule_AddObject(m, "App", (PyObject *)&AppType);
