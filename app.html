@@ -1,0 +1,171 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>The app module &mdash; GeanyPy v1.0 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="GeanyPy v1.0 documentation" href="index.html" />
+    <link rel="up" title="API Documentation" href="api.html" />
+    <link rel="next" title="The dialogs module" href="dialogs.html" />
+    <link rel="prev" title="API Documentation" href="api.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="dialogs.html" title="The dialogs module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="api.html" title="API Documentation"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">GeanyPy v1.0 documentation</a> &raquo;</li>
+          <li><a href="api.html" accesskey="U">API Documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-app">
+<span id="the-app-module"></span><h1>The <a class="reference internal" href="#module-app" title="app: Application settings"><tt class="xref py py-mod docutils literal"><span class="pre">app</span></tt></a> module<a class="headerlink" href="#module-app" title="Permalink to this headline">¶</a></h1>
+<p>This modules contains a class to access application settings.</p>
+<div class="section" id="app-objects">
+<h2><a class="reference internal" href="#app.App" title="app.App"><tt class="xref py py-class docutils literal"><span class="pre">App</span></tt></a> Objects<a class="headerlink" href="#app-objects" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="app.App">
+<em class="property">class </em><tt class="descclassname">app.</tt><tt class="descname">App</tt><a class="headerlink" href="#app.App" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<p>This class is initialized automatically and by the <a class="reference internal" href="api.html#module-geany" title="geany"><tt class="xref py py-mod docutils literal"><span class="pre">geany</span></tt></a> module and
+shouldn&#8217;t be initalized by users.  An instance of it is available through
+the <a class="reference internal" href="api.html#geany.app" title="geany.app"><tt class="xref py py-data docutils literal"><span class="pre">geany.app</span></tt></a> attribute of the <a class="reference internal" href="api.html#module-geany" title="geany"><tt class="xref py py-mod docutils literal"><span class="pre">geany</span></tt></a> module.</p>
+<p>All members of the <a class="reference internal" href="#app.App" title="app.App"><tt class="xref py py-class docutils literal"><span class="pre">App</span></tt></a> are read-only properties.</p>
+<blockquote>
+<div><dl class="attribute">
+<dt id="app.App.configdir">
+<tt class="descclassname">App.</tt><tt class="descname">configdir</tt><a class="headerlink" href="#app.App.configdir" title="Permalink to this definition">¶</a></dt>
+<dd><p>User configuration directory, usually ~/.config/geany.  To store configuration
+files for your plugin, it&#8217;s a good idea to use something like this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">conf_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">geany</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">configdir</span><span class="p">,</span> <span class="s">&quot;plugins&quot;</span><span class="p">,</span> <span class="s">&quot;yourplugin&quot;</span><span class="p">,</span>
+                <span class="s">&quot;yourconfigfile.conf&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="app.App.debug_mode">
+<tt class="descclassname">App.</tt><tt class="descname">debug_mode</tt><a class="headerlink" href="#app.App.debug_mode" title="Permalink to this definition">¶</a></dt>
+<dd><p>If True, debug messages should be printed.  For example, if you want to make
+a <tt class="xref py py-func docutils literal"><span class="pre">print()</span></tt> function that only prints when <a class="reference internal" href="#app.App.debug_mode" title="app.App.debug_mode"><tt class="xref py py-attr docutils literal"><span class="pre">App.debug_mode</span></tt></a>
+is active, you could do something like this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">debug_print</span><span class="p">(</span><span class="n">message</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">geany</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">debug_mode</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="app.App.project">
+<tt class="descclassname">App.</tt><tt class="descname">project</tt><a class="headerlink" href="#app.App.project" title="Permalink to this definition">¶</a></dt>
+<dd><p>If not <tt class="xref py py-obj xref docutils literal"><span class="pre">None</span></tt>, the a <tt class="xref py py-class docutils literal"><span class="pre">project.Project</span></tt> for currently active project.</p>
+</dd></dl>
+
+</div></blockquote>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">The <tt class="docutils literal"><span class="pre">app</span></tt> module</a><ul>
+<li><a class="reference internal" href="#app-objects"><tt class="docutils literal"><span class="pre">App</span></tt> Objects</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="api.html"
+                        title="previous chapter">API Documentation</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="dialogs.html"
+                        title="next chapter">The <tt class="docutils literal"><span class="pre">dialogs</span></tt> module</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/app.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="dialogs.html" title="The dialogs module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="api.html" title="API Documentation"
+             >previous</a> |</li>
+        <li><a href="index.html">GeanyPy v1.0 documentation</a> &raquo;</li>
+          <li><a href="api.html" >API Documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, Matthew Brush &lt;mbrush@codebrainz.ca&gt;.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>
