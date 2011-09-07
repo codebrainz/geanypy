@@ -34,7 +34,7 @@ App_dealloc(App *self)
 
 
 static int
-App_init(App *self, PyObject *args, PyObject *kwds)
+App_init(App *self)
 {
     self->app = geany_data->app;
 	return 0;
@@ -42,7 +42,7 @@ App_init(App *self, PyObject *args, PyObject *kwds)
 
 
 static PyObject *
-App__get_configdir(App *self, PyObject *args)
+App__get_configdir(App *self)
 {
     if (self->app != NULL)
         return PyString_FromString(self->app->configdir);
@@ -51,7 +51,7 @@ App__get_configdir(App *self, PyObject *args)
 
 
 static PyObject *
-App__get_debug_mode(App *self, PyObject *args)
+App__get_debug_mode(App *self)
 {
     if (self->app != NULL)
     {
@@ -65,7 +65,7 @@ App__get_debug_mode(App *self, PyObject *args)
 
 
 static PyObject *
-App__get_project(App *self, PyObject *args)
+App__get_project(App *self)
 {
     Project *proj;
     proj = Project_create_new();
@@ -76,9 +76,9 @@ App__get_project(App *self, PyObject *args)
 
 
 static PyMethodDef App_methods[] = {
-	{ "_get_configdir", (PyCFunction) App__get_configdir, METH_VARARGS },
-    { "_get_debug_mode", (PyCFunction) App__get_debug_mode, METH_VARARGS },
-    { "_get_project", (PyCFunction) App__get_project, METH_VARARGS },
+	{ "_get_configdir", (PyCFunction) App__get_configdir, METH_NOARGS },
+    { "_get_debug_mode", (PyCFunction) App__get_debug_mode, METH_NOARGS },
+    { "_get_project", (PyCFunction) App__get_project, METH_NOARGS },
 	{ NULL }
 };
 
