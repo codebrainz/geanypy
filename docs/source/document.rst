@@ -7,24 +7,6 @@ The :mod:`document` module
 This module provides functions for working with documents.  Most of the module-level
 functions are used for creating instances of the :class:`Document` object.
 
-.. function:: compare_by_display_name(doc_a, doc_b)
-
-    Compares two documents by their display names.
-
-    :param doc_a: The first :class:`Document`
-    :param doc_b: The second :class:`Document`
-
-    :return: Negative number if `doc_a` is < `doc_b`, zero if `doc_a` == `doc_b` and a positive number if `doc_a` > `doc_b`.
-
-.. function:: compare_by_tab_order(doc_a, doc_b[, reverse=False])
-
-    Compares two documents by their tab order, possibly reverse order.
-
-    :param doc_a: The first :class:`Document`
-    :param doc_b: The second :class:`Document`
-    :param reverse: Whether to compare in reverse tab number order.
-
-    :return: Negative number if `doc_a` is < `doc_b`, zero if `doc_a` == `doc_b` and a positive number if `doc_a` > `doc_b`.
 
 .. function:: find_by_filename(filename)
 

@@ -2,11 +2,11 @@ import _geany_document
 import filetypes
 import editor
 
-def compare_by_display_name(doc_a, doc_b):
-    return _geany_document.compare_by_display_name(doc_a, doc_b)
+#def compare_by_display_name(doc_a, doc_b):
+    #return _geany_document.compare_by_display_name(doc_a, doc_b)
 
-def compare_by_tab_order(doc_a, doc_b, reverse=False):
-    return _geany_document.compare_by_tab_order(doc_a, doc_b, reverse)
+#def compare_by_tab_order(doc_a, doc_b, reverse=False):
+    #return _geany_document.compare_by_tab_order(doc_a, doc_b, reverse)
 
 def find_by_filename(filename):
     return _geany_document.find_by_filename(filename)
@@ -33,7 +33,7 @@ def get_from_page(page_num):
         return doc
 
 def get_from_index(index):
-    _doc = _geany_document.index(index)
+    _doc = _geany_document.get_from_index(index)
     if _doc is not None:
         doc = Document()
         doc._doc = _doc
