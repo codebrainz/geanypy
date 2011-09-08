@@ -14,7 +14,7 @@ class Prefs(object):
 
 	Example use:
 		import geany
-		print(geany.prefs.default_open_dir)
+		print(geany.prefs.default_open_path)
 	"""
 
 	_prefs = None
