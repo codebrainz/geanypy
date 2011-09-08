@@ -24,8 +24,10 @@ import msgwindow
 import navqueue
 import project
 import scintilla
+import prefs
 
 from app import App
+from prefs import Prefs
 from mainwidgets import MainWidgets
 from main import is_realized, locale_init, reload_configuration
 from signalmanager import SignalManager
@@ -37,10 +39,14 @@ __all__ = [ "Plugin",
             "reload_configuration",
             "main_widgets",
             "app",
+            "prefs",
             "signals" ]
 
 # Geany's application data fields
 app = App()
+
+# Geany's preferences
+prefs = Prefs()
 
 # Import GTK+ widgets that are part of Geany's UI
 main_widgets = MainWidgets()

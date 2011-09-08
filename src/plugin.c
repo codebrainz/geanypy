@@ -70,6 +70,7 @@ GeanyPy_start_interpreter(void)
     init_geany_dialogs();
     init_geany_document();
     init_geany_editor();
+    init_geany_prefs();
     init_geany_project();
 
     /* Adjust Python path to find wrapper package (geany) */

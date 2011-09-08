@@ -6,6 +6,7 @@ geanypy_sources				=	__init__.py \
 								mainwidgets.py \
 								project.py \
 								app.py \
+								prefs.py \
 								scintilla.py \
 								console.py \
 								manager.py \

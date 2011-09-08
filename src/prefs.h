@@ -1,5 +1,5 @@
 /*
- * geanypy.h
+ * prefs.h
  *
  * Copyright 2011 Matthew Brush <mbrush@codebrainz.ca>
  *
@@ -20,48 +20,24 @@
  *
  */
 
-#ifndef GEANYPY_H__
-#define GEANYPY_H__
+#ifndef GEANYPY_PREFS_H__
+#define GEANYPY_PREFS_H__
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 
-#include <Python.h>
-#ifndef PyMODINIT_FUNC
-#  define PyMODINIT_FUNC void
-#endif
-#include <structmember.h>
+typedef struct
+{
+	PyObject_HEAD
+	GeanyPrefs *prefs;
+} Prefs;
 
-#include <stdlib.h>
-#include <errno.h>
-#include <string.h>
-#include <dlfcn.h>
 
-#include <gtk/gtk.h>
-#include <pygobject.h>
-#include <pygtk/pygtk.h>
-#include <geanyplugin.h>
-
-#ifndef GTK
-#  define GTK
-#endif
-#include <Scintilla.h>
-#include <ScintillaWidget.h>
-
-#include "plugin-config.h"
-#include "app.h"
-#include "dialogs.h"
-#include "document.h"
-#include "editor.h"
-#include "plugin.h"
-#include "prefs.h"
-#include "project.h"
-#include "signalmanager.h"
-
+PyMODINIT_FUNC init_geany_prefs(void);
 
 
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
-#endif /* GEANYPY_H__ */
+#endif /* GEANYPY_PREFS_H__ */
