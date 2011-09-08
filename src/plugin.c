@@ -186,6 +186,8 @@ GeanyPy_init_manager(const gchar *dir)
 
     args = Py_BuildValue("([s, s])", GEANYPY_PLUGIN_DIR, dir);
     manager = PyObject_CallObject(man, args);
+    if (PyErr_Occurred)
+		PyErr_Print();
     Py_DECREF(man);
     Py_DECREF(args);
 
