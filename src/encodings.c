@@ -1,10 +1,4 @@
-#include <Python.h>
-#include <structmember.h>
-#include <gtk/gtk.h>
-#include <geanyplugin.h>
-#include <pygtk/pygtk.h>
-#include "plugin.h"
-
+#include "geanypy.h"
 
 static PyObject *
 Encodings_convert_to_utf8(PyObject *module, PyObject *args)

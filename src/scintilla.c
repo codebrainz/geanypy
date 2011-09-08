@@ -19,15 +19,7 @@
  * MA 02110-1301, USA.
  */
 
-#include <Python.h>
-#include <structmember.h>
-#include <gtk/gtk.h>
-#include <pygobject.h>
-#include <pygtk/pygtk.h>
-#include <geanyplugin.h>
-#include <Scintilla.h>
-#include <ScintillaWidget.h>
-#include "plugin.h"
+#include "geanypy.h"
 
 
 static void

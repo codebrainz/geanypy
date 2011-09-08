@@ -42,13 +42,6 @@ typedef struct
 typedef struct
 {
 	PyObject_HEAD
-	GeanyEditor *editor;
-} Editor;
-
-
-typedef struct
-{
-	PyObject_HEAD
 	GeanyIndentPrefs *indent_prefs;
 } IndentPrefs;
 
@@ -93,8 +86,7 @@ PyMODINIT_FUNC init_dialogs(void);
 
 PyMODINIT_FUNC init_geany_indent_prefs(void);
 IndentPrefs *IndentPrefs_create_new_from_geany_indent_prefs(GeanyIndentPrefs *indent_prefs);
-PyMODINIT_FUNC init_geany_editor(void);
-Editor *Editor_create_new_from_geany_editor(GeanyEditor *editor);
+
 
 PyMODINIT_FUNC init_geany_main_widgets(void);
 

@@ -1,4 +1,4 @@
-import _geany_editor
+import _editor as c_editor
 import indentprefs
 import scintilla
 
@@ -64,23 +64,23 @@ class Editor(object):
 
     @property
     def eol_char(self):
-        return self._editor._get_eol_char()
+        return self._editor.get_eol_char()
 
     @property
     def eol_char_len(self):
-        return self._editor._get_eol_char_len()
+        return self._editor.get_eol_char_len()
 
     @property
     def eol_char_mode(self):
-        return self._editor._get_eol_char_mode()
+        return self._editor.get_eol_char_mode()
 
     @property
     def eol_char_name(self):
-        return self._editor._get_eol_char_name()
+        return self._editor.get_eol_char_name()
 
     @property
     def indent_prefs(self):
-        _ip = self._editor._get_indent_prefs()
+        _ip = self._editor.get_indent_prefs()
         if _ip is not None:
             ip = indentprefs.IndentPrefs()
             ip._indent_prefs = _ip
@@ -92,11 +92,11 @@ class Editor(object):
 
     @indent_type.setter
     def indent_type(self, value):
-        self._editor._set_indent_type(value)
+        self._editor.set_indent_type(value)
 
     @property
     def sci(self):
-        _sci = self._editor._get_scintilla()
+        _sci = self._editor.get_scintilla()
         if _sci is not None:
             sci = scintilla.Scintilla()
             sci._sci = _sci

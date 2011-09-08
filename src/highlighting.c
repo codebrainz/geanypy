@@ -1,8 +1,4 @@
-#include <Python.h>
-#include <structmember.h>
-#include <gtk/gtk.h>
-#include <geanyplugin.h>
-#include "plugin.h"
+#include "geanypy.h"
 
 
 static void

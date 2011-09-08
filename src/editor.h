@@ -1,5 +1,5 @@
 /*
- * geanypy.h
+ * editor.h
  *
  * Copyright 2011 Matthew Brush <mbrush@codebrainz.ca>
  *
@@ -20,47 +20,25 @@
  *
  */
 
-#ifndef GEANYPY_H__
-#define GEANYPY_H__
+#ifndef GEANYPY_EDITOR_H__
+#define GEANYPY_EDITOR_H__
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 
-#include <Python.h>
-#ifndef PyMODINIT_FUNC
-#  define PyMODINIT_FUNC void
-#endif
-#include <structmember.h>
+typedef struct
+{
+	PyObject_HEAD
+	GeanyEditor *editor;
+} Editor;
 
-#include <stdlib.h>
-#include <errno.h>
-#include <string.h>
-#include <dlfcn.h>
 
-#include <gtk/gtk.h>
-#include <pygobject.h>
-#include <pygtk/pygtk.h>
-#include <geanyplugin.h>
-
-#ifndef GTK
-#  define GTK
-#endif
-#include <Scintilla.h>
-#include <ScintillaWidget.h>
-
-#include "plugin-config.h"
-#include "app.h"
-#include "dialogs.h"
-#include "document.h"
-#include "editor.h"
-#include "plugin.h"
-#include "project.h"
-#include "signalmanager.h"
-
+PyMODINIT_FUNC init_geany_editor(void);
+Editor *Editor_create_new_from_geany_editor(GeanyEditor *editor);
 
 
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
-#endif /* GEANYPY_H__ */
+#endif /* GEANYPY_EDITOR_H__ */

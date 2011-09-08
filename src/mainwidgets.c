@@ -19,13 +19,7 @@
  * MA 02110-1301, USA.
  */
 
-#include <Python.h>
-#include <structmember.h>
-#include <gtk/gtk.h>
-#include <geanyplugin.h>
-#include <pygobject.h>
-#include <pygtk/pygtk.h>
-#include "plugin.h"
+#include "geanypy.h"
 
 
 static PyTypeObject *PyGObject_Type = NULL;
