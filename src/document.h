@@ -27,11 +27,6 @@ extern "C" {
 #endif
 
 
-#include <Python.h>
-#include <geanyplugin.h>
-#include "common.h"
-
-
 typedef struct
 {
 	PyObject_HEAD

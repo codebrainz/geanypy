@@ -19,12 +19,7 @@
  * MA 02110-1301, USA.
  */
 
-#include <Python.h>
-#include <geanyplugin.h>
-#include <gtk/gtk.h>
-#include <pygtk/pygtk.h>
-#include "plugin.h"
-#include "dialogs.h"
+#include "geanypy.h"
 
 
 static PyObject *

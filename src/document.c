@@ -19,11 +19,7 @@
  * MA 02110-1301, USA.
  */
 
-#include <Python.h>
-#include <structmember.h>
-#include <geanyplugin.h>
-#include "plugin.h"
-#include "document.h"
+#include "geanypy.h"
 
 
 static void

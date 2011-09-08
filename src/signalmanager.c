@@ -1,14 +1,4 @@
-#include <Python.h>
-#include <gtk/gtk.h>
-#include <pygobject.h>
-#include <pygtk/pygtk.h>
-#include <geanyplugin.h>
-#include <Scintilla.h>
-#include <ScintillaWidget.h>
-#include "plugin.h"
-#include "signalmanager.h"
-#include "document.h"
-#include "project.h"
+#include "geanypy.h"
 
 
 static void signal_manager_connect_signals(SignalManager *man);

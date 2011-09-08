@@ -1,5 +1,5 @@
 /*
- * project.h
+ * geanypy.h
  *
  * Copyright 2011 Matthew Brush <mbrush@codebrainz.ca>
  *
@@ -20,25 +20,46 @@
  *
  */
 
-#ifndef GEANYPY_PROJECT_H__
-#define GEANYPY_PROJECT_H__
+#ifndef GEANYPY_H__
+#define GEANYPY_H__
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 
-typedef struct
-{
-	PyObject_HEAD
-	GeanyProject *project;
-} Project;
+#include <Python.h>
+#ifndef PyMODINIT_FUNC
+#  define PyMODINIT_FUNC void
+#endif
+#include <structmember.h>
 
+#include <stdlib.h>
+#include <errno.h>
+#include <string.h>
+#include <dlfcn.h>
 
-PyMODINIT_FUNC init_geany_project(void);
-Project *Project_create_new(void);
+#include <gtk/gtk.h>
+#include <pygobject.h>
+#include <pygtk/pygtk.h>
+#include <geanyplugin.h>
+
+#ifndef GTK
+#  define GTK
+#endif
+#include <Scintilla.h>
+#include <ScintillaWidget.h>
+
+#include "plugin-config.h"
+#include "app.h"
+#include "dialogs.h"
+#include "document.h"
+#include "plugin.h"
+#include "project.h"
+#include "signalmanager.h"
+
 
 
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
-#endif /* GEANYPY_PROJECT_H__ */
+#endif /* GEANYPY_H__ */

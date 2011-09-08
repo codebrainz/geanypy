@@ -27,9 +27,6 @@ extern "C" {
 #endif
 
 
-#include <Python.h>
-
-
 PyMODINIT_FUNC init_geany_dialogs(void);
 
 
