@@ -34,7 +34,7 @@ typedef struct
 } App;
 
 
-PyMODINIT_FUNC init_geany_app(void);
+PyMODINIT_FUNC initapp(void);
 
 
 #ifdef __cplusplus

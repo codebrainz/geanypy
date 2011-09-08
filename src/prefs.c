@@ -22,6 +22,7 @@
 #include "geanypy.h"
 
 
+
 static void
 Prefs_dealloc(Prefs *self)
 {
@@ -44,6 +45,7 @@ Prefs_get_default_open_path(Prefs *self)
 		return PyString_FromString(self->prefs->default_open_path);
 	Py_RETURN_NONE;
 }
+GEANYPY_WRAP_GET_ONLY(Prefs, default_open_path);
 
 
 static PyMethodDef Prefs_methods[] = {
@@ -52,10 +54,16 @@ static PyMethodDef Prefs_methods[] = {
 };
 
 
+static PyGetSetDef Prefs_getseters[] = {
+	GEANYPY_GETSETDEF(Prefs, default_open_path),
+	{ NULL }
+};
+
+
 static PyTypeObject PrefsType = {
 	PyObject_HEAD_INIT(NULL)
 	0,											/* ob_size */
-	"geany._prefs.Prefs",							/* tp_name */
+	"geany.prefs.Prefs",						/* tp_name */
 	sizeof(Prefs),								/* tp_basicsize */
 	0,											/* tp_itemsize */
 	(destructor)Prefs_dealloc,					/* tp_dealloc */
@@ -83,7 +91,7 @@ static PyTypeObject PrefsType = {
 	0,											/* tp_iternext */
 	Prefs_methods,								/* tp_methods */
 	0,											/* tp_members */
-	0,											/* tp_getset */
+	Prefs_getseters,							/* tp_getset */
 	0,											/* tp_base */
 	0,											/* tp_dict */
 	0,											/* tp_descr_get */
@@ -98,7 +106,7 @@ static PyTypeObject PrefsType = {
 static PyMethodDef PrefsModule_methods[] = { { NULL } };
 
 
-PyMODINIT_FUNC init_geany_prefs(void)
+PyMODINIT_FUNC initprefs(void)
 {
 	PyObject *m;
 
@@ -106,7 +114,7 @@ PyMODINIT_FUNC init_geany_prefs(void)
 	if (PyType_Ready(&PrefsType) < 0)
 		return;
 
-	m = Py_InitModule("_prefs", PrefsModule_methods);
+	m = Py_InitModule("prefs", PrefsModule_methods);
 
 	Py_INCREF(&PrefsType);
 	PyModule_AddObject(m, "Prefs", (PyObject *)&PrefsType);

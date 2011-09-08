@@ -4,9 +4,6 @@ geanypy_sources				=	__init__.py \
 								indentprefs.py \
 								editor.py \
 								mainwidgets.py \
-								project.py \
-								app.py \
-								prefs.py \
 								scintilla.py \
 								console.py \
 								manager.py \

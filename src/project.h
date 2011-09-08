@@ -34,7 +34,7 @@ typedef struct
 } Project;
 
 
-PyMODINIT_FUNC init_geany_project(void);
+PyMODINIT_FUNC initproject(void);
 Project *Project_create_new(void);
 
 

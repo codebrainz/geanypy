@@ -34,7 +34,7 @@ typedef struct
 } Prefs;
 
 
-PyMODINIT_FUNC init_geany_prefs(void);
+PyMODINIT_FUNC initprefs(void);
 
 
 #ifdef __cplusplus

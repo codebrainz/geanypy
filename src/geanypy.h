@@ -33,6 +33,48 @@ extern "C" {
 #endif
 #include <structmember.h>
 
+
+#define GEANYPY_WRAP_GET_ONLY(cls, prop_name) \
+	static PyObject * \
+	cls ## _ ## prop_name ##_getter(PyObject *self, void *closure) { \
+		return cls ## _get_ ## prop_name ( ( cls * ) self); \
+	} \
+	static int \
+	cls ## _ ## prop_name ## _setter(PyObject *self, PyObject *value, void *closure) { \
+		PyErr_SetString(PyExc_AttributeError, \
+			"property '" #prop_name "' is read-only."); \
+		return -1; \
+	}
+
+#define GEANYPY_WRAP_SET_ONLY(cls, prop_name) \
+	static PyObject * \
+	cls ## _ ## prop_name ## _getter(PyObject *self, void *closure) { \
+		PyErr_SetString(PyExc_AttributeError, \
+			"property '" #prop_name "' is write-only."); \
+		return -1; \
+	} \
+	static int \
+	cls ## _ ## prop_name ## _setter(PyObject *self, PyObject *value, void *closure) { \
+		return cls ## _set_ ## prop_name( ( cls * ) self, value); \
+	}
+
+#define GEANYPY_WRAP_GET_SET(cls, prop_name) \
+	static PyObject * \
+	cls ## _ ## prop_name ## _getter(PyObject *self, void *closure) { \
+		return  cls ## _get_ ## prop_name( ( cls * ) self); \
+	} \
+	static int \
+	cls ## _ ## prop_name ## _setter(PyObject *self, PyObject *value, void *closure) { \
+		return cls ## _set_ ## prop_name( ( cls * ) self, value); \
+	}
+
+#define GEANYPY_GETSETDEF(cls, prop_name) \
+	{ #prop_name, \
+		(getter) cls ## _ ## prop_name ## _getter, \
+		(setter) cls ## _ ## prop_name ## _setter, \
+		NULL, NULL }
+
+
 #include <stdlib.h>
 #include <errno.h>
 #include <string.h>
@@ -58,7 +100,6 @@ extern "C" {
 #include "prefs.h"
 #include "project.h"
 #include "signalmanager.h"
-
 
 
 #ifdef __cplusplus

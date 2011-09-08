@@ -2,12 +2,10 @@ import geany
 import document
 import editor
 import filetypes
-import project
 import scintilla
 import _document as c_document
 import _editor as c_editor
 import _geany_filetypes
-import _project as c_project
 import _geany_scintilla_notification
 from collections import namedtuple
 
@@ -122,10 +120,6 @@ class SignalManager(object):
                 ed = editor.Editor()
                 ed._editor = arg
                 new_args.append(ed)
-            elif isinstance(arg, c_project.Project):
-                proj = project.Project()
-                project._project = arg
-                new_args.append(project)
             elif isinstance(arg, _geany_scintilla_notification.Notification):
                 notif = scintilla.Notification()
                 notif._notif = arg

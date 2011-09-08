@@ -44,6 +44,7 @@ App_get_config_dir(App *self)
 		return PyString_FromString(self->app->configdir);
 	Py_RETURN_NONE;
 }
+GEANYPY_WRAP_GET_ONLY(App, config_dir);
 
 
 static PyObject *
@@ -58,17 +59,21 @@ App_get_debug_mode(App *self)
 	}
 	Py_RETURN_NONE;
 }
+GEANYPY_WRAP_GET_ONLY(App, debug_mode);
 
 
 static PyObject *
 App_get_project(App *self)
 {
 	Project *proj;
+	if (geany_data->app->project == NULL)
+		Py_RETURN_NONE;
 	proj = Project_create_new();
 	if (proj != NULL)
 		return (PyObject *) proj;
 	Py_RETURN_NONE;
 }
+GEANYPY_WRAP_GET_ONLY(App, project);
 
 
 static PyMethodDef App_methods[] = {
@@ -79,10 +84,18 @@ static PyMethodDef App_methods[] = {
 };
 
 
+static PyGetSetDef App_getseters[] = {
+	GEANYPY_GETSETDEF(App, config_dir),
+	GEANYPY_GETSETDEF(App, debug_mode),
+	GEANYPY_GETSETDEF(App, project),
+	{ NULL }
+};
+
+
 static PyTypeObject AppType = {
 	PyObject_HEAD_INIT(NULL)
 	0,											/* ob_size */
-	"geany._app.App",							/* tp_name */
+	"geany.app.App",							/* tp_name */
 	sizeof(App),								/* tp_basicsize */
 	0,											/* tp_itemsize */
 	(destructor)App_dealloc,					/* tp_dealloc */
@@ -110,7 +123,7 @@ static PyTypeObject AppType = {
 	0,											/* tp_iternext */
 	App_methods,								/* tp_methods */
 	0,											/* tp_members */
-	0,											/* tp_getset */
+	App_getseters,								/* tp_getset */
 	0,											/* tp_base */
 	0,											/* tp_dict */
 	0,											/* tp_descr_get */
@@ -125,7 +138,7 @@ static PyTypeObject AppType = {
 static PyMethodDef AppModule_methods[] = { { NULL } };
 
 
-PyMODINIT_FUNC init_geany_app(void)
+PyMODINIT_FUNC initapp(void)
 {
 	PyObject *m;
 
@@ -133,7 +146,7 @@ PyMODINIT_FUNC init_geany_app(void)
 	if (PyType_Ready(&AppType) < 0)
 		return;
 
-	m = Py_InitModule("_app", AppModule_methods);
+	m = Py_InitModule("app", AppModule_methods);
 
 	Py_INCREF(&AppType);
 	PyModule_AddObject(m, "App", (PyObject *)&AppType);

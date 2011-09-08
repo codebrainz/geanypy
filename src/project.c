@@ -44,6 +44,7 @@ Project_get_base_path(Project *self)
 		return PyString_FromString(self->project->base_path);
 	Py_RETURN_NONE;
 }
+GEANYPY_WRAP_GET_ONLY(Project, base_path);
 
 
 static PyObject *
@@ -53,6 +54,7 @@ Project_get_description(Project *self)
 		return PyString_FromString(self->project->description);
 	Py_RETURN_NONE;
 }
+GEANYPY_WRAP_GET_ONLY(Project, description);
 
 
 static PyObject *
@@ -62,6 +64,7 @@ Project_get_file_name(Project *self)
 		return PyString_FromString(self->project->file_name);
 	Py_RETURN_NONE;
 }
+GEANYPY_WRAP_GET_ONLY(Project, file_name);
 
 
 static PyObject *
@@ -83,6 +86,7 @@ Project_get_file_patterns(Project *self)
 	}
 	Py_RETURN_NONE;
 }
+GEANYPY_WRAP_GET_ONLY(Project, file_patterns);
 
 
 static PyObject *
@@ -92,6 +96,7 @@ Project_get_name(Project *self)
 		return PyString_FromString(self->project->name);
 	Py_RETURN_NONE;
 }
+GEANYPY_WRAP_GET_ONLY(Project, name);
 
 
 static PyObject *
@@ -101,6 +106,7 @@ Project_get_type(Project *self)
 		return Py_BuildValue("i", self->project->type);
 	Py_RETURN_NONE;
 }
+GEANYPY_WRAP_GET_ONLY(Project, type);
 
 
 static PyObject *
@@ -111,6 +117,7 @@ Project_get_is_open(Project *self)
 	else
 		Py_RETURN_TRUE;
 }
+GEANYPY_WRAP_GET_ONLY(Project, is_open);
 
 
 static PyMethodDef Project_methods[] = {
@@ -125,10 +132,22 @@ static PyMethodDef Project_methods[] = {
 };
 
 
+static PyGetSetDef Project_getseters[] = {
+	GEANYPY_GETSETDEF(Project, base_path),
+	GEANYPY_GETSETDEF(Project, description),
+	GEANYPY_GETSETDEF(Project, file_name),
+	GEANYPY_GETSETDEF(Project, file_patterns),
+	GEANYPY_GETSETDEF(Project, name),
+	GEANYPY_GETSETDEF(Project, type),
+	GEANYPY_GETSETDEF(Project, is_open),
+	{ NULL }
+};
+
+
 static PyTypeObject ProjectType = {
 	PyObject_HEAD_INIT(NULL)
 	0,											/* ob_size */
-	"geany._project.Project",					/* tp_name */
+	"geany.project.Project",					/* tp_name */
 	sizeof(Project),							/* tp_basicsize */
 	0,											/* tp_itemsize */
 	(destructor)Project_dealloc,				/* tp_dealloc */
@@ -156,7 +175,7 @@ static PyTypeObject ProjectType = {
 	0,											/* tp_iternext */
 	Project_methods,							/* tp_methods */
 	0,											/* tp_members */
-	0,											/* tp_getset */
+	Project_getseters,							/* tp_getset */
 	0,											/* tp_base */
 	0,											/* tp_dict */
 	0,											/* tp_descr_get */
@@ -171,7 +190,7 @@ static PyTypeObject ProjectType = {
 static PyMethodDef ProjectModule_methods[] = { { NULL } };
 
 
-PyMODINIT_FUNC init_geany_project(void)
+PyMODINIT_FUNC initproject(void)
 {
 	PyObject *m;
 
@@ -179,7 +198,7 @@ PyMODINIT_FUNC init_geany_project(void)
 	if (PyType_Ready(&ProjectType) < 0)
 		return;
 
-	m = Py_InitModule("_project", ProjectModule_methods);
+	m = Py_InitModule("project", ProjectModule_methods);
 
 	Py_INCREF(&ProjectType);
 	PyModule_AddObject(m, "Project", (PyObject *)&ProjectType);
