@@ -75,6 +75,10 @@ extern "C" {
 		NULL, NULL }
 
 
+#define GEANYPY_NEW(cls) \
+	(cls *) PyObject_CallObject((PyObject *) &(cls ## Type), NULL);
+
+
 #include <stdlib.h>
 #include <errno.h>
 #include <string.h>

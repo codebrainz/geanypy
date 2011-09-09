@@ -27,12 +27,13 @@ extern "C" {
 #endif
 
 
+PyTypeObject AppType;
+
 typedef struct
 {
 	PyObject_HEAD
 	GeanyApp *app;
 } App;
-
 
 PyMODINIT_FUNC initapp(void);
 

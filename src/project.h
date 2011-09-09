@@ -26,6 +26,7 @@
 extern "C" {
 #endif
 
+PyTypeObject ProjectType;
 
 typedef struct
 {
@@ -33,9 +34,7 @@ typedef struct
 	GeanyProject *project;
 } Project;
 
-
 PyMODINIT_FUNC initproject(void);
-Project *Project_create_new(void);
 
 
 #ifdef __cplusplus

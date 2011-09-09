@@ -212,7 +212,7 @@ static void on_project_dialog_create(GObject *geany_object, GtkWidget *notebook,
 static void on_project_open(GObject *geany_object, GKeyFile *config, SignalManager *man)
 {
     PyObject *args, *py_proj;
-    py_proj = (PyObject *) Project_create_new();
+    py_proj = (PyObject *) GEANYPY_NEW(Project);
     args = Py_BuildValue("(O)", py_proj);
     PyObject_CallObject(man->py_emit_func, args);
 }
@@ -221,7 +221,7 @@ static void on_project_open(GObject *geany_object, GKeyFile *config, SignalManag
 static void on_project_save(GObject *geany_object, GKeyFile *config, SignalManager *man)
 {
     PyObject *args, *py_proj;
-    py_proj = (PyObject *) Project_create_new();
+    py_proj = (PyObject *) GEANYPY_NEW(Project);
     args = Py_BuildValue("(O)", py_proj);
     PyObject_CallObject(man->py_emit_func, args);
 }

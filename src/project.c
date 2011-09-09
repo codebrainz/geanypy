@@ -144,7 +144,7 @@ static PyGetSetDef Project_getseters[] = {
 };
 
 
-static PyTypeObject ProjectType = {
+PyTypeObject ProjectType = {
 	PyObject_HEAD_INIT(NULL)
 	0,											/* ob_size */
 	"geany.project.Project",					/* tp_name */

@@ -38,61 +38,64 @@ App_init(App *self)
 
 
 static PyObject *
-App_get_config_dir(App *self)
+App_get_property(App *self, void *prop_name)
 {
-	if (self->app != NULL)
+	if (!self || !self->app || !prop_name)
+		Py_RETURN_NONE;
+
+	if (g_str_equal(prop_name, "configdir") && self->app->configdir)
 		return PyString_FromString(self->app->configdir);
-	Py_RETURN_NONE;
-}
-GEANYPY_WRAP_GET_ONLY(App, config_dir);
-
-
-static PyObject *
-App_get_debug_mode(App *self)
-{
-	if (self->app != NULL)
+#if ENABLE_PRIVATE
+	else if (g_str_equal(prop_name, "datadir") && self->app->datadir)
+		return PyString_FromString(self->app->datadir);
+	else if (g_str_equal(prop_name, "docdir") && self->app->docdir)
+		return PyString_FromString(self->app->docdir);
+#endif
+	else if (g_str_equal(prop_name, "debug_mode") && self->app->debug_mode)
 	{
 		if (self->app->debug_mode)
 			Py_RETURN_TRUE;
 		else
 			Py_RETURN_FALSE;
 	}
+	else if (g_str_equal(prop_name, "project") && self->app->project)
+		return (PyObject *) GEANYPY_NEW(Project);
+
 	Py_RETURN_NONE;
 }
-GEANYPY_WRAP_GET_ONLY(App, debug_mode);
 
 
-static PyObject *
-App_get_project(App *self)
+static int
+App_set_property(App *self, PyObject *value, void *closure)
 {
-	Project *proj;
-	if (geany_data->app->project == NULL)
-		Py_RETURN_NONE;
-	proj = Project_create_new();
-	if (proj != NULL)
-		return (PyObject *) proj;
-	Py_RETURN_NONE;
+	PyErr_SetString(PyExc_AttributeError, "can't set attribute");
+		return -1;
 }
-GEANYPY_WRAP_GET_ONLY(App, project);
-
-
-static PyMethodDef App_methods[] = {
-	{ "get_config_dir",	(PyCFunction) App_get_config_dir,	METH_NOARGS },
-	{ "get_debug_mode",	(PyCFunction) App_get_debug_mode,	METH_NOARGS },
-	{ "get_project",	(PyCFunction) App_get_project,		METH_NOARGS },
-	{ NULL }
-};
 
 
 static PyGetSetDef App_getseters[] = {
-	GEANYPY_GETSETDEF(App, config_dir),
-	GEANYPY_GETSETDEF(App, debug_mode),
-	GEANYPY_GETSETDEF(App, project),
+	{ "configdir", (getter) App_get_property, (setter) App_set_property,
+		"User configuration directory, usually ~/.config/geany. ",
+		"configdir" },
+#ifdef ENABLE_PRIVATE
+	{ "datadir", (getter) App_get_property, (setter) App_set_property,
+		"Geany's data directory.",
+		"datadir" },
+	{ "docdir", (getter) App_get_property, (setter) App_set_property,
+		"Geany's documentation directory.",
+		"docdir" },
+#endif
+	{ "debug_mode", (getter) App_get_property, (setter) App_set_property,
+		"True if debug messages should be printed.",
+		"debug_mode" },
+	{ "project", (getter) App_get_property, (setter) App_set_property,
+		"Currently active project or None if none is open.",
+		"project" },
 	{ NULL }
 };
 
 
-static PyTypeObject AppType = {
+PyTypeObject AppType = {
 	PyObject_HEAD_INIT(NULL)
 	0,											/* ob_size */
 	"geany.app.App",							/* tp_name */
@@ -114,14 +117,14 @@ static PyTypeObject AppType = {
 	0,											/* tp_setattro */
 	0,											/* tp_as_buffer */
 	Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,	/* tp_flags */
-	"Geany App",								/* tp_doc  */
+	"Wrapper around a GeanyApp structure.",		/* tp_doc  */
 	0,											/* tp_traverse  */
 	0,											/* tp_clear  */
 	0,											/* tp_richcompare */
 	0,											/* tp_weaklistoffset */
 	0,											/* tp_iter */
 	0,											/* tp_iternext */
-	App_methods,								/* tp_methods */
+	0,											/* tp_methods */
 	0,											/* tp_members */
 	App_getseters,								/* tp_getset */
 	0,											/* tp_base */
