@@ -7,7 +7,6 @@ geanypy_sources				=	__init__.py \
 								manager.py \
 								loader.py \
 								plugin.py \
-								encodings.py \
 								highlighting.py \
 								main.py \
 								msgwindow.py \
