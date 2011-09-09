@@ -4,6 +4,7 @@
 static void
 Project_dealloc(Project *self)
 {
+	g_return_if_fail(self != NULL);
 	self->ob_type->tp_free((PyObject *) self);
 }
 
@@ -11,114 +12,61 @@ Project_dealloc(Project *self)
 static int
 Project_init(Project *self, PyObject *args, PyObject *kwds)
 {
+	g_return_val_if_fail(self != NULL, -1);
 	self->project = geany_data->app->project;
 	return 0;
 }
 
 
 static PyObject *
-Project_get_base_path(Project *self)
+Project_get_property(Project *self, const gchar *prop_name)
 {
-	if (self->project != NULL)
+	g_return_val_if_fail(self != NULL, NULL);
+	g_return_val_if_fail(prop_name != NULL, NULL);
+
+	if (!self->project)
+		Py_RETURN_NONE;
+
+	if (g_str_equal(prop_name, "base_path") && self->project->base_path)
 		return PyString_FromString(self->project->base_path);
-	Py_RETURN_NONE;
-}
-GEANYPY_WRAP_GET_ONLY(Project, base_path);
-
-
-static PyObject *
-Project_get_description(Project *self)
-{
-	if (self->project != NULL)
+	else if (g_str_equal(prop_name, "description") && self->project->description)
 		return PyString_FromString(self->project->description);
-	Py_RETURN_NONE;
-}
-GEANYPY_WRAP_GET_ONLY(Project, description);
-
-
-static PyObject *
-Project_get_file_name(Project *self)
-{
-	if (self->project != NULL)
+	else if (g_str_equal(prop_name, "file_name") && self->project->file_name)
 		return PyString_FromString(self->project->file_name);
-	Py_RETURN_NONE;
-}
-GEANYPY_WRAP_GET_ONLY(Project, file_name);
-
-
-static PyObject *
-Project_get_file_patterns(Project *self)
-{
-	guint i, len;
-	PyObject *list, *item;
-
-	if (self->project != NULL)
+	else if (g_str_equal(prop_name, "file_patterns") && self->project->file_patterns)
 	{
+		guint i, len;
+		PyObject *set;
 		len = g_strv_length(self->project->file_patterns);
-		list = PyList_New(0);
+		set = PyFrozenSet_New(NULL);
 		for (i = 0; i < len; i++)
-		{
-			item = PyString_FromString(self->project->file_patterns[i]);
-			PyList_Append(list, item);
-		}
-		return list;
+			PySet_Add(set, PyString_FromString(self->project->file_patterns[i]));
+		return set;
 	}
-	Py_RETURN_NONE;
-}
-GEANYPY_WRAP_GET_ONLY(Project, file_patterns);
-
-
-static PyObject *
-Project_get_name(Project *self)
-{
-	if (self->project != NULL)
+	else if (g_str_equal(prop_name, "name") && self->project->name)
 		return PyString_FromString(self->project->name);
-	Py_RETURN_NONE;
-}
-GEANYPY_WRAP_GET_ONLY(Project, name);
-
-
-static PyObject *
-Project_get_type(Project *self)
-{
-	if (self->project != NULL)
+	else if (g_str_equal(prop_name, "type") && self->project->type)
 		return Py_BuildValue("i", self->project->type);
+
 	Py_RETURN_NONE;
 }
-GEANYPY_WRAP_GET_ONLY(Project, type);
-
-
-static PyObject *
-Project_get_is_open(Project *self)
-{
-	if (self->project == NULL)
-		Py_RETURN_FALSE;
-	else
-		Py_RETURN_TRUE;
-}
-GEANYPY_WRAP_GET_ONLY(Project, is_open);
-
-
-static PyMethodDef Project_methods[] = {
-	{ "get_base_path",		(PyCFunction) Project_get_base_path,		METH_NOARGS },
-	{ "get_description",	(PyCFunction) Project_get_description,		METH_NOARGS },
-	{ "get_file_name",		(PyCFunction) Project_get_file_name,		METH_NOARGS },
-	{ "get_file_patterns",	(PyCFunction) Project_get_file_patterns,	METH_NOARGS },
-	{ "get_name",			(PyCFunction) Project_get_name,				METH_NOARGS },
-	{ "get_type",			(PyCFunction) Project_get_type,				METH_NOARGS },
-	{ "get_is_open",		(PyCFunction) Project_get_is_open,			METH_NOARGS },
-	{ NULL }
-};
+GEANYPY_PROPS_READONLY(Project);
 
 
 static PyGetSetDef Project_getseters[] = {
-	GEANYPY_GETSETDEF(Project, base_path),
-	GEANYPY_GETSETDEF(Project, description),
-	GEANYPY_GETSETDEF(Project, file_name),
-	GEANYPY_GETSETDEF(Project, file_patterns),
-	GEANYPY_GETSETDEF(Project, name),
-	GEANYPY_GETSETDEF(Project, type),
-	GEANYPY_GETSETDEF(Project, is_open),
+	GEANYPY_GETSETDEF(Project, "base_path",
+		"Base path of the project directory (maybe relative)."),
+	GEANYPY_GETSETDEF(Project, "description",
+		"Short description of the project."),
+	GEANYPY_GETSETDEF(Project, "file_name",
+		"Where the project file is stored."),
+	GEANYPY_GETSETDEF(Project, "file_patterns",
+		"Sequence of filename extension patterns."),
+	GEANYPY_GETSETDEF(Project, "name",
+		"The name of the project."),
+	GEANYPY_GETSETDEF(Project, "type",
+		"Identifier whether it is a pure Geany project or modified/"
+		"extended by a plugin."),
 	{ NULL }
 };
 
@@ -129,40 +77,15 @@ PyTypeObject ProjectType = {
 	"geany.project.Project",					/* tp_name */
 	sizeof(Project),							/* tp_basicsize */
 	0,											/* tp_itemsize */
-	(destructor)Project_dealloc,				/* tp_dealloc */
-	0,											/* tp_print */
-	0,											/* tp_getattr */
-	0,											/* tp_setattr */
-	0,											/* tp_compare */
-	0,											/* tp_repr */
-	0,											/* tp_as_number */
-	0,											/* tp_as_sequence */
-	0,											/* tp_as_mapping */
-	0,											/* tp_hash */
-	0,											/* tp_call */
-	0,											/* tp_str */
-	0,											/* tp_getattro */
-	0,											/* tp_setattro */
-	0,											/* tp_as_buffer */
+	(destructor) Project_dealloc,				/* tp_dealloc */
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/* tp_print - tp_as_buffer */
 	Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,	/* tp_flags */
-	"Geany Project",							/* tp_doc */
-	0,											/* tp_traverse */
-	0,											/* tp_clear */
-	0,											/* tp_richcompare */
-	0,											/* tp_weaklistoffset */
-	0,											/* tp_iter */
-	0,											/* tp_iternext */
-	Project_methods,							/* tp_methods */
-	0,											/* tp_members */
+	"Wrapper around a GeanyProject structure.",	/* tp_doc */
+	0, 0, 0, 0, 0, 0, 0, 0,						/* tp_traverse - tp_members */
 	Project_getseters,							/* tp_getset */
-	0,											/* tp_base */
-	0,											/* tp_dict */
-	0,											/* tp_descr_get */
-	0,											/* tp_descr_set */
-	0,											/* tp_dictoffset */
-	(initproc)Project_init,						/* tp_init */
-	0,											/* tp_alloc */
-	0,											/* tp_new */
+	0, 0, 0, 0, 0,								/* tp_base - tp_dictoffset */
+	(initproc) Project_init,					/* tp_init */
+	0, 0,										/* tp_alloc - tp_new */
 };
 
 
@@ -177,17 +100,8 @@ PyMODINIT_FUNC initproject(void)
 	if (PyType_Ready(&ProjectType) < 0)
 		return;
 
-	m = Py_InitModule("project", ProjectModule_methods);
+	m = Py_InitModule3("project", ProjectModule_methods, "Project information");
 
 	Py_INCREF(&ProjectType);
 	PyModule_AddObject(m, "Project", (PyObject *)&ProjectType);
 }
-
-
-Project *Project_create_new(void)
-{
-	Project *self;
-	self = (Project *) PyObject_CallObject((PyObject *) &ProjectType, NULL);
-	return self;
-}
-

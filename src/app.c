@@ -58,51 +58,20 @@ App_get_property(App *self, const gchar *prop_name)
 
 	Py_RETURN_NONE;
 }
-
-
-static int
-App_set_property(App *self, PyObject *value, const gchar *prop_name)
-{
-	g_return_val_if_fail(self != NULL, -1);
-	PyErr_SetString(PyExc_AttributeError, "can't set attribute");
-	return -1;
-}
+GEANYPY_PROPS_READONLY(App);
 
 
 static PyGetSetDef App_getseters[] = {
-	{
-		"configdir", /* prop/member name */
-		(getter) App_get_property,	/* same getter for each prop */
-		(setter) App_set_property,	/* same setter for each prop */
-		"User configuration directory, usually ~/.config/geany. ", /* doc */
-		"configdir" 				/* closure to know which prop */
-	},
+	GEANYPY_GETSETDEF(App, "configdir",
+		"User configuration directory, usually ~/.config/geany. "),
 #ifdef ENABLE_PRIVATE
-	{
-		"datadir",
-		(getter) App_get_property, (setter) App_set_property,
-		"Geany's data directory.",
-		"datadir"
-	},
-	{
-		"docdir",
-		(getter) App_get_property, (setter) App_set_property,
-		"Geany's documentation directory.",
-		"docdir"
-	},
+	GEANYPY_GETSETDEF(App, "datadir", "Geany's data directory."),
+	GEANYPY_GETSETDEF(App, "docdir", "Geany's documentation directory."),
 #endif
-	{
-		"debug_mode",
-		(getter) App_get_property, (setter) App_set_property,
-		"True if debug messages should be printed.",
-		"debug_mode"
-	},
-	{
-		"project",
-		(getter) App_get_property, (setter) App_set_property,
-		"Currently active project or None if none is open.",
-		"project"
-	},
+	GEANYPY_GETSETDEF(App, "debug_mode",
+		"True if debug messages should be printed."),
+	GEANYPY_GETSETDEF(App, "project",
+		"Currently active project or None if none is open."),
 	{ NULL }
 };
 

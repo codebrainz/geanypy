@@ -34,47 +34,23 @@ extern "C" {
 #include <structmember.h>
 
 
-#define GEANYPY_WRAP_GET_ONLY(cls, prop_name) \
-	static PyObject * \
-	cls ## _ ## prop_name ##_getter(PyObject *self, void *closure) { \
-		return cls ## _get_ ## prop_name ( ( cls * ) self); \
-	} \
+/* Defines a setter that throws an attribute exception when called. */
+#define GEANYPY_PROPS_READONLY(cls) \
 	static int \
-	cls ## _ ## prop_name ## _setter(PyObject *self, PyObject *value, void *closure) { \
-		PyErr_SetString(PyExc_AttributeError, \
-			"property '" #prop_name "' is read-only."); \
-		return -1; \
-	}
+	cls ## _set_property(cls *self, PyObject *value, const gchar *prop_name) { \
+		PyErr_SetString(PyExc_AttributeError, "can't set attribute"); \
+		return -1; }
 
-#define GEANYPY_WRAP_SET_ONLY(cls, prop_name) \
-	static PyObject * \
-	cls ## _ ## prop_name ## _getter(PyObject *self, void *closure) { \
-		PyErr_SetString(PyExc_AttributeError, \
-			"property '" #prop_name "' is write-only."); \
-		return -1; \
-	} \
-	static int \
-	cls ## _ ## prop_name ## _setter(PyObject *self, PyObject *value, void *closure) { \
-		return cls ## _set_ ## prop_name( ( cls * ) self, value); \
-	}
-
-#define GEANYPY_WRAP_GET_SET(cls, prop_name) \
-	static PyObject * \
-	cls ## _ ## prop_name ## _getter(PyObject *self, void *closure) { \
-		return  cls ## _get_ ## prop_name( ( cls * ) self); \
-	} \
-	static int \
-	cls ## _ ## prop_name ## _setter(PyObject *self, PyObject *value, void *closure) { \
-		return cls ## _set_ ## prop_name( ( cls * ) self, value); \
-	}
-
-#define GEANYPY_GETSETDEF(cls, prop_name) \
-	{ #prop_name, \
-		(getter) cls ## _ ## prop_name ## _getter, \
-		(setter) cls ## _ ## prop_name ## _setter, \
-		NULL, NULL }
+/* Defines a getter/setter for use in the tp_getset table. */
+#define GEANYPY_GETSETDEF(cls, prop_name, doc) \
+	{ prop_name, \
+		(getter) cls ## _get_property, \
+		(setter) cls ## _set_property, \
+		doc, \
+		prop_name }
 
 
+/* Initializes a new `cls` type object. */
 #define GEANYPY_NEW(cls) \
 	(cls *) PyObject_CallObject((PyObject *) &(cls ## Type), NULL);
 
@@ -100,7 +76,6 @@ extern "C" {
 #include "document.h"
 #include "editor.h"
 #include "plugin.h"
-#include "prefs.h"
 #include "project.h"
 #include "signalmanager.h"
 
