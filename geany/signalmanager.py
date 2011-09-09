@@ -3,7 +3,6 @@ import document
 import editor
 import filetypes
 import scintilla
-import _editor as c_editor
 import _geany_filetypes
 import _geany_scintilla_notification
 from collections import namedtuple
@@ -111,10 +110,6 @@ class SignalManager(object):
                 ft = filetypes.Filetype()
                 ft._ft = arg
                 new_args.append(ft)
-            elif isinstance(arg, c_editor.Editor):
-                ed = editor.Editor()
-                ed._editor = arg
-                new_args.append(ed)
             elif isinstance(arg, _geany_scintilla_notification.Notification):
                 notif = scintilla.Notification()
                 notif._notif = arg

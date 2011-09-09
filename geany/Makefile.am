@@ -1,7 +1,6 @@
 geanypy_sources				=	__init__.py \
 								filetypes.py \
 								indentprefs.py \
-								editor.py \
 								mainwidgets.py \
 								scintilla.py \
 								console.py \
