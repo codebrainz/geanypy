@@ -16,6 +16,160 @@ Document_init(Document *self)
 }
 
 
+static PyObject *
+Document_get_property(Document *self, const gchar *prop_name)
+{
+	g_return_val_if_fail(self != NULL, NULL);
+	g_return_val_if_fail(prop_name != NULL, NULL);
+
+	if (!self->doc)
+	{
+		PyErr_SetString(PyExc_RuntimeError,
+			"Document instance not initialized properly");
+		return NULL;
+	}
+
+	if (!DOC_VALID(self->doc))
+	{
+		PyErr_SetString(PyExc_RuntimeError, "Document is invalid");
+		return NULL;
+	}
+
+	if (g_str_equal(prop_name, "basename_for_display"))
+	{
+		PyObject *py_str = NULL;
+		gchar *res_string;
+		res_string = document_get_basename_for_display(self->doc, -1);
+		if (!res_string)
+		{
+			PyErr_SetString(PyExc_RuntimeError,
+				"Geany API failed to return a string");
+			Py_RETURN_NONE;
+		}
+		py_str = PyString_FromString(res_string);
+		g_free(res_string);
+		return py_str;
+	}
+	else if (g_str_equal(prop_name, "notebook_page"))
+		return Py_BuildValue("i", document_get_notebook_page(self->doc));
+	else if (g_str_equal(prop_name, "status_color"))
+	{
+		const GdkColor *color = document_get_status_color(self->doc);
+		if (!color)
+			Py_RETURN_NONE;
+		return Py_BuildValue("iii", color->red, color->green, color->blue);
+	}
+	else if (g_str_equal(prop_name, "editor")  && self->doc->editor)
+	{
+		Editor *editor;
+		if (self->doc->editor != NULL)
+		{
+			editor = Editor_create_new_from_geany_editor(self->doc->editor);
+			return (PyObject *) editor;
+		}
+		Py_RETURN_NONE;
+	}
+	else if (g_str_equal(prop_name, "encoding") && self->doc->encoding)
+		return PyString_FromString(self->doc->encoding);
+	else if (g_str_equal(prop_name, "file_name") && self->doc->file_name)
+		return PyString_FromString(self->doc->file_name);
+	else if (g_str_equal(prop_name, "file_type") && self->doc->file_type)
+		return (PyObject *) Filetype_create_new_from_geany_filetype(self->doc->file_type);
+	else if (g_str_equal(prop_name, "has_bom"))
+	{
+		if (self->doc->has_bom)
+			Py_RETURN_TRUE;
+		else
+			Py_RETURN_FALSE;
+	}
+	else if (g_str_equal(prop_name, "has_tags"))
+	{
+		if (self->doc->has_tags)
+			Py_RETURN_TRUE;
+		else
+			Py_RETURN_FALSE;
+	}
+	else if (g_str_equal(prop_name, "index"))
+		return Py_BuildValue("i", self->doc->index);
+	else if (g_str_equal(prop_name, "is_valid"))
+	{
+		if (self->doc->is_valid)
+			Py_RETURN_TRUE;
+		else
+			Py_RETURN_FALSE;
+	}
+	else if (g_str_equal(prop_name, "readonly"))
+	{
+		if (self->doc->readonly)
+			Py_RETURN_TRUE;
+		else
+			Py_RETURN_FALSE;
+	}
+	else if (g_str_equal(prop_name, "real_path"))
+	{
+		if (self->doc->real_path)
+			return PyString_FromString(self->doc->real_path);
+		Py_RETURN_NONE;
+	}
+	else if (g_str_equal(prop_name, "text_changed"))
+	{
+		if (self->doc->changed)
+			Py_RETURN_NONE;
+		else
+			Py_RETURN_NONE;
+	}
+}
+
+
+static int
+Document_set_property(Document *self, PyObject *value, const gchar *prop_name)
+{
+	g_return_val_if_fail(self != NULL, -1);
+	g_return_val_if_fail(value != NULL, -1);
+	g_return_val_if_fail(prop_name != NULL, -1);
+
+	if (!self->doc)
+	{
+		PyErr_SetString(PyExc_RuntimeError,
+			"Document instance not initialized properly");
+		return -1;
+	}
+
+	if (g_str_equal(prop_name, "encoding"))
+	{
+		gchar *encoding = PyString_AsString(value);
+		if (encoding)
+		{
+			document_set_encoding(self->doc, encoding);
+			return 0;
+		}
+	}
+	else if (g_str_equal(prop_name, "filetype"))
+	{
+		Filetype *filetype = (Filetype *) value;
+		if (filetype->ft)
+		{
+			document_set_filetype(self->doc, filetype->ft);
+			return 0;
+		}
+	}
+	else if (g_str_equal(prop_name, "text_changed"))
+	{
+		long v = PyInt_AsLong(value);
+		if (v == -1 && PyErr_Occurred())
+		{
+			PyErr_Print();
+			return -1;
+		}
+		document_set_text_changed(self->doc, (gboolean) v);
+		return 0;
+	}
+
+	PyErr_SetString(PyExc_AttributeError, "can't set property");
+	return -1;
+}
+
+
 static PyObject*
 Document_close(Document *self)
 {
@@ -23,46 +177,6 @@ Document_close(Document *self)
 		Py_RETURN_TRUE;
 	else
 		Py_RETURN_FALSE;
-}
-
-
-static PyObject*
-Document_get_basename_for_display(Document *self)
-{
-	gchar *res;
-
-	res = document_get_basename_for_display(self->doc, -1);
-
-	if (res == NULL)
-		Py_RETURN_NONE;
-
-	return Py_BuildValue("s", res);
-}
-
-
-static PyObject*
-Document_get_notebook_page(Document *self)
-{
-	gint res;
-
-	res = document_get_notebook_page(self->doc);
-
-	return Py_BuildValue("i", res);
-}
-
-
-static PyObject*
-Document_get_status_color(Document *self)
-{
-	const GdkColor *color;
-
-	color = document_get_status_color(self->doc);
-
-	if (color == NULL)
-		Py_RETURN_NONE;
-
-	return Py_BuildValue("iii", color->red, color->green, color->blue);
-
 }
 
 
@@ -146,248 +260,76 @@ Document_save_file_as(Document *self, PyObject *args, PyObject *kwargs)
 }
 
 
-static PyObject*
-Document_set_encoding(Document *self, PyObject *args)
-{
-	gchar *encoding = NULL;
-
-	if (PyArg_ParseTuple(args, "s", &encoding))
-	{
-		if (encoding != NULL)
-			document_set_encoding(self->doc, encoding);
-	}
-	Py_RETURN_NONE;
-}
-
-
-static PyObject*
-Document_get_encoding(Document *self)
-{
-	if (DOC_VALID(self->doc))
-		return PyString_FromString(self->doc->encoding);
-	Py_RETURN_NONE;
-}
-
-
-static PyObject*
-Document_set_filetype(Document *self, PyObject *ft)
-{
-	Filetype *filetype = NULL;
-
-	if (ft != NULL && ft != Py_None)
-	{
-		filetype = (Filetype *) ft;
-		if (filetype->ft != NULL)
-			document_set_filetype(self->doc, filetype->ft);
-	}
-	Py_RETURN_NONE;
-}
-
-
-static PyObject*
-Document_get_filetype(Document *self)
-{
-	if (DOC_VALID(self->doc))
-		return (PyObject *) Filetype_create_new_from_geany_filetype(self->doc->file_type);
-	Py_RETURN_NONE;
-}
-
-
-static PyObject*
-Document_set_text_changed(Document *self, PyObject *args)
-{
-	gint changed;
-	if (DOC_VALID(self->doc))
-	{
-		changed = self->doc->changed;
-		if (PyArg_ParseTuple(args, "i", &changed))
-			document_set_text_changed(self->doc, changed);
-	}
-	Py_RETURN_NONE;
-}
-
-
-static PyObject*
-Document_get_text_changed(Document *self)
-{
-	if (DOC_VALID(self->doc))
-	{
-		if (self->doc->changed)
-			Py_RETURN_TRUE;
-		else
-			Py_RETURN_FALSE;
-	}
-	Py_RETURN_NONE;
-}
-
-
-static PyObject*
-Document_get_file_name(Document *self)
-{
-	if (DOC_VALID(self->doc) && self->doc->file_name != NULL)
-		return PyString_FromString(self->doc->file_name);
-	Py_RETURN_NONE;
-}
-
-
-static PyObject*
-Document_get_has_bom(Document *self)
-{
-	if (DOC_VALID(self->doc))
-	{
-		if (self->doc->has_bom)
-			Py_RETURN_TRUE;
-		else
-			Py_RETURN_FALSE;
-	}
-	Py_RETURN_NONE;
-}
-
-
-static PyObject*
-Document_get_has_tags(Document *self)
-{
-	if (DOC_VALID(self->doc))
-	{
-		if (self->doc->has_tags)
-			Py_RETURN_TRUE;
-		else
-			Py_RETURN_FALSE;
-	}
-	Py_RETURN_NONE;
-}
-
-
-static PyObject*
-Document_get_index(Document *self)
-{
-	if (DOC_VALID(self->doc))
-		return Py_BuildValue("i", self->doc->index);
-	Py_RETURN_NONE;
-
-}
-
-
-static PyObject*
-Document_get_is_valid(Document *self)
-{
-	if (DOC_VALID(self->doc))
-	{
-		if (self->doc->is_valid)
-			Py_RETURN_TRUE;
-		else
-			Py_RETURN_FALSE;
-	}
-	Py_RETURN_NONE;
-}
-
-
-static PyObject*
-Document_get_readonly(Document *self)
-{
-	if (DOC_VALID(self->doc))
-	{
-		if (self->doc->readonly)
-			Py_RETURN_TRUE;
-		else
-			Py_RETURN_FALSE;
-	}
-	Py_RETURN_NONE;
-}
-
-
-static PyObject*
-Document_get_real_path(Document *self)
-{
-	if (DOC_VALID(self->doc))
-		return PyString_FromString(self->doc->real_path);
-	Py_RETURN_NONE;
-}
-
-
-static PyObject *
-Document_get_editor(Document *self)
-{
-	Editor *editor;
-	if (DOC_VALID(self->doc) && self->doc->editor != NULL)
-	{
-		editor = Editor_create_new_from_geany_editor(self->doc->editor);
-		return (PyObject *) editor;
-	}
-	Py_RETURN_NONE;
-}
-
-
 static PyMethodDef Document_methods[] = {
-	{ "close",						(PyCFunction)Document_close, 					METH_NOARGS },
-	{ "get_basename_for_display",	(PyCFunction)Document_get_basename_for_display,	METH_NOARGS },
-	{ "get_notebook_page",			(PyCFunction)Document_get_notebook_page,			METH_NOARGS },
-	{ "get_status_color",			(PyCFunction)Document_get_status_color,			METH_NOARGS },
-	{ "reload_file",				(PyCFunction)Document_reload_file,				METH_KEYWORDS },
-	{ "rename_file",				(PyCFunction)Document_rename_file,				METH_KEYWORDS },
-	{ "save_file",					(PyCFunction)Document_save_file,				METH_KEYWORDS },
-	{ "save_file_as",				(PyCFunction)Document_save_file_as,				METH_KEYWORDS },
-	{ "set_encoding",				(PyCFunction)Document_set_encoding,				METH_VARARGS },
-	{ "get_encoding",				(PyCFunction)Document_get_encoding,				METH_NOARGS },
-	{ "set_file_type",				(PyCFunction)Document_set_filetype,				METH_O },
-	{ "get_file_type",				(PyCFunction)Document_get_filetype,				METH_NOARGS },
-	{ "set_text_changed",			(PyCFunction)Document_set_text_changed,			METH_VARARGS },
-	{ "get_text_changed",			(PyCFunction)Document_get_text_changed,			METH_NOARGS },
-	{ "get_file_name",				(PyCFunction)Document_get_file_name,				METH_NOARGS },
-	{ "get_has_bom",				(PyCFunction)Document_get_has_bom,				METH_NOARGS },
-	{ "get_has_tags",				(PyCFunction)Document_get_has_tags,				METH_NOARGS },
-	{ "get_index",					(PyCFunction)Document_get_index,					METH_NOARGS },
-	{ "get_is_valid",				(PyCFunction)Document_get_is_valid,				METH_NOARGS },
-	{ "get_read_only",				(PyCFunction)Document_get_readonly,				METH_NOARGS },
-	{ "get_real_path",				(PyCFunction)Document_get_real_path,				METH_NOARGS },
-	{ "get_editor",					(PyCFunction)Document_get_editor,					METH_NOARGS },
+	{ "close",				(PyCFunction)Document_close, 		METH_NOARGS,
+		"Closes the document." },
+	{ "reload_file",		(PyCFunction)Document_reload_file,	METH_KEYWORDS,
+		"Reloads the document with the specified file encoding or None "
+		"to auto-detect the file encoding." },
+	{ "rename_file",		(PyCFunction)Document_rename_file,	METH_KEYWORDS,
+		"Renames the document's file." },
+	{ "save_file",			(PyCFunction)Document_save_file,	METH_KEYWORDS,
+		"Saves the document's file." },
+	{ "save_file_as",		(PyCFunction)Document_save_file_as,	METH_KEYWORDS,
+		"Saves the document with a new filename, detecting the filetype." },
 	{ NULL }
 };
 
 
-static PyMemberDef Document_members[] = { {NULL} };
+static PyGetSetDef Document_getseters[] = {
+	GEANYPY_GETSETDEF(Document, "editor",
+		"The editor associated with the document."),
+	GEANYPY_GETSETDEF(Document, "encoding",
+		"The encoding of the document."),
+	GEANYPY_GETSETDEF(Document, "file_name",
+		"The document's filename."),
+	GEANYPY_GETSETDEF(Document, "file_type",
+		"The filetype for this document."),
+	GEANYPY_GETSETDEF(Document, "has_bom",
+		"Internally used flag to indicate whether the file of this document "
+		"has a byte-order-mark."),
+	GEANYPY_GETSETDEF(Document, "has_tags",
+		"Whether this document supports source code symbols (tags) to "
+		"show in the sidebar."),
+	GEANYPY_GETSETDEF(Document, "index",
+		"Index of the document."),
+	GEANYPY_GETSETDEF(Document, "is_valid",
+		"General flag to represent this document is active and all properties "
+		"are set correctly."),
+	GEANYPY_GETSETDEF(Document, "readonly",
+		"Whether this document is read-only."),
+	GEANYPY_GETSETDEF(Document, "real_path",
+		"The link-dereferenced filename of the document."),
+	GEANYPY_GETSETDEF(Document, "basename_for_display",
+		"Returns the basename of the document's file."),
+	GEANYPY_GETSETDEF(Document, "notebook_page",
+		"Gets the notebook page index for the document."),
+	GEANYPY_GETSETDEF(Document, "status_color",
+		"Gets the status color of the document or None for default."),
+	GEANYPY_GETSETDEF(Document, "text_changed",
+		"Whether the document has been changed since it was last saved."),
+	{ NULL },
+};
+
 
 
 static PyTypeObject DocumentType = {
 	PyObject_HEAD_INIT(NULL)
 	0,											/* ob_size */
-	"geany_document.Document",					/* tp_name */
+	"geany.document.Document",					/* tp_name */
 	sizeof(Document),							/* tp_basicsize */
 	0,											/* tp_itemsize */
-	(destructor)Document_dealloc,				/* tp_dealloc */
-	0,											/* tp_print */
-	0,											/* tp_getattr */
-	0,											/* tp_setattr */
-	0,											/* tp_compare */
-	0,											/* tp_repr */
-	0,											/* tp_as_number */
-	0,											/* tp_as_sequence */
-	0,											/* tp_as_mapping */
-	0,											/* tp_hash */
-	0,											/* tp_call */
-	0,											/* tp_str */
-	0,											/* tp_getattro */
-	0,											/* tp_setattro */
-	0,											/* tp_as_buffer */
+	(destructor) Document_dealloc,				/* tp_dealloc */
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/* tp_print - tp_as_buffer */
 	Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,	/* tp_flags */
-	"Geany document",							/* tp_doc */
-	0,											/* tp_traverse */
-	0,											/* tp_clear */
-	0,											/* tp_richcompare */
-	0,											/* tp_weaklistoffset */
-	0,											/* tp_iter */
-	0,											/* tp_iternext */
+	"Wrapper around a GeanyDocument structure.",/* tp_doc */
+	0, 0, 0, 0, 0, 0,							/* tp_traverse - tp_iternext */
 	Document_methods,							/* tp_methods */
-	Document_members,							/* tp_members */
-	0,											/* tp_getset */
-	0,											/* tp_base */
-	0,											/* tp_dict */
-	0,											/* tp_descr_get */
-	0,											/* tp_descr_set */
-	0,											/* tp_dictoffset */
-	(initproc)Document_init,					/* tp_init */
-	0,											/* tp_alloc */
-	0,											/* tp_new */
+	0,											/* tp_members */
+	Document_getseters,							/* tp_getset */
+	0, 0, 0, 0, 0,								/* tp_base - tp_dictoffset */
+	(initproc) Document_init,					/* tp_init */
+	0, 0,										/* tp_alloc - tp_new */
 
 };
 
@@ -571,20 +513,30 @@ Document_get_documents_list(PyObject *module)
 
 static
 PyMethodDef DocumentModule_methods[] = {
-	{ "find_by_filename",	(PyCFunction) Document_find_by_filename,	METH_KEYWORDS },
-	{ "find_by_real_path",	(PyCFunction) Document_find_by_real_path,	METH_KEYWORDS },
-	{ "get_current",		(PyCFunction) Document_get_current,			METH_NOARGS },
-	{ "get_from_page",		(PyCFunction) Document_get_from_page,		METH_KEYWORDS },
-	{ "index",				(PyCFunction) Document_get_from_index,		METH_KEYWORDS },
-	{ "new_file",			(PyCFunction) Document_new_file,			METH_KEYWORDS },
-	{ "open_file",			(PyCFunction) Document_open_file,			METH_KEYWORDS },
-	{ "remove_page",		(PyCFunction) Document_remove_page,			METH_KEYWORDS },
-	{ "get_documents_list",	(PyCFunction) Document_get_documents_list,	METH_NOARGS },
+	{ "find_by_filename",	(PyCFunction) Document_find_by_filename,	METH_KEYWORDS,
+		"Finds a document with the given filename." },
+	{ "find_by_real_path",	(PyCFunction) Document_find_by_real_path,	METH_KEYWORDS,
+		"Finds a document whose real path matches the given filename." },
+	{ "get_current",		(PyCFunction) Document_get_current,			METH_NOARGS,
+		"Finds the current document."},
+	{ "get_from_page",		(PyCFunction) Document_get_from_page,		METH_KEYWORDS,
+		"Finds the document for the given notebook page." },
+	{ "index",				(PyCFunction) Document_get_from_index,		METH_KEYWORDS,
+		"Finds the document with the given index." },
+	{ "new_file",			(PyCFunction) Document_new_file,			METH_KEYWORDS,
+		"Creates a new document." },
+	{ "open_file",			(PyCFunction) Document_open_file,			METH_KEYWORDS,
+		"Opens a new document specified by the given filename." },
+	{ "remove_page",		(PyCFunction) Document_remove_page,			METH_KEYWORDS,
+		"Removes the given notebook tab page and clears all related "
+		"information in the documents list." },
+	{ "get_documents_list",	(PyCFunction) Document_get_documents_list,	METH_NOARGS,
+		"Returns a sequence of valid documents." },
 	{ NULL }
 };
 
 
-PyMODINIT_FUNC init_geany_document(void)
+PyMODINIT_FUNC initdocument(void)
 {
 	PyObject *m;
 
@@ -592,7 +544,8 @@ PyMODINIT_FUNC init_geany_document(void)
 	if (PyType_Ready(&DocumentType) < 0)
 		return;
 
-	m = Py_InitModule("_document", DocumentModule_methods);
+	m = Py_InitModule3("document", DocumentModule_methods,
+			"Document information and management.");
 
 	Py_INCREF(&DocumentType);
 	PyModule_AddObject(m, "Document", (PyObject *)&DocumentType);

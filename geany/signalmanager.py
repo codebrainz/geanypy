@@ -3,7 +3,6 @@ import document
 import editor
 import filetypes
 import scintilla
-import _document as c_document
 import _editor as c_editor
 import _geany_filetypes
 import _geany_scintilla_notification
@@ -108,11 +107,7 @@ class SignalManager(object):
 
         new_args = []
         for arg in args:
-            if isinstance(arg, c_document.Document):
-                doc = document.Document()
-                doc._doc = arg
-                new_args.append(doc)
-            elif isinstance(arg, _geany_filetypes.Filetype):
+            if isinstance(arg, _geany_filetypes.Filetype):
                 ft = filetypes.Filetype()
                 ft._ft = arg
                 new_args.append(ft)

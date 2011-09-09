@@ -65,12 +65,11 @@ GeanyPy_start_interpreter(void)
     init_geany_navqueue();
     init_geany_scintilla();
     init_geany_scintilla_notification();
-
-    init_geany_dialogs();
-    init_geany_document();
     init_geany_editor();
 
     initapp();
+    initdialogs();
+    initdocument();
     initprefs();
     initproject();
 

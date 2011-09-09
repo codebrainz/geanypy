@@ -1,5 +1,4 @@
 geanypy_sources				=	__init__.py \
-								document.py \
 								filetypes.py \
 								indentprefs.py \
 								editor.py \

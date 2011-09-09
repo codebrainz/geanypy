@@ -109,18 +109,25 @@ Dialogs_show_save_as(PyObject *self)
 
 static
 PyMethodDef DialogsModule_methods[] = {
-    { "show_input",			(PyCFunction) Dialogs_show_input,			METH_KEYWORDS },
-    { "show_input_numeric",	(PyCFunction) Dialogs_show_input_numeric,	METH_KEYWORDS },
-    { "show_msgbox",		(PyCFunction) Dialogs_show_msgbox,			METH_KEYWORDS },
-    { "show_question",		(PyCFunction) Dialogs_show_question,		METH_KEYWORDS },
-    { "show_save_as",		(PyCFunction) Dialogs_show_save_as,			METH_NOARGS },
+    { "show_input",			(PyCFunction) Dialogs_show_input,			METH_KEYWORDS,
+		"Asks the user for input." },
+    { "show_input_numeric",	(PyCFunction) Dialogs_show_input_numeric,	METH_KEYWORDS,
+		"Shows an input box to enter a numerical value." },
+    { "show_msgbox",		(PyCFunction) Dialogs_show_msgbox,			METH_KEYWORDS,
+		"Shows a message box of the specified type.  See "
+		"gtk.MESSAGE_TYPE_* constants."},
+    { "show_question",		(PyCFunction) Dialogs_show_question,		METH_KEYWORDS,
+		"Shows a question message box with Yes/No buttons." },
+    { "show_save_as",		(PyCFunction) Dialogs_show_save_as,			METH_NOARGS,
+		"Shows the Save As dialog for the current notebook." },
     { NULL }
 };
 
 
-PyMODINIT_FUNC init_geany_dialogs(void)
+PyMODINIT_FUNC initdialogs(void)
 {
     PyObject *m;
 
-    m = Py_InitModule("dialogs", DialogsModule_methods);
+    m = Py_InitModule3("dialogs", DialogsModule_methods,
+			"Wrappers around Geany's dialog functions.");
 }

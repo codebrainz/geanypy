@@ -72,7 +72,6 @@ extern "C" {
 #include <ScintillaWidget.h>
 
 #include "plugin-config.h"
-#include "dialogs.h"
 #include "document.h"
 #include "editor.h"
 #include "plugin.h"
