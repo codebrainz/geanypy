@@ -1,6 +1,13 @@
 #include "geanypy.h"
 
 
+typedef struct
+{
+	PyObject_HEAD
+	GeanyApp *app;
+} App;
+
+
 static void
 App_dealloc(App *self)
 {
@@ -74,7 +81,7 @@ static PyGetSetDef App_getseters[] = {
 };
 
 
-PyTypeObject AppType = {
+static PyTypeObject AppType = {
 	PyObject_HEAD_INIT(NULL)
 	0,											/* ob_size */
 	"geany.app.App",							/* tp_name */
