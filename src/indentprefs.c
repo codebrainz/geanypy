@@ -11,7 +11,7 @@ IndentPrefs_dealloc(IndentPrefs *self)
 static int
 IndentPrefs_init(IndentPrefs *self, PyObject *args, PyObject *kwds)
 {
-    self->indent_prefs = NULL;
+	self->indent_prefs = NULL;
 	return 0;
 }
 
@@ -53,14 +53,14 @@ static PyGetSetDef IndentPrefs_getseters[] = {
 
 PyTypeObject IndentPrefsType = {
 	PyObject_HEAD_INIT(NULL)
-    0,												/* ob_size */
-    "geany.editor.IndentPrefs",						/* tp_name */
-    sizeof(IndentPrefs),							/* tp_basicsize */
-    0,												/* tp_itemsize */
-    (destructor) IndentPrefs_dealloc,				/* tp_dealloc */
+	0,												/* ob_size */
+	"geany.editor.IndentPrefs",						/* tp_name */
+	sizeof(IndentPrefs),							/* tp_basicsize */
+	0,												/* tp_itemsize */
+	(destructor) IndentPrefs_dealloc,				/* tp_dealloc */
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,		/* tp_print - tp_as_buffer */
-    Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,		/* tp_flags */
-    "Wrapper around a GeanyIndentPrefs structure.",	/* tp_doc */
+	Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,		/* tp_flags */
+	"Wrapper around a GeanyIndentPrefs structure.",	/* tp_doc */
 	0, 0, 0, 0, 0, 0, 0, 0,							/* tp_traverse - tp_members */
 	IndentPrefs_getseters,							/* tp_getset */
 	0, 0, 0, 0, 0,									/* tp_base - tp_dictoffset */
@@ -71,8 +71,8 @@ PyTypeObject IndentPrefsType = {
 
 IndentPrefs *IndentPrefs_create_new_from_geany_indent_prefs(GeanyIndentPrefs *indent_prefs)
 {
-    IndentPrefs *self;
-    self = (IndentPrefs *) PyObject_CallObject((PyObject *) &IndentPrefsType, NULL);
-    self->indent_prefs = indent_prefs;
-    return self;
+	IndentPrefs *self;
+	self = (IndentPrefs *) PyObject_CallObject((PyObject *) &IndentPrefsType, NULL);
+	self->indent_prefs = indent_prefs;
+	return self;
 }

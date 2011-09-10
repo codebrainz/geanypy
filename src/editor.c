@@ -426,9 +426,9 @@ PyMODINIT_FUNC initeditor(void)
 	if (PyType_Ready(&EditorType) < 0)
 		return;
 
-    IndentPrefsType.tp_new = PyType_GenericNew;
-    if (PyType_Ready(&IndentPrefsType) < 0)
-        return;
+	IndentPrefsType.tp_new = PyType_GenericNew;
+	if (PyType_Ready(&IndentPrefsType) < 0)
+		return;
 
 	m = Py_InitModule3("editor", EditorModule_methods,
 			"Editor information and management.");
@@ -437,7 +437,7 @@ PyMODINIT_FUNC initeditor(void)
 	PyModule_AddObject(m, "Editor", (PyObject *)&EditorType);
 
 	Py_INCREF(&IndentPrefsType);
-    PyModule_AddObject(m, "IndentPrefs", (PyObject *)&IndentPrefsType);
+	PyModule_AddObject(m, "IndentPrefs", (PyObject *)&IndentPrefsType);
 
 	PyModule_AddIntConstant(m, "INDENT_TYPE_SPACES",
 		(glong) GEANY_INDENT_TYPE_SPACES);
@@ -451,9 +451,9 @@ PyMODINIT_FUNC initeditor(void)
 		(glong) GEANY_INDICATOR_SEARCH);
 	PyModule_AddStringConstant(m, "WORDCHARS", GEANY_WORDCHARS);
 
-    PyModule_AddIntConstant(m, "INDENT_TYPE_SPACES", (glong) GEANY_INDENT_TYPE_SPACES);
-    PyModule_AddIntConstant(m, "INDENT_TYPE_TABS", (glong) GEANY_INDENT_TYPE_TABS);
-    PyModule_AddIntConstant(m, "INDENT_TYPE_BOTH", (glong) GEANY_INDENT_TYPE_BOTH);
+	PyModule_AddIntConstant(m, "INDENT_TYPE_SPACES", (glong) GEANY_INDENT_TYPE_SPACES);
+	PyModule_AddIntConstant(m, "INDENT_TYPE_TABS", (glong) GEANY_INDENT_TYPE_TABS);
+	PyModule_AddIntConstant(m, "INDENT_TYPE_BOTH", (glong) GEANY_INDENT_TYPE_BOTH);
 }
 
 
