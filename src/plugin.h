@@ -97,8 +97,6 @@ Scintilla *Scintilla_create_new_from_scintilla(ScintillaObject *sci);
 PyMODINIT_FUNC init_geany_scintilla_notification(void);
 ScintillaNotification *ScintillaNotification_create_new_from_scintilla_notification(SCNotification *notif);
 
-PyMODINIT_FUNC init_geany_encodings(void);
-
 PyMODINIT_FUNC init_geany_highlighting(void);
 
 PyMODINIT_FUNC init_geany_main(void);

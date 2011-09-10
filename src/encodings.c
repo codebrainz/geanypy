@@ -67,6 +67,96 @@ Encodings_get_charset_from_index(PyObject *module, PyObject *args, PyObject *kwa
 }
 
 
+static const gchar *encoding_names[] = {
+	"ISO_8859_1",
+	"ISO_8859_2",
+	"ISO_8859_3",
+	"ISO_8859_4",
+	"ISO_8859_5",
+	"ISO_8859_6",
+	"ISO_8859_7",
+	"ISO_8859_8",
+	"ISO_8859_8_I",
+	"ISO_8859_9",
+	"ISO_8859_10",
+	"ISO_8859_13",
+	"ISO_8859_14",
+	"ISO_8859_15",
+	"ISO_8859_16",
+
+	"UTF_7",
+	"UTF_8",
+	"UTF_16LE",
+	"UTF_16BE",
+	"UCS_2LE",
+	"UCS_2BE",
+	"UTF_32LE",
+	"UTF_32BE",
+
+	"ARMSCII_8",
+	"BIG5",
+	"BIG5_HKSCS",
+	"CP_866",
+
+	"EUC_JP",
+	"EUC_KR",
+	"EUC_TW",
+
+	"GB18030",
+	"GB2312",
+	"GBK",
+	"GEOSTD8",
+	"HZ",
+
+	"IBM_850",
+	"IBM_852",
+	"IBM_855",
+	"IBM_857",
+	"IBM_862",
+	"IBM_864",
+
+	"ISO_2022_JP",
+	"ISO_2022_KR",
+	"ISO_IR_111",
+	"JOHAB",
+	"KOI8_R",
+	"KOI8_U",
+
+	"SHIFT_JIS",
+	"TCVN",
+	"TIS_620",
+	"UHC",
+	"VISCII",
+
+	"WINDOWS_1250",
+	"WINDOWS_1251",
+	"WINDOWS_1252",
+	"WINDOWS_1253",
+	"WINDOWS_1254",
+	"WINDOWS_1255",
+	"WINDOWS_1256",
+	"WINDOWS_1257",
+	"WINDOWS_1258",
+
+	"NONE",
+	"CP_932",
+
+	"MAX"
+};
+
+
+static PyObject *
+Encodings_get_list(PyObject *module)
+{
+	int i;
+	PyObject *list;
+	list = PyList_New(0);
+	for (i = 0; i < GEANY_ENCODINGS_MAX; i++)
+		PyList_Append(list, PyString_FromString(encoding_names[i]));
+	return list;
+}
+
+
 static
 PyMethodDef EncodingsModule_methods[] = {
     {
@@ -87,15 +177,24 @@ PyMethodDef EncodingsModule_methods[] = {
 		(PyCFunction)Encodings_get_charset_from_index, METH_KEYWORDS,
 		"Gets the character set name of the specified index."
 	},
+	{
+		"get_list",
+		(PyCFunction) Encodings_get_list, METH_NOARGS,
+		"Gets a list of all supported encodings."
+	},
     { NULL }
 };
 
 
 PyMODINIT_FUNC
-init_geany_encodings(void)
+initencodings(void)
 {
+	int i;
     PyObject *m;
 
     m = Py_InitModule3("encodings", EncodingsModule_methods,
 			"Encoding conversion functions.");
+
+	for (i = 0; i < GEANY_ENCODINGS_MAX; i++)
+		PyModule_AddIntConstant(m, encoding_names[i], (glong) i);
 }
