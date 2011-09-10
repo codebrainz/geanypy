@@ -32,12 +32,6 @@ extern GeanyData		*geany_data;
 extern GeanyFunctions	*geany_functions;
 
 
-typedef struct
-{
-	PyObject_HEAD
-	GeanyFiletype *ft;
-} Filetype;
-
 
 typedef struct
 {
@@ -78,9 +72,6 @@ typedef struct
 #define PyMODINIT_FUNC void
 #endif
 
-
-PyMODINIT_FUNC init_geany_filetype(void);
-Filetype *Filetype_create_new_from_geany_filetype(GeanyFiletype *ft);
 
 PyMODINIT_FUNC init_dialogs(void);
 

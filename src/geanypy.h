@@ -55,6 +55,16 @@ extern "C" {
 	(cls *) PyObject_CallObject((PyObject *) &(cls ## Type), NULL);
 
 
+/* Returns a new py string or py none if string is NULL. */
+#define GEANYPY_RETURN_STRING(memb) \
+	{ \
+		if (memb != NULL) \
+			return PyString_FromString(memb); \
+		else \
+			Py_RETURN_NONE; \
+	}
+
+
 #include <stdlib.h>
 #include <errno.h>
 #include <string.h>
@@ -74,6 +84,7 @@ extern "C" {
 #include "plugin-config.h"
 #include "document.h"
 #include "editor.h"
+#include "filetypes.h"
 #include "plugin.h"
 #include "project.h"
 #include "signalmanager.h"
