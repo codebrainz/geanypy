@@ -11,7 +11,7 @@ Filetype_dealloc(Filetype *self)
 static int
 Filetype_init(Filetype *self, PyObject *args, PyObject *kwds)
 {
-    self->ft = NULL;
+	self->ft = NULL;
 	return 0;
 }
 
@@ -129,19 +129,19 @@ static PyGetSetDef Filetype_getseters[] = {
 
 static PyTypeObject FiletypeType = {
 	PyObject_HEAD_INIT(NULL)
-    0,											/* ob_size */
-    "geany.filetypes.Filetype",					/* tp_name */
-    sizeof(Filetype),							/* tp_basicsize */
-    0,											/* tp_itemsize */
-    (destructor) Filetype_dealloc,				/* tp_dealloc */
+	0,											/* ob_size */
+	"geany.filetypes.Filetype",					/* tp_name */
+	sizeof(Filetype),							/* tp_basicsize */
+	0,											/* tp_itemsize */
+	(destructor) Filetype_dealloc,				/* tp_dealloc */
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/* tp_print - tp_as_buffer */
-    Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,	/* tp_flags */
-    "Wrapper around a GeanyFiletype structure.",/* tp_doc */
-    0, 0, 0, 0, 0, 0, 0, 0,						/* tp_traverse - tp_members */
-    Filetype_getseters,							/* tp_getset */
-    0, 0, 0, 0, 0,								/* tp_base - tp_dictoffset */
-    (initproc) Filetype_init,					/* tp_init */
-    0, 0,										/* tp_alloc - tp_new */
+	Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,	/* tp_flags */
+	"Wrapper around a GeanyFiletype structure.",/* tp_doc */
+	0, 0, 0, 0, 0, 0, 0, 0,						/* tp_traverse - tp_members */
+	Filetype_getseters,							/* tp_getset */
+	0, 0, 0, 0, 0,								/* tp_base - tp_dictoffset */
+	(initproc) Filetype_init,					/* tp_init */
+	0, 0,										/* tp_alloc - tp_new */
 
 };
 
@@ -149,20 +149,20 @@ static PyTypeObject FiletypeType = {
 static PyObject *
 Filetype_detect_from_file(PyObject *self, PyObject *args, PyObject *kwargs)
 {
-    GeanyFiletype *ft;
-    gchar *filename = NULL;
-    static gchar *kwlist[] = { "filename", NULL };
+	GeanyFiletype *ft;
+	gchar *filename = NULL;
+	static gchar *kwlist[] = { "filename", NULL };
 
-    if (PyArg_ParseTupleAndKeywords(args, kwargs, "s", kwlist, &filename))
-    {
-        if (filename)
-        {
+	if (PyArg_ParseTupleAndKeywords(args, kwargs, "s", kwlist, &filename))
+	{
+		if (filename)
+		{
 			if ((ft = filetypes_detect_from_file(filename)))
 				return (PyObject *) Filetype_create_new_from_geany_filetype(ft);
 		}
-    }
+	}
 
-    Py_RETURN_NONE;
+	Py_RETURN_NONE;
 }
 
 
@@ -190,89 +190,89 @@ Filetype_get_sorted_by_name(PyObject *self)
 static PyObject *
 Filetype_index(PyObject *self, PyObject *args, PyObject *kwargs)
 {
-    GeanyFiletype *ft;
-    gint idx = -1;
-    static gchar *kwlist[] = { "index", NULL };
+	GeanyFiletype *ft;
+	gint idx = -1;
+	static gchar *kwlist[] = { "index", NULL };
 
-    if (PyArg_ParseTupleAndKeywords(args, kwargs, "i", kwlist, &idx))
-    {
-        if ((ft = filetypes_index(idx)))
-            return (PyObject *) Filetype_create_new_from_geany_filetype(ft);
-    }
+	if (PyArg_ParseTupleAndKeywords(args, kwargs, "i", kwlist, &idx))
+	{
+		if ((ft = filetypes_index(idx)))
+			return (PyObject *) Filetype_create_new_from_geany_filetype(ft);
+	}
 
-    Py_RETURN_NONE;
+	Py_RETURN_NONE;
 }
 
 
 static PyObject *
 Filetype_lookup_by_name(PyObject *self, PyObject *args, PyObject *kwargs)
 {
-    GeanyFiletype *ft;
-    gchar *filetype = NULL;
-    static gchar *kwlist[] = { "name", NULL };
+	GeanyFiletype *ft;
+	gchar *filetype = NULL;
+	static gchar *kwlist[] = { "name", NULL };
 
-    if (PyArg_ParseTupleAndKeywords(args, kwargs, "s", kwlist, &filetype))
-    {
-        if (filetype && (ft = filetypes_lookup_by_name(filetype)))
+	if (PyArg_ParseTupleAndKeywords(args, kwargs, "s", kwlist, &filetype))
+	{
+		if (filetype && (ft = filetypes_lookup_by_name(filetype)))
 			return (PyObject *) Filetype_create_new_from_geany_filetype(ft);
-    }
+	}
 
-    Py_RETURN_NONE;
+	Py_RETURN_NONE;
 }
 
 
 static PyObject *
 Filetype_get_sorted_by_title(PyObject *self, PyObject *args)
 {
-    const GSList *iter;
-    PyObject *list;
+	const GSList *iter;
+	PyObject *list;
 
-    list = PyList_New(0);
+	list = PyList_New(0);
 
-    for (iter = geany_data->filetypes_by_title; iter != NULL; iter = g_slist_next(iter))
-    {
+	for (iter = geany_data->filetypes_by_title; iter != NULL; iter = g_slist_next(iter))
+	{
 		if (!iter->data)
 			continue;
 		PyList_Append(list, (PyObject *)
 			Filetype_create_new_from_geany_filetype((GeanyFiletype *) iter->data));
 	}
 
-    return list;
+	return list;
 }
 
 
 static
 PyMethodDef FiletypeModule_methods[] = {
-    { "detect_from_file", (PyCFunction) Filetype_detect_from_file, METH_KEYWORDS },
-    { "index", (PyCFunction) Filetype_index, METH_KEYWORDS },
-    { "get_sorted_by_name", (PyCFunction) Filetype_get_sorted_by_name, METH_NOARGS },
-    { "lookup_by_name", (PyCFunction) Filetype_lookup_by_name, METH_KEYWORDS },
-    { "get_sorted_by_title", (PyCFunction) Filetype_get_sorted_by_title, METH_NOARGS },
-    { NULL }
+	{ "detect_from_file", (PyCFunction) Filetype_detect_from_file, METH_KEYWORDS },
+	{ "index", (PyCFunction) Filetype_index, METH_KEYWORDS },
+	{ "get_sorted_by_name", (PyCFunction) Filetype_get_sorted_by_name, METH_NOARGS },
+	{ "lookup_by_name", (PyCFunction) Filetype_lookup_by_name, METH_KEYWORDS },
+	{ "get_sorted_by_title", (PyCFunction) Filetype_get_sorted_by_title, METH_NOARGS },
+	{ NULL }
 };
 
 
 PyMODINIT_FUNC
 initfiletypes(void)
 {
-    PyObject *m;
+	PyObject *m;
 
-    FiletypeType.tp_new = PyType_GenericNew;
-    if (PyType_Ready(&FiletypeType) < 0)
-        return;
+	FiletypeType.tp_new = PyType_GenericNew;
+	if (PyType_Ready(&FiletypeType) < 0)
+		return;
 
-    m = Py_InitModule3("filetypes", FiletypeModule_methods,
+	m = Py_InitModule3("filetypes", FiletypeModule_methods,
 			"Filetype information and management.");
 
-    Py_INCREF(&FiletypeType);
-    PyModule_AddObject(m, "Filetype", (PyObject *)&FiletypeType);
+	Py_INCREF(&FiletypeType);
+	PyModule_AddObject(m, "Filetype", (PyObject *)&FiletypeType);
 }
 
 
 Filetype *Filetype_create_new_from_geany_filetype(GeanyFiletype *ft)
 {
-    Filetype *self;
-    self = (Filetype *) PyObject_CallObject((PyObject *) &FiletypeType, NULL);
-    self->ft = ft;
-    return self;
+	Filetype *self;
+	self = (Filetype *) PyObject_CallObject((PyObject *) &FiletypeType, NULL);
+	self->ft = ft;
+	return self;
 }
