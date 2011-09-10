@@ -61,13 +61,6 @@ typedef struct
 } ScintillaNotification;
 
 
-typedef struct
-{
-	PyObject_HEAD
-	const GeanyLexerStyle *lexer_style;
-} LexerStyle;
-
-
 #ifndef PyMODINIT_FUNC
 #define PyMODINIT_FUNC void
 #endif
@@ -87,8 +80,6 @@ Scintilla *Scintilla_create_new_from_scintilla(ScintillaObject *sci);
 
 PyMODINIT_FUNC init_geany_scintilla_notification(void);
 ScintillaNotification *ScintillaNotification_create_new_from_scintilla_notification(SCNotification *notif);
-
-PyMODINIT_FUNC init_geany_highlighting(void);
 
 PyMODINIT_FUNC init_geany_main(void);
 

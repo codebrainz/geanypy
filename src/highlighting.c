@@ -1,6 +1,13 @@
 #include "geanypy.h"
 
 
+typedef struct
+{
+	PyObject_HEAD
+	const GeanyLexerStyle *lexer_style;
+} LexerStyle;
+
+
 static void
 LexerStyle_dealloc(LexerStyle *self)
 {
@@ -17,112 +24,94 @@ LexerStyle_init(LexerStyle *self, PyObject *args, PyObject *kwds)
 
 
 static PyObject *
-LexerStyle__get_background(LexerStyle *self, PyObject *args)
+LexerStyle_get_property(LexerStyle *self, const gchar *prop_name)
 {
-    if (self->lexer_style != NULL)
-        return Py_BuildValue("i", self->lexer_style->background);
-    Py_RETURN_NONE;
+	g_return_val_if_fail(self != NULL, NULL);
+	g_return_val_if_fail(prop_name != NULL, NULL);
+
+	if (!self->lexer_style)
+	{
+		PyErr_SetString(PyExc_RuntimeError,
+			"LexerStyle instance not initialized properly");
+		return NULL;
+	}
+
+	if (g_str_equal(prop_name, "background"))
+	{
+		guint16 red, green, blue;
+		red = self->lexer_style->background & 255;
+		green = (self->lexer_style->background >> 8) & 255;
+		blue = (self->lexer_style->background >> 16) & 255;
+		return Py_BuildValue("iii", red, green, blue);
+	}
+	else if (g_str_equal(prop_name, "foreground"))
+	{
+		guint16 red, green, blue;
+		red = self->lexer_style->foreground & 255;
+		green = (self->lexer_style->foreground >> 8) & 255;
+		blue = (self->lexer_style->foreground >> 16) & 255;
+		return Py_BuildValue("iii", red, green, blue);
+	}
+	else if (g_str_equal(prop_name, "bold"))
+	{
+		if (self->lexer_style->bold)
+			Py_RETURN_TRUE;
+		else
+			Py_RETURN_FALSE;
+	}
+	else if (g_str_equal(prop_name, "italic"))
+	{
+		if (self->lexer_style->italic)
+			Py_RETURN_TRUE;
+		else
+			Py_RETURN_FALSE;
+	}
+
+	Py_RETURN_NONE;
 }
+GEANYPY_PROPS_READONLY(LexerStyle);
 
 
-static PyObject *
-LexerStyle__get_bold(LexerStyle *self, PyObject *args)
-{
-    if (self->lexer_style != NULL)
-    {
-        if (self->lexer_style->bold)
-            Py_RETURN_TRUE;
-        else
-            Py_RETURN_FALSE;
-    }
-    Py_RETURN_NONE;
-}
-
-
-static PyObject *
-LexerStyle__get_foreground(LexerStyle *self, PyObject *args)
-{
-    if (self->lexer_style != NULL)
-        return Py_BuildValue("i", self->lexer_style->foreground);
-    Py_RETURN_NONE;
-}
-
-
-static PyObject *
-LexerStyle__get_italic(LexerStyle *self, PyObject *args)
-{
-    if (self->lexer_style != NULL)
-    {
-        if (self->lexer_style->italic)
-            Py_RETURN_TRUE;
-        else
-            Py_RETURN_FALSE;
-    }
-    Py_RETURN_NONE;
-}
-
-
-static PyMethodDef LexerStyle_methods[] = {
-    { "_get_background", (PyCFunction) LexerStyle__get_background, METH_VARARGS },
-    { "_get_bold", (PyCFunction) LexerStyle__get_bold, METH_VARARGS },
-    { "_get_foreground", (PyCFunction) LexerStyle__get_foreground, METH_VARARGS },
-    { "_get_italic", (PyCFunction) LexerStyle__get_italic, METH_VARARGS },
+static PyGetSetDef LexerStyle_getseters[] = {
+	GEANYPY_GETSETDEF(LexerStyle, "background",
+		"Background color of text, as an (R,G,B) tuple."),
+	GEANYPY_GETSETDEF(LexerStyle, "foreground",
+		"Foreground color of text, as an (R,G,B) tuple."),
+	GEANYPY_GETSETDEF(LexerStyle, "bold",
+		"Whether the text is bold or not."),
+	GEANYPY_GETSETDEF(LexerStyle, "italic",
+		"Whether the text is italic or not."),
 	{ NULL }
 };
 
 
 static PyTypeObject LexerStyleType = {
 	PyObject_HEAD_INIT(NULL)
-    0,                          /*ob_size*/
-    "_geany_highlighting.LexerStyle",     /*tp_name*/
-    sizeof(Editor),             /*tp_basicsize*/
-    0,                          /*tp_itemsize*/
-    (destructor)LexerStyle_dealloc, /*tp_dealloc*/
-    0,                          /*tp_print*/
-    0,                          /*tp_getattr*/
-    0,                          /*tp_setattr*/
-    0,                          /*tp_compare*/
-    0,                          /*tp_repr*/
-    0,                          /*tp_as_number*/
-    0,                          /*tp_as_sequence*/
-    0,                          /*tp_as_mapping*/
-    0,                          /*tp_hash */
-    0,                          /*tp_call*/
-    0,                          /*tp_str*/
-    0,                          /*tp_getattro*/
-    0,                          /*tp_setattro*/
-    0,                          /*tp_as_buffer*/
-    Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE, /*tp_flags*/
-    "Geany lexer style",             /* tp_doc */
-    0,		                    /* tp_traverse */
-    0,		               	    /* tp_clear */
-    0,		                    /* tp_richcompare */
-    0,		                    /* tp_weaklistoffset */
-    0,		                    /* tp_iter */
-    0,		                    /* tp_iternext */
-    LexerStyle_methods,             /* tp_methods */
-    0,                          /* tp_members */
-    0,                          /* tp_getset */
-    0,                          /* tp_base */
-    0,                          /* tp_dict */
-    0,                          /* tp_descr_get */
-    0,                          /* tp_descr_set */
-    0,                          /* tp_dictoffset */
-    (initproc)LexerStyle_init,      /* tp_init */
-    0,                          /* tp_alloc */
-    0,                          /* tp_new */
-
+    0,												/*ob_size*/
+    "geany.highlighting.LexerStyle",				/*tp_name*/
+    sizeof(Editor),									/*tp_basicsize*/
+    0,												/*tp_itemsize*/
+    (destructor) LexerStyle_dealloc,				/*tp_dealloc*/
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,		/* tp_print - tp_as_buffer */
+    Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,		/*tp_flags*/
+    "Wrapper around a GeanyLexerStyle structure.",	/* tp_doc */
+	0, 0, 0, 0, 0, 0, 0, 0,							/* tp_traverse - tp_members */
+    LexerStyle_getseters,							/* tp_getset */
+	0, 0, 0, 0, 0,									/* tp_base - tp_dictoffset */
+    (initproc) LexerStyle_init,						/* tp_init */
+    0,  0,											/* tp_alloc - tp_new */
 };
 
 
 static PyObject *
-Highlighting_get_style(PyObject *module, PyObject *args)
+Highlighting_get_style(PyObject *module, PyObject *args, PyObject *kwargs)
 {
     gint ft_id, style_id;
     LexerStyle *lexer_style;
     const GeanyLexerStyle *ls;
+    static gchar *kwlist[] = { "filetype_id", "style_id", NULL };
 
-    if (PyArg_ParseTuple(args, "ii", &ft_id, &style_id))
+    if (PyArg_ParseTupleAndKeywords(args, kwargs, "ii", kwlist, &ft_id, &style_id))
     {
         ls = highlighting_get_style(ft_id, style_id);
         if (ls != NULL)
@@ -138,11 +127,12 @@ Highlighting_get_style(PyObject *module, PyObject *args)
 
 
 static PyObject *
-Highlighting_is_code_style(PyObject *module, PyObject *args)
+Highlighting_is_code_style(PyObject *module, PyObject *args, PyObject *kwargs)
 {
     gint lexer, style;
+	static gchar *kwlist[] = { "lexer", "style", NULL };
 
-    if (PyArg_ParseTuple(args, "ii", &lexer, &style))
+    if (PyArg_ParseTupleAndKeywords(args, kwargs, "ii", kwlist, &lexer, &style))
     {
         if (highlighting_is_code_style(lexer, style))
             Py_RETURN_TRUE;
@@ -155,11 +145,12 @@ Highlighting_is_code_style(PyObject *module, PyObject *args)
 
 
 static PyObject *
-Highlighting_is_comment_style(PyObject *module, PyObject *args)
+Highlighting_is_comment_style(PyObject *module, PyObject *args, PyObject *kwargs)
 {
     gint lexer, style;
+    static gchar *kwlist[] = { "lexer", "style", NULL };
 
-    if (PyArg_ParseTuple(args, "ii", &lexer, &style))
+    if (PyArg_ParseTupleAndKeywords(args, kwargs, "ii", kwlist, &lexer, &style))
     {
         if (highlighting_is_comment_style(lexer, style))
             Py_RETURN_TRUE;
@@ -172,11 +163,12 @@ Highlighting_is_comment_style(PyObject *module, PyObject *args)
 
 
 static PyObject *
-Highlighting_is_string_style(PyObject *module, PyObject *args)
+Highlighting_is_string_style(PyObject *module, PyObject *args, PyObject *kwargs)
 {
     gint lexer, style;
+    static gchar *kwlist[] = { "lexer", "style", NULL };
 
-    if (PyArg_ParseTuple(args, "ii", &lexer, &style))
+    if (PyArg_ParseTupleAndKeywords(args, kwargs, "ii", kwlist, &lexer, &style))
     {
         if (highlighting_is_string_style(lexer, style))
             Py_RETURN_TRUE;
@@ -189,13 +181,14 @@ Highlighting_is_string_style(PyObject *module, PyObject *args)
 
 
 static PyObject *
-Highlighting_set_styles(PyObject *module, PyObject *args)
+Highlighting_set_styles(PyObject *module, PyObject *args, PyObject *kwargs)
 {
     PyObject *py_sci, *py_ft;
     Scintilla *sci;
     Filetype *ft;
+    static gchar *kwlist[] = { "sci", "filetype" };
 
-    if (PyArg_ParseTuple(args, "OO", &py_sci, &py_ft))
+    if (PyArg_ParseTupleAndKeywords(args, kwargs, "OO", kwlist, &py_sci, &py_ft))
     {
         if (py_sci != Py_None && py_ft != Py_None)
         {
@@ -211,17 +204,17 @@ Highlighting_set_styles(PyObject *module, PyObject *args)
 
 static
 PyMethodDef EditorModule_methods[] = {
-    { "get_style", (PyCFunction) Highlighting_get_style, METH_VARARGS },
-    { "is_code_style", (PyCFunction) Highlighting_is_code_style, METH_VARARGS },
-    { "is_comment_style", (PyCFunction) Highlighting_is_comment_style, METH_VARARGS },
-    { "is_string_style", (PyCFunction) Highlighting_is_string_style, METH_VARARGS },
-    { "set_styles", (PyCFunction) Highlighting_set_styles, METH_VARARGS },
+    { "get_style", (PyCFunction) Highlighting_get_style, METH_KEYWORDS },
+    { "is_code_style", (PyCFunction) Highlighting_is_code_style, METH_KEYWORDS },
+    { "is_comment_style", (PyCFunction) Highlighting_is_comment_style, METH_KEYWORDS },
+    { "is_string_style", (PyCFunction) Highlighting_is_string_style, METH_KEYWORDS },
+    { "set_styles", (PyCFunction) Highlighting_set_styles, METH_KEYWORDS },
     { NULL }
 };
 
 
 PyMODINIT_FUNC
-init_geany_highlighting(void)
+inithighlighting(void)
 {
     PyObject *m;
 
@@ -229,7 +222,8 @@ init_geany_highlighting(void)
     if (PyType_Ready(&LexerStyleType) < 0)
         return;
 
-    m = Py_InitModule("_geany_highlighting", EditorModule_methods);
+    m = Py_InitModule3("highlighting", EditorModule_methods,
+			"Highlighting information and management.");
 
     Py_INCREF(&LexerStyleType);
     PyModule_AddObject(m, "LexerStyle", (PyObject *)&LexerStyleType);

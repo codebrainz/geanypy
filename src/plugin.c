@@ -55,7 +55,6 @@ GeanyPy_start_interpreter(void)
     Py_Initialize();
 
     /* Import the C modules */
-    init_geany_highlighting();
     init_geany_indent_prefs();
     init_geany_main();
     init_geany_main_widgets();
@@ -70,6 +69,7 @@ GeanyPy_start_interpreter(void)
     initeditor();
     initencoding();
     initfiletypes();
+    inithighlighting();
     initprefs();
     initproject();
 

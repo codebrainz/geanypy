@@ -6,7 +6,6 @@ geanypy_sources				=	__init__.py \
 								manager.py \
 								loader.py \
 								plugin.py \
-								highlighting.py \
 								main.py \
 								msgwindow.py \
 								navqueue.py \
