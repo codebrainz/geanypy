@@ -8,23 +8,22 @@ geanypy_la_CPPFLAGS			=	@GEANY_CFLAGS@ @PYGTK_CFLAGS@ @PYTHON_CPPFLAGS@ \
 								-UHAVE_CONFIG_H
 geanypy_la_LIBADD			=	@GEANY_LIBS@ @PYGTK_LIBS@ @PYTHON_LDFLAGS@ \
 								@PYTHON_EXTRA_LIBS@ @PYTHON_EXTRA_LDFLAGS@
-geanypy_la_SOURCES			=	plugin.c \
-								plugin.h \
+geanypy_la_SOURCES			=	app.c \
 								dialogs.c \
 								document.c \
-								filetypes.c \
-								indentprefs.c \
 								editor.c \
-								mainwidgets.c \
-								project.c \
-								app.c \
-								prefs.c \
-								scintilla.c \
-								scinotification.c \
 								encodings.c \
+								filetypes.c \
 								highlighting.c \
+								indentprefs.c \
 								main.c \
+								mainwidgets.c \
 								msgwindow.c \
 								navqueue.c \
+								plugin.c plugin.h \
+								prefs.c \
+								project.c \
+								scinotification.c \
+								scintilla.c \
 								signalmanager.c \
 								signalmanager.h
