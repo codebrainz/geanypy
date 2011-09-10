@@ -68,7 +68,7 @@ GeanyPy_start_interpreter(void)
     initdialogs();
     initdocument();
     initeditor();
-    initencodings();
+    initencoding();
     initfiletypes();
     initprefs();
     initproject();

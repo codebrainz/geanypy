@@ -12,7 +12,7 @@ import console
 import dialogs
 import document
 import editor
-import encodings
+import encoding
 import filetypes
 import highlighting
 import indentprefs

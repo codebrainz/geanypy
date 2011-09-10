@@ -12,7 +12,7 @@ geanypy_la_SOURCES			=	app.c \
 								dialogs.c \
 								document.c \
 								editor.c \
-								encodings.c \
+								encoding.c \
 								filetypes.c \
 								highlighting.c \
 								indentprefs.c \

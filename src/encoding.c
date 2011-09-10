@@ -163,7 +163,7 @@ PyMethodDef EncodingsModule_methods[] = {
 		"convert_to_utf8",
 		(PyCFunction)Encodings_convert_to_utf8, METH_KEYWORDS,
 		"Tries to convert the supplied buffer to UTF-8 encoding.  Returns "
-		"the converted buffer and t and the encoding that was used."
+		"the converted buffer and the encoding that was used."
 	},
     {
 		"convert_to_utf8_from_charset",
@@ -187,12 +187,12 @@ PyMethodDef EncodingsModule_methods[] = {
 
 
 PyMODINIT_FUNC
-initencodings(void)
+initencoding(void)
 {
 	int i;
     PyObject *m;
 
-    m = Py_InitModule3("encodings", EncodingsModule_methods,
+    m = Py_InitModule3("encoding", EncodingsModule_methods,
 			"Encoding conversion functions.");
 
 	for (i = 0; i < GEANY_ENCODINGS_MAX; i++)
