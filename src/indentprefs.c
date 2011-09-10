@@ -51,45 +51,22 @@ static PyGetSetDef IndentPrefs_getseters[] = {
 };
 
 
-static PyTypeObject IndentPrefsType = {
+PyTypeObject IndentPrefsType = {
 	PyObject_HEAD_INIT(NULL)
-    0,											/* ob_size */
-    "geany.indentprefs.IndentPrefs",			/* tp_name */
-    sizeof(IndentPrefs),						/* tp_basicsize */
-    0,											/* tp_itemsize */
-    (destructor) IndentPrefs_dealloc,			/* tp_dealloc */
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/* tp_print - tp_as_buffer */
-    Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,	/* tp_flags */
-    "Wrapper around a GeanyApp structure.",		/* tp_doc */
-	0, 0, 0, 0, 0, 0, 0, 0,						/* tp_traverse - tp_members */
-	IndentPrefs_getseters,						/* tp_getset */
-	0, 0, 0, 0, 0,								/* tp_base - tp_dictoffset */
-	(initproc) IndentPrefs_init,				/* tp_init */
-	0, 0,										/* tp_alloc - tp_new */
+    0,												/* ob_size */
+    "geany.editor.IndentPrefs",						/* tp_name */
+    sizeof(IndentPrefs),							/* tp_basicsize */
+    0,												/* tp_itemsize */
+    (destructor) IndentPrefs_dealloc,				/* tp_dealloc */
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,		/* tp_print - tp_as_buffer */
+    Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,		/* tp_flags */
+    "Wrapper around a GeanyIndentPrefs structure.",	/* tp_doc */
+	0, 0, 0, 0, 0, 0, 0, 0,							/* tp_traverse - tp_members */
+	IndentPrefs_getseters,							/* tp_getset */
+	0, 0, 0, 0, 0,									/* tp_base - tp_dictoffset */
+	(initproc) IndentPrefs_init,					/* tp_init */
+	0, 0,											/* tp_alloc - tp_new */
 };
-
-
-static PyMethodDef IndentPrefsModule_methods[] = { { NULL } };
-
-
-PyMODINIT_FUNC
-initindentprefs(void)
-{
-    PyObject *m;
-
-    IndentPrefsType.tp_new = PyType_GenericNew;
-    if (PyType_Ready(&IndentPrefsType) < 0)
-        return;
-
-    m = Py_InitModule("indentprefs", IndentPrefsModule_methods);
-
-    Py_INCREF(&IndentPrefsType);
-    PyModule_AddObject(m, "IndentPrefs", (PyObject *)&IndentPrefsType);
-
-    PyModule_AddIntConstant(m, "INDENT_TYPE_SPACES", (glong) GEANY_INDENT_TYPE_SPACES);
-    PyModule_AddIntConstant(m, "INDENT_TYPE_TABS", (glong) GEANY_INDENT_TYPE_TABS);
-    PyModule_AddIntConstant(m, "INDENT_TYPE_BOTH", (glong) GEANY_INDENT_TYPE_BOTH);
-}
 
 
 IndentPrefs *IndentPrefs_create_new_from_geany_indent_prefs(GeanyIndentPrefs *indent_prefs)

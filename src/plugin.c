@@ -69,7 +69,7 @@ GeanyPy_start_interpreter(void)
     initencoding();
     initfiletypes();
     inithighlighting();
-    initindentprefs();
+    //initindentprefs();
     initprefs();
     initproject();
 

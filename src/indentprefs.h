@@ -1,6 +1,8 @@
 #ifndef GEANYPY_INDENTPREFS_H__
 #define GEANYPY_INDENTPREFS_H__
 
+PyTypeObject IndentPrefsType; /* for use in editor.c:initeditor() */
+
 typedef struct
 {
 	PyObject_HEAD
