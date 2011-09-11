@@ -12,8 +12,8 @@ Notification_dealloc(Notification *self)
 static int
 Notification_init(Notification *self, PyObject *args, PyObject *kwds)
 {
-    self->notif = NULL;
-    self->hdr = NULL;
+	self->notif = NULL;
+	self->hdr = NULL;
 	return 0;
 }
 
@@ -110,18 +110,18 @@ static PyGetSetDef Notification_getseters[] = {
 
 PyTypeObject NotificationType = {
 	PyObject_HEAD_INIT(NULL)
-    0,												/* ob_size */
-    "geany.scintilla.Notification",					/* tp_name */
-    sizeof(Scintilla),								/* tp_basicsize */
-    0,												/* tp_itemsize */
-    (destructor) Notification_dealloc,				/* tp_dealloc */
+	0,												/* ob_size */
+	"geany.scintilla.Notification",					/* tp_name */
+	sizeof(Scintilla),								/* tp_basicsize */
+	0,												/* tp_itemsize */
+	(destructor) Notification_dealloc,				/* tp_dealloc */
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,		/* tp_print - tp_as_buffer */
-    Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,		/* tp_flags */
-    "Wrapper around a SCNotification structure.",	/* tp_doc */
+	Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,		/* tp_flags */
+	"Wrapper around a SCNotification structure.",	/* tp_doc */
 	0, 0, 0, 0, 0, 0, 0, 0,							/* tp_traverse - tp_members */
-    Notification_getseters,							/* tp_getset */
+	Notification_getseters,							/* tp_getset */
 	0, 0, 0, 0, 0,									/* tp_base - tp_dictoffset */
-    (initproc) Notification_init,					/* tp_init */
+	(initproc) Notification_init,					/* tp_init */
 	0, 0,											/* tp_alloc - tp_new */
 
 };
@@ -129,9 +129,9 @@ PyTypeObject NotificationType = {
 
 Notification *Notification_create_new_from_scintilla_notification(SCNotification *notif)
 {
-    Notification *self;
-    self = (Notification *) PyObject_CallObject((PyObject *) &NotificationType, NULL);
-    self->notif = notif;
-    self->hdr = NotifyHeader_create_new_from_scintilla_notification(self->notif);
-    return self;
+	Notification *self;
+	self = (Notification *) PyObject_CallObject((PyObject *) &NotificationType, NULL);
+	self->notif = notif;
+	self->hdr = NotifyHeader_create_new_from_scintilla_notification(self->notif);
+	return self;
 }

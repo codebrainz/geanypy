@@ -11,7 +11,7 @@ NotifyHeader_dealloc(NotifyHeader *self)
 static int
 NotifyHeader_init(NotifyHeader *self, PyObject *args, PyObject *kwds)
 {
-    self->notif = NULL;
+	self->notif = NULL;
 	return 0;
 }
 
@@ -51,18 +51,18 @@ static PyGetSetDef NotifyHeader_getseters[] = {
 
 PyTypeObject NotifyHeaderType = {
 	PyObject_HEAD_INIT(NULL)
-    0,												/* ob_size */
-    "geany.scintilla.NotifyHeader",					/* tp_name */
-    sizeof(Scintilla),								/* tp_basicsize */
-    0,												/* tp_itemsize */
-    (destructor) NotifyHeader_dealloc,				/* tp_dealloc */
+	0,												/* ob_size */
+	"geany.scintilla.NotifyHeader",					/* tp_name */
+	sizeof(Scintilla),								/* tp_basicsize */
+	0,												/* tp_itemsize */
+	(destructor) NotifyHeader_dealloc,				/* tp_dealloc */
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,		/* tp_print - tp_as_buffer */
-    Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,		/* tp_flags */
-    "Wrapper around a NotifyHeader structure.",		/* tp_doc */
+	Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,		/* tp_flags */
+	"Wrapper around a NotifyHeader structure.",		/* tp_doc */
 	0, 0, 0, 0, 0, 0, 0, 0,							/* tp_traverse - tp_members */
-    NotifyHeader_getseters,							/* tp_getset */
+	NotifyHeader_getseters,							/* tp_getset */
 	0, 0, 0, 0, 0,									/* tp_base - tp_dictoffset */
-    (initproc) NotifyHeader_init,					/* tp_init */
+	(initproc) NotifyHeader_init,					/* tp_init */
 	0, 0,											/* tp_alloc - tp_new */
 
 };
@@ -70,8 +70,8 @@ PyTypeObject NotifyHeaderType = {
 
 NotifyHeader *NotifyHeader_create_new_from_scintilla_notification(SCNotification *notif)
 {
-    NotifyHeader *self;
-    self = (NotifyHeader *) PyObject_CallObject((PyObject *) &NotifyHeaderType, NULL);
-    self->notif = notif;
-    return self;
+	NotifyHeader *self;
+	self = (NotifyHeader *) PyObject_CallObject((PyObject *) &NotifyHeaderType, NULL);
+	self->notif = notif;
+	return self;
 }
