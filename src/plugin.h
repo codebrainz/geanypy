@@ -59,8 +59,6 @@ Scintilla *Scintilla_create_new_from_scintilla(ScintillaObject *sci);
 PyMODINIT_FUNC init_geany_scintilla_notification(void);
 ScintillaNotification *ScintillaNotification_create_new_from_scintilla_notification(SCNotification *notif);
 
-PyMODINIT_FUNC init_geany_navqueue(void);
-
 
 #ifdef __cplusplus
 } /* extern "C" */
