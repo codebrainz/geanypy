@@ -63,12 +63,12 @@ GeanyPy_start_interpreter(void)
     initfiletypes();
     inithighlighting();
     initmain();
-    initmainwidgets();
     initmsgwin();
     initnavqueue();
     initprefs();
     initproject();
     initscintilla();
+    initui_utils();
 
     /* Adjust Python path to find wrapper package (geany) */
     init_code = g_strdup_printf(

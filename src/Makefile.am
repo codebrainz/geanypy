@@ -10,21 +10,23 @@ geanypy_la_LIBADD			=	@GEANY_LIBS@ @PYGTK_LIBS@ @PYTHON_LDFLAGS@ \
 								@PYTHON_EXTRA_LIBS@ @PYTHON_EXTRA_LDFLAGS@
 geanypy_la_SOURCES			=	app.c \
 								dialogs.c \
-								document.c \
-								editor.c \
+								document.c document.h \
+								editor.c editor.h \
 								encoding.c \
 								filetypes.c \
+								geanypy.h \
 								highlighting.c \
-								indentprefs.c \
+								indentprefs.c indentprefs.h \
+								interfaceprefs.c \
 								main.c \
 								mainwidgets.c \
 								msgwindow.c \
 								navqueue.c \
 								plugin.c plugin.h \
 								prefs.c \
-								project.c \
+								project.c project.h \
 								scinotification.c \
 								scinotifyheader.c \
-								scintilla.c \
-								signalmanager.c \
-								signalmanager.h
+								scintilla.c scintilla.h \
+								signalmanager.c signalmanager.h \
+								ui_utils.c ui_utils.h

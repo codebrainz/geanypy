@@ -90,6 +90,7 @@ extern "C" {
 #include "project.h"
 #include "scintilla.h"
 #include "signalmanager.h"
+#include "ui_utils.h"
 
 
 #ifdef __cplusplus

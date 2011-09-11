@@ -1,16 +1,6 @@
 #include "geanypy.h"
 
 
-typedef struct
-{
-	PyObject_HEAD
-	GeanyMainWidgets *main_widgets;
-} MainWidgets;
-
-
-static PyTypeObject *PyGObject_Type = NULL;
-
-
 static void
 MainWidgets_dealloc(MainWidgets *self)
 {
@@ -86,49 +76,20 @@ static PyGetSetDef MainWidgets_getseters[] = {
 };
 
 
-static PyTypeObject MainWidgetsType = {
+PyTypeObject MainWidgetsType = {
 	PyObject_HEAD_INIT(NULL)
 	0,													/* ob_size */
-	"geany.mainwidgets.MainWidgets",					/* tp_name */
+	"geany.ui_utils.MainWidgets",						/* tp_name */
 	sizeof(MainWidgets),								/* tp_basicsize */
 	0,													/* tp_itemsize */
-	(destructor)MainWidgets_dealloc,					/* tp_dealloc */
+	(destructor) MainWidgets_dealloc,					/* tp_dealloc */
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,			/* tp_print - tp_as_buffer */
 	Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,			/* tp_flags */
 	"Wrapper around the GeanyMainWidgets structure.",	/* tp_doc */
 	0, 0, 0, 0, 0, 0, 0, 0,								/* tp_traverse - tp_members */
 	MainWidgets_getseters,								/* tp_getset */
 	0, 0, 0, 0, 0,										/* tp_base - tp_dictoffset */
-	(initproc)MainWidgets_init,							/* tp_init */
+	(initproc) MainWidgets_init,						/* tp_init */
 	0, 0,												/* tp_alloc - tp_new */
 
 };
-
-
-static PyMethodDef MainWidgetsModule_methods[] = { { NULL } };
-
-
-PyMODINIT_FUNC initmainwidgets(void)
-{
-	PyObject *m;
-
-	init_pygobject();
-	init_pygtk();
-	m = PyImport_ImportModule("gobject");
-
-	if (m)
-	{
-		PyGObject_Type = (PyTypeObject *) PyObject_GetAttrString(m, "GObject");
-		Py_XDECREF(m);
-	}
-
-	MainWidgetsType.tp_new = PyType_GenericNew;
-	if (PyType_Ready(&MainWidgetsType) < 0)
-		return;
-
-	m = Py_InitModule3("mainwidgets", MainWidgetsModule_methods,
-			"Important widgets in the main window.");
-
-	Py_INCREF(&MainWidgetsType);
-	PyModule_AddObject(m, "MainWidgets", (PyObject *)&MainWidgetsType);
-}

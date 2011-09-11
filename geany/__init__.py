@@ -17,19 +17,19 @@ import filetypes
 import highlighting
 import loader
 import main
-import mainwidgets
 import manager
 import msgwindow
 import navqueue
 import project
 import scintilla
 import prefs
+import ui_utils
 
 from app import App
 from prefs import Prefs
-from mainwidgets import MainWidgets
 from main import is_realized, locale_init, reload_configuration
 from signalmanager import SignalManager
+from ui_utils import MainWidgets, InterfacePrefs
 
 
 __all__ = [ "Plugin",
@@ -37,6 +37,7 @@ __all__ = [ "Plugin",
             "locale_init",
             "reload_configuration",
             "main_widgets",
+            "interface_prefs",
             "app",
             "prefs",
             "signals" ]
@@ -49,6 +50,9 @@ prefs = Prefs()
 
 # Import GTK+ widgets that are part of Geany's UI
 main_widgets = MainWidgets()
+
+# Interface settings
+interface_prefs = InterfacePrefs()
 
 # GObject to connect signal handlers on and which emits signals.
 signals = SignalManager()
