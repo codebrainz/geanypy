@@ -3,7 +3,6 @@ import document
 import editor
 import filetypes
 import scintilla
-import _geany_scintilla_notification
 from collections import namedtuple
 
 
@@ -105,12 +104,7 @@ class SignalManager(object):
 
         new_args = []
         for arg in args:
-            if isinstance(arg, _geany_scintilla_notification.Notification):
-                notif = scintilla.Notification()
-                notif._notif = arg
-                new_args.append(notif)
-            else:
-                new_args.append(arg)
+            new_args.append(arg)
 
         for callback in self.callbacks[event]:
             args_ = list(new_args[:])

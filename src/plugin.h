@@ -32,32 +32,9 @@ extern GeanyData		*geany_data;
 extern GeanyFunctions	*geany_functions;
 
 
-
-
-typedef struct
-{
-	PyObject_HEAD
-	ScintillaObject *sci;
-} Scintilla;
-
-
-typedef struct
-{
-    PyObject_HEAD
-    SCNotification *notif;
-} ScintillaNotification;
-
-
 #ifndef PyMODINIT_FUNC
 #define PyMODINIT_FUNC void
 #endif
-
-
-PyMODINIT_FUNC init_geany_scintilla(void);
-Scintilla *Scintilla_create_new_from_scintilla(ScintillaObject *sci);
-
-PyMODINIT_FUNC init_geany_scintilla_notification(void);
-ScintillaNotification *ScintillaNotification_create_new_from_scintilla_notification(SCNotification *notif);
 
 
 #ifdef __cplusplus

@@ -24,6 +24,7 @@ geanypy_la_SOURCES			=	app.c \
 								prefs.c \
 								project.c \
 								scinotification.c \
+								scinotifyheader.c \
 								scintilla.c \
 								signalmanager.c \
 								signalmanager.h

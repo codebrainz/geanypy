@@ -55,9 +55,6 @@ GeanyPy_start_interpreter(void)
     Py_Initialize();
 
     /* Import the C modules */
-    init_geany_scintilla();
-    init_geany_scintilla_notification();
-
     initapp();
     initdialogs();
     initdocument();
@@ -71,6 +68,7 @@ GeanyPy_start_interpreter(void)
     initnavqueue();
     initprefs();
     initproject();
+    initscintilla();
 
     /* Adjust Python path to find wrapper package (geany) */
     init_code = g_strdup_printf(

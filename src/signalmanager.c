@@ -169,7 +169,7 @@ static gboolean on_editor_notify(GObject *geany_object, GeanyEditor *editor, SCN
     args = Py_BuildValue("sOO",
             "editor-notify",
             (PyObject *) Editor_create_new_from_geany_editor(editor),
-            (PyObject *) ScintillaNotification_create_new_from_scintilla_notification(nt));
+            (PyObject *) Notification_create_new_from_scintilla_notification(nt));
     PyObject_CallObject(man->py_emit_func, args);
 	return FALSE;
 }

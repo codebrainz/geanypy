@@ -777,18 +777,13 @@ static PyMethodDef Scintilla_methods[] = {
 };
 
 
-static PyMemberDef Scintilla_members[] = {
-	{ NULL }
-};
-
-
 static PyTypeObject ScintillaType = {
 	PyObject_HEAD_INIT(NULL)
     0,                          /*ob_size*/
-    "_geany_scintilla.Scintilla",  /*tp_name*/
+    "geany.scintilla.Scintilla",  /*tp_name*/
     sizeof(Scintilla),          /*tp_basicsize*/
     0,                          /*tp_itemsize*/
-    (destructor)Scintilla_dealloc, /*tp_dealloc*/
+    (destructor) Scintilla_dealloc, /*tp_dealloc*/
     0,                          /*tp_print*/
     0,                          /*tp_getattr*/
     0,                          /*tp_setattr*/
@@ -804,7 +799,7 @@ static PyTypeObject ScintillaType = {
     0,                          /*tp_setattro*/
     0,                          /*tp_as_buffer*/
     Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE, /*tp_flags*/
-    "Geany scintilla",          /* tp_doc */
+    "Wrapper around a ScintillaObject structure.",          /* tp_doc */
     0,		                    /* tp_traverse */
     0,		               	    /* tp_clear */
     0,		                    /* tp_richcompare */
@@ -812,25 +807,23 @@ static PyTypeObject ScintillaType = {
     0,		                    /* tp_iter */
     0,		                    /* tp_iternext */
     Scintilla_methods,          /* tp_methods */
-    Scintilla_members,          /* tp_members */
+    0,          /* tp_members */
     0,                          /* tp_getset */
     0,                          /* tp_base */
     0,                          /* tp_dict */
     0,                          /* tp_descr_get */
     0,                          /* tp_descr_set */
     0,                          /* tp_dictoffset */
-    (initproc)Scintilla_init,   /* tp_init */
+    (initproc) Scintilla_init,   /* tp_init */
     0,                          /* tp_alloc */
     0,                          /* tp_new */
 
 };
 
-
 static PyMethodDef ScintillaModule_methods[] = { { NULL } };
 
 
-PyMODINIT_FUNC
-init_geany_scintilla(void)
+PyMODINIT_FUNC initscintilla(void)
 {
     PyObject *m;
 
@@ -838,10 +831,86 @@ init_geany_scintilla(void)
     if (PyType_Ready(&ScintillaType) < 0)
         return;
 
-    m = Py_InitModule("_geany_scintilla", ScintillaModule_methods);
+    NotificationType.tp_new = PyType_GenericNew;
+    if (PyType_Ready(&NotificationType) < 0)
+        return;
+
+    NotifyHeaderType.tp_new = PyType_GenericNew;
+    if (PyType_Ready(&NotifyHeaderType) < 0)
+		return;
+
+    m = Py_InitModule("scintilla", ScintillaModule_methods);
 
     Py_INCREF(&ScintillaType);
     PyModule_AddObject(m, "Scintilla", (PyObject *)&ScintillaType);
+
+    Py_INCREF(&NotificationType);
+    PyModule_AddObject(m, "Notification", (PyObject *)&NotificationType);
+
+    Py_INCREF(&NotifyHeaderType);
+    PyModule_AddObject(m, "NotifyHeader", (PyObject *)&NotifyHeaderType);
+
+
+	PyModule_AddIntConstant(m, "FLAG_WHOLE_WORD", SCFIND_WHOLEWORD);
+	PyModule_AddIntConstant(m, "FLAG_MATCH_CASE", SCFIND_MATCHCASE);
+	PyModule_AddIntConstant(m, "FLAG_WORD_START", SCFIND_WORDSTART);
+	PyModule_AddIntConstant(m, "FLAG_REGEXP", SCFIND_REGEXP);
+	PyModule_AddIntConstant(m, "FLAG_POSIX", SCFIND_POSIX);
+
+	PyModule_AddIntConstant(m, "UPDATE_CONTENT", SC_UPDATE_CONTENT);
+	PyModule_AddIntConstant(m, "UPDATE_SELECTION", SC_UPDATE_SELECTION);
+	PyModule_AddIntConstant(m, "UPDATE_V_SCROLL", SC_UPDATE_V_SCROLL);
+	PyModule_AddIntConstant(m, "UPDATE_H_SCROLL", SC_UPDATE_H_SCROLL);
+
+	PyModule_AddIntConstant(m, "MOD_INSERT_TEXT", SC_MOD_INSERTTEXT);
+	PyModule_AddIntConstant(m, "MOD_DELETE_TEXT", SC_MOD_DELETETEXT);
+	PyModule_AddIntConstant(m, "MOD_CHANGE_STYLE", SC_MOD_CHANGESTYLE);
+	PyModule_AddIntConstant(m, "MOD_CHANGE_FOLD", SC_MOD_CHANGEFOLD);
+	PyModule_AddIntConstant(m, "PERFORMED_USER", SC_PERFORMED_USER);
+	PyModule_AddIntConstant(m, "PERFORMED_UNDO", SC_PERFORMED_UNDO);
+	PyModule_AddIntConstant(m, "PERFORMED_REDO", SC_PERFORMED_REDO);
+	PyModule_AddIntConstant(m, "MULTI_STEP_UNDO_REDO", SC_MULTISTEPUNDOREDO);
+	PyModule_AddIntConstant(m, "LAST_STEP_IN_UNDO_REDO", SC_LASTSTEPINUNDOREDO);
+	PyModule_AddIntConstant(m, "MOD_CHANGE_MARKER", SC_MOD_CHANGEMARKER);
+	PyModule_AddIntConstant(m, "MOD_BEFORE_INSERT", SC_MOD_BEFOREINSERT);
+	PyModule_AddIntConstant(m, "MOD_BEFORE_DELETE", SC_MOD_BEFOREDELETE);
+	PyModule_AddIntConstant(m, "MOD_CHANGE_INDICATOR", SC_MOD_CHANGEINDICATOR);
+	PyModule_AddIntConstant(m, "MOD_CHANGE_LINE_STATE", SC_MOD_CHANGELINESTATE);
+	PyModule_AddIntConstant(m, "MOD_LEXER_STATE", SC_MOD_LEXERSTATE);
+	PyModule_AddIntConstant(m, "MOD_CHANGE_MARGIN", SC_MOD_CHANGEMARGIN);
+	PyModule_AddIntConstant(m, "MOD_CHANGE_ANNOTATION", SC_MOD_CHANGEANNOTATION);
+	PyModule_AddIntConstant(m, "MULTILINE_UNDO_REDO", SC_MULTILINEUNDOREDO);
+	PyModule_AddIntConstant(m, "START_ACTION", SC_STARTACTION);
+	PyModule_AddIntConstant(m, "MOD_CONTAINER", SC_MOD_CONTAINER);
+	PyModule_AddIntConstant(m, "MOD_EVENT_MASK_ALL", SC_MODEVENTMASKALL);
+
+	PyModule_AddIntConstant(m, "STYLE_NEEDED", SCN_STYLENEEDED);
+	PyModule_AddIntConstant(m, "CHAR_ADDED", SCN_CHARADDED);
+	PyModule_AddIntConstant(m, "SAVE_POINT_REACHED", SCN_SAVEPOINTREACHED);
+	PyModule_AddIntConstant(m, "SAVE_POINT_LEFT", SCN_SAVEPOINTLEFT);
+	PyModule_AddIntConstant(m, "MODIFY_ATTEMPT_RO", SCN_MODIFYATTEMPTRO);
+	PyModule_AddIntConstant(m, "KEY", SCN_KEY);
+	PyModule_AddIntConstant(m, "DOUBLE_CLICK", SCN_DOUBLECLICK);
+	PyModule_AddIntConstant(m, "UPDATE_UI", SCN_UPDATEUI);
+	PyModule_AddIntConstant(m, "MODIFIED", SCN_MODIFIED);
+	PyModule_AddIntConstant(m, "MACRO_RECORD", SCN_MACRORECORD);
+	PyModule_AddIntConstant(m, "MARGIN_CLICK", SCN_MARGINCLICK);
+	PyModule_AddIntConstant(m, "NEED_SHOWN", SCN_NEEDSHOWN);
+	PyModule_AddIntConstant(m, "PAINTED", SCN_PAINTED);
+	PyModule_AddIntConstant(m, "USER_LIST_SELECTION", SCN_USERLISTSELECTION);
+	PyModule_AddIntConstant(m, "URI_DROPPED", SCN_URIDROPPED);
+	PyModule_AddIntConstant(m, "DWELL_START", SCN_DWELLSTART);
+	PyModule_AddIntConstant(m, "DWELL_END", SCN_DWELLEND);
+	PyModule_AddIntConstant(m, "ZOOM", SCN_ZOOM);
+	PyModule_AddIntConstant(m, "HOT_SPOT_CLICK", SCN_HOTSPOTCLICK);
+	PyModule_AddIntConstant(m, "HOT_SPOT_DOUBLE_CLICK", SCN_HOTSPOTDOUBLECLICK);
+	PyModule_AddIntConstant(m, "CALL_TIP_CLICK", SCN_CALLTIPCLICK);
+	PyModule_AddIntConstant(m, "AUTO_C_SELECTION", SCN_AUTOCSELECTION);
+	PyModule_AddIntConstant(m, "INDICATOR_CLICK", SCN_INDICATORCLICK);
+	PyModule_AddIntConstant(m, "INDICATOR_RELEASE", SCN_INDICATORRELEASE);
+	PyModule_AddIntConstant(m, "AUTOC_CANCELLED", SCN_AUTOCCANCELLED);
+	PyModule_AddIntConstant(m, "AUTOC_CHAR_DELETED", SCN_AUTOCCHARDELETED);
+	PyModule_AddIntConstant(m, "HOT_SPOT_RELEASE_CLICK", SCN_HOTSPOTRELEASECLICK);
 }
 
 

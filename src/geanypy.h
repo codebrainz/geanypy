@@ -88,6 +88,7 @@ extern "C" {
 #include "indentprefs.h"
 #include "plugin.h"
 #include "project.h"
+#include "scintilla.h"
 #include "signalmanager.h"
 
 
