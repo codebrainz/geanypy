@@ -25,6 +25,27 @@ Scintilla_init(Scintilla *self)
 
 
 static PyObject *
+Scintilla_get_property(Scintilla *self, const gchar *prop_name)
+{
+	g_return_val_if_fail(self != NULL, NULL);
+	g_return_val_if_fail(prop_name != NULL, NULL);
+
+	if (!self->sci)
+	{
+		PyErr_SetString(PyExc_RuntimeError,
+			"Scintilla instance not initialized properly");
+		return NULL;
+	}
+
+	if (g_str_equal(prop_name, "widget"))
+		return pygobject_new(G_OBJECT(self->sci));
+
+	Py_RETURN_NONE;
+}
+GEANYPY_PROPS_READONLY(Scintilla);
+
+
+static PyObject *
 Scintilla_delete_marker_at_line(Scintilla *self, PyObject *args, PyObject *kwargs)
 {
 	gint line_num, marker;
@@ -856,47 +877,30 @@ static PyMethodDef Scintilla_methods[] = {
 };
 
 
+static PyGetSetDef Scintilla_getseters[] = {
+	GEANYPY_GETSETDEF(Scintilla, "widget",
+		"Gets the ScintillaObject as a GTK+ widget."),
+	{ NULL }
+};
+
+
 static PyTypeObject ScintillaType = {
 	PyObject_HEAD_INIT(NULL)
-	0,						  /*ob_size*/
-	"geany.scintilla.Scintilla",  /*tp_name*/
-	sizeof(Scintilla),		  /*tp_basicsize*/
-	0,						  /*tp_itemsize*/
-	(destructor) Scintilla_dealloc, /*tp_dealloc*/
-	0,						  /*tp_print*/
-	0,						  /*tp_getattr*/
-	0,						  /*tp_setattr*/
-	0,						  /*tp_compare*/
-	0,						  /*tp_repr*/
-	0,						  /*tp_as_number*/
-	0,						  /*tp_as_sequence*/
-	0,						  /*tp_as_mapping*/
-	0,						  /*tp_hash */
-	0,						  /*tp_call*/
-	0,						  /*tp_str*/
-	0,						  /*tp_getattro*/
-	0,						  /*tp_setattro*/
-	0,						  /*tp_as_buffer*/
-	Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE, /*tp_flags*/
-	"Wrapper around a ScintillaObject structure.",		  /* tp_doc */
-	0,							/* tp_traverse */
-	0,					   		/* tp_clear */
-	0,							/* tp_richcompare */
-	0,							/* tp_weaklistoffset */
-	0,							/* tp_iter */
-	0,							/* tp_iternext */
-	Scintilla_methods,		  /* tp_methods */
-	0,		  /* tp_members */
-	0,						  /* tp_getset */
-	0,						  /* tp_base */
-	0,						  /* tp_dict */
-	0,						  /* tp_descr_get */
-	0,						  /* tp_descr_set */
-	0,						  /* tp_dictoffset */
-	(initproc) Scintilla_init,   /* tp_init */
-	0,						  /* tp_alloc */
-	0,						  /* tp_new */
-
+	0,												/* ob_size */
+	"geany.scintilla.Scintilla",					/* tp_name */
+	sizeof(Scintilla),								/* tp_basicsize */
+	0,												/* tp_itemsize */
+	(destructor) Scintilla_dealloc,					/* tp_dealloc */
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,		/* tp_print - tp_as_buffer */
+	Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,		/* tp_flags */
+	"Wrapper around a ScintillaObject structure.",	/* tp_doc */
+	0, 0, 0, 0, 0, 0,								/* tp_traverse - tp_iternext */
+	Scintilla_methods,								/* tp_methods */
+	0,												/* tp_members */
+	Scintilla_getseters,							/* tp_getset */
+	0, 0, 0, 0, 0,									/* tp_base - tp_dictoffset */
+	(initproc) Scintilla_init,						/* tp_init */
+	0, 0,											/* tp_alloc - tp_new */
 };
 
 static PyMethodDef ScintillaModule_methods[] = { { NULL } };
