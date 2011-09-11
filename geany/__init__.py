@@ -50,7 +50,7 @@ prefs = Prefs()
 # Import GTK+ widgets that are part of Geany's UI
 main_widgets = MainWidgets()
 
-# Allow plugins to connect/disconnect from Geany signals
+# GObject to connect signal handlers on and which emits signals.
 signals = SignalManager()
 
 import plugin

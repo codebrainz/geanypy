@@ -1,112 +1,56 @@
-import geany
-import document
-import editor
-import filetypes
-import scintilla
-from collections import namedtuple
+"""
+A simple analog of `GeanyObject` in the C API, that is, an object to emit
+all signals on.  The signals are emitted from the C code in signalmanager.c,
+where the Geany types get wrapped in PyObject types.
+"""
+
+import gobject
 
 
-#: Simple object to hold a callback callable and the arguments to pass to it.
-Callback = namedtuple('Callback', 'func args')
+class SignalManager(gobject.GObject):
+	"""
+	Manages callback functions for events emitted by Geany's internal GObject.
+	"""
+	__gsignals__ = {
+		'build-start':				(gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
+										()),
+		'document-activate':		(gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
+										(gobject.TYPE_PYOBJECT,)),
+		'document-before-save':		(gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
+										(gobject.TYPE_PYOBJECT,)),
+		'document-close':			(gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
+										(gobject.TYPE_PYOBJECT,)),
+		'document-filetype-set':	(gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
+										(gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT)),
+		'document-new':				(gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
+										(gobject.TYPE_PYOBJECT,)),
+		'document-open':			(gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
+										(gobject.TYPE_PYOBJECT,)),
+		'document-reload':			(gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
+										(gobject.TYPE_PYOBJECT,)),
+		'document-save':			(gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
+										(gobject.TYPE_PYOBJECT,)),
+		'editor-notify':			(gobject.SIGNAL_RUN_LAST, gobject.TYPE_BOOLEAN,
+										(gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT)),
+		'geany-startup-complete':	(gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
+										()),
+		'project-close': 			(gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
+										()),
+		'project-dialog-confirmed':	(gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
+										(gobject.TYPE_OBJECT,)),
+		'project-dialog-create':	(gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
+										(gobject.TYPE_OBJECT,)),
+		'project-open':				(gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
+										(gobject.TYPE_PYOBJECT,)),
+		'project-save':				(gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
+										(gobject.TYPE_PYOBJECT,)),
+		'update-editor-menu':		(gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
+										(gobject.TYPE_STRING, gobject.TYPE_INT,
+										gobject.TYPE_PYOBJECT)),
+	} # __gsignals__
 
+	def __init__(self):
+		self.__gobject_init__()
 
-class SignalManager(object):
-    """
-    Manages callback functions for events emitted by Geany's internal GObject.
-    """
+gobject.type_register(SignalManager)
 
-    #: Stores registered callbacks and arguments for each event.
-    callbacks = {
-        'build-start': [],
-        'document-activate': [],
-        'document-before-save': [],
-        'document-close': [],
-        'document-filetype-set': [],
-        'document-new': [],
-        'document-open': [],
-        'document-reload': [],
-        'document-save': [],
-        'editor-notify': [],
-        'geany-startup-complete': [],
-        'project-close': [],
-        'project-dialog-confirmed': [],
-        'project-dialog-create': [],
-        'project-open': [],
-        'project-save': [],
-        'update-editor-menu': []
-    }
-
-
-    def connect(self, event, func, *args):
-        """
-        Connect C{func} to the C{event} specified.  When the C{event} is
-        emitted, C{func} will be called with the C{event}s arguments and the
-        C{args} appended.  C{args} can be used for any type of user data to
-        pass when the signal is emitted.
-
-        @type event: string
-        @param event: name of one of the events, see C{SignalManager.callbacks}.
-        @type func: callable
-        @param func: a callable object that will be called when the signal
-            specified by C{event} is emitted.
-        @type args: tuple
-        @param args: any user-supplied arguments to pass to C{func} when
-            calling it.
-
-        @raise ValueError: when C{event} is not one of the known events.
-        """
-
-        if event not in self.callbacks:
-            raise ValueError("Cannot connect to unknown event '%s'" % event)
-        self.callbacks[event].append(Callback(func, args))
-
-
-    def disconnect(self, event, func):
-        """
-        Disconnect C{func} from being called when C{event} is emitted.  Any
-        callback functions registered which are equal to C{func} will be
-        removed.
-
-        @type event: string
-        @param event: name of the event to remove callable C{func} from being
-            called for.
-        @type func: callable
-        @param func: the callable object to search for in the registered
-            callbacks for C{event} and remove.
-
-        @raise ValueError: when C{event} is not one of the known events.
-        """
-
-        if event not in self.callbacks:
-            raise ValueError("Cannot disconnect from unknown event '%s'" % event)
-        for callback in self.callbacks[event]:
-            if callback.func == func:
-                self.callbacks[event].remove(callback)
-
-
-    def emit_signal(self, event, *args):
-        """
-        For each callback registered for C{event}, call it with the specifed
-        C{args} prefixed to the registered callback arguments passed when
-        it was connected with C{connect}.
-
-        @type event: string
-        @param event: name of the event to emit
-        @type args: tuple
-        @param args: extra arguments to prefix to the registered arguments
-            passed to the callback.
-
-        @raise ValueError: when C{event} is not one of the known events.
-        """
-
-        if event not in self.callbacks:
-            raise ValueError("Cannot emit unknown event '%s'" % event)
-
-        new_args = []
-        for arg in args:
-            new_args.append(arg)
-
-        for callback in self.callbacks[event]:
-            args_ = list(new_args[:])
-            args_.extend(list(callback.args))
-            callback.func(*tuple(args_))
