@@ -53,8 +53,6 @@ typedef struct
 #endif
 
 
-PyMODINIT_FUNC init_dialogs(void);
-
 PyMODINIT_FUNC init_geany_scintilla(void);
 Scintilla *Scintilla_create_new_from_scintilla(ScintillaObject *sci);
 
