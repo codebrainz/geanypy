@@ -16,7 +16,7 @@ geanypy_la_SOURCES			=	app.c \
 								filetypes.c \
 								geanypy.h \
 								highlighting.c \
-								indentprefs.c indentprefs.h \
+								indentprefs.c \
 								interfaceprefs.c \
 								main.c \
 								mainwidgets.c \

@@ -85,7 +85,6 @@ extern "C" {
 #include "document.h"
 #include "editor.h"
 #include "filetypes.h"
-#include "indentprefs.h"
 #include "plugin.h"
 #include "project.h"
 #include "scintilla.h"
