@@ -55,7 +55,6 @@ GeanyPy_start_interpreter(void)
     Py_Initialize();
 
     /* Import the C modules */
-    init_geany_msgwin();
     init_geany_navqueue();
     init_geany_scintilla();
     init_geany_scintilla_notification();
@@ -69,6 +68,7 @@ GeanyPy_start_interpreter(void)
     inithighlighting();
     initmain();
     initmainwidgets();
+    initmsgwin();
     initprefs();
     initproject();
 
