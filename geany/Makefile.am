@@ -1,5 +1,4 @@
 geanypy_sources				=	__init__.py \
-								mainwidgets.py \
 								scintilla.py \
 								console.py \
 								manager.py \

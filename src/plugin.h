@@ -32,11 +32,6 @@ extern GeanyData		*geany_data;
 extern GeanyFunctions	*geany_functions;
 
 
-typedef struct
-{
-	PyObject_HEAD
-	GeanyMainWidgets *main_widgets;
-} MainWidgets;
 
 
 typedef struct
@@ -59,8 +54,6 @@ typedef struct
 
 
 PyMODINIT_FUNC init_dialogs(void);
-
-PyMODINIT_FUNC init_geany_main_widgets(void);
 
 PyMODINIT_FUNC init_geany_scintilla(void);
 Scintilla *Scintilla_create_new_from_scintilla(ScintillaObject *sci);
