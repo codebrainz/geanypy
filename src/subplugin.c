@@ -48,7 +48,6 @@ struct GeanyKeyGroup	// from plugindata.h
 
 struct _SubPlugin
 {
-	GeanyPlugin *root; /* always points to geany_plugin */
 	GeanyPlugin *sub;
 
 	gchar *name;
@@ -103,7 +102,6 @@ SubPlugin *subplugin_new(const PluginInfo *info)
 	g_return_val_if_fail(info->name != NULL, NULL);
 
 	plugin = g_new0(SubPlugin, 1);
-	plugin->root = geany_plugin;
 	plugin->n_items = 0;
 	plugin->kb_list = NULL;
 
