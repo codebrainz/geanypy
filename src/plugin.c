@@ -69,6 +69,7 @@ GeanyPy_start_interpreter(void)
     initproject();
     initscintilla();
     initsearch();
+    inittemplates();
     initui_utils();
 
     /* Adjust Python path to find wrapper package (geany) */

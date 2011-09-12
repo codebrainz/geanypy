@@ -20,10 +20,11 @@ import main
 import manager
 import msgwindow
 import navqueue
+import prefs
 import project
 import scintilla
 import search
-import prefs
+import templates
 import ui_utils
 
 from app import App
@@ -32,6 +33,7 @@ from main import is_realized, locale_init, reload_configuration
 from signalmanager import SignalManager
 from ui_utils import MainWidgets, InterfacePrefs
 from search import SearchPrefs
+from templates import TemplatePrefs
 
 
 __all__ = [ "Plugin",
@@ -43,6 +45,7 @@ __all__ = [ "Plugin",
             "app",
             "prefs",
             "search_prefs",
+            "template_prefs",
             "signals" ]
 
 # Geany's application data fields
@@ -55,6 +58,7 @@ main_widgets = MainWidgets()
 prefs = Prefs()
 interface_prefs = InterfacePrefs()
 search_prefs = SearchPrefs()
+template_prefs = TemplatePrefs()
 
 # GObject to connect signal handlers on and which emits signals.
 signals = SignalManager()

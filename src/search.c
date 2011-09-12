@@ -67,7 +67,7 @@ static PyTypeObject SearchPrefsType = {
 	(destructor) SearchPrefs_dealloc,					/* tp_dealloc */
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,	/* tp_print - tp_as_buffer */
 	Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,	/* tp_flags */
-	"Wrsearch_prefser around a GeanySearchPrefs structure.",		/* tp_doc  */
+	"Wrapper around a GeanySearchPrefs structure.",		/* tp_doc  */
 	0, 0, 0, 0, 0, 0, 0, 0,						/* tp_traverse - tp_members */
 	SearchPrefs_getseters,								/* tp_getset */
 	0, 0, 0, 0, 0,								/* tp_base - tp_dictoffset */
