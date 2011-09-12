@@ -28,7 +28,7 @@ import templates
 import ui_utils
 
 from app import App
-from prefs import Prefs
+from prefs import Prefs, ToolPrefs
 from main import is_realized, locale_init, reload_configuration
 from signalmanager import SignalManager
 from ui_utils import MainWidgets, InterfacePrefs
@@ -43,9 +43,10 @@ __all__ = [ "Plugin",
             "main_widgets",
             "interface_prefs",
             "app",
-            "prefs",
+            "general_prefs",
             "search_prefs",
             "template_prefs",
+            "tool_prefs",
             "signals" ]
 
 # Geany's application data fields
@@ -55,10 +56,11 @@ app = App()
 main_widgets = MainWidgets()
 
 # Preferences
-prefs = Prefs()
+general_prefs = Prefs() # GeanyData->prefs but name clashes with module
 interface_prefs = InterfacePrefs()
 search_prefs = SearchPrefs()
 template_prefs = TemplatePrefs()
+tool_prefs = ToolPrefs()
 
 # GObject to connect signal handlers on and which emits signals.
 signals = SignalManager()
