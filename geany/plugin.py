@@ -17,7 +17,7 @@ basic plugin could look something like this:
 			self.open_document('/path/to/some/file')
 
 		def open_document(self, filename):
-			self._doc = geany.document.open(filename)
+			self._doc = geany.document.open_file(filename)
 
 		def close_document(self):
 			self._doc.close()
@@ -52,6 +52,70 @@ class Plugin(gobject.GObject):
 	#__plugin_version__ = None
 	#__plugin_author__ = None
 
+	__gsignals__ = {
+		# These two signals notify GeanyPy that a keybinding was added or
+		# removed.
+		'keybinding-added':		(gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
+									(gobject.TYPE_STRING, gobject.TYPE_PYOBJECT)),
+		'keybinding-removed':	(gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
+									(gobject.TYPE_STRING, gobject.TYPE_PYOBJECT)),
+	}
+
+
+	def _normalize_accel_string(self, accel_string):
+		"""
+		Converts an accel_string to keyval and modifiers and back to a string
+		to filter it into the same string even accel_string is slightly
+		different each time.
+		"""
+		kv, km = gtk.accelerator_parse(accel_string)
+		if kv and km:
+			return gtk.accelerator_name(kv, km)
+		else:
+			return False
+
+
+	def add_keybinding(self, accel_string, callback):
+		"""
+		Registers a new keybinding.  Returns True if the callback was
+		registered or False if there was a problem and it wasn't.
+		"""
+		# normalize the accel_string
+		accel_string = self._normalize_accel_string(accel_string)
+		if not accel_string:
+			return False
+		if accel_string in self._keybindings:
+			self._keybindings[accel_string].append(callback)
+		else:
+			self._keybindings[accel_string] = [callback]
+		self.emit('keybinding-added', accel_string, callback)
+		return True
+
+
+	def remove_keybinding(self, accel_string, callback, remove_all=False):
+		"""
+		Unregisters an existing keybinding.  Returns True if the callback
+		was unregistered or False if there was a problem and it wasn't. If
+		remove_all is True, all instances of callback that were registered
+		for accel_string will be removed, otherwise only the first one found
+		is removed.
+		"""
+		accel_string = self._normalize_accel_string(accel_string)
+		if not accel_string:
+			return False
+		if accel_string not in self._keybindings:
+			return False
+		else:
+			rmed = False
+			for cb in self._keybindings[accel_string]:
+				if cb == callback:
+					self._keybindings[accel_string].remove(cb)
+					rmed = True
+					self.emit('keybinding-removed', accel_string, callback)
+					if not remove_all:
+						return True
+			return rmed
+
 
 	def __init__(self):
 		"""
@@ -59,6 +123,7 @@ class Plugin(gobject.GObject):
 		so that's a good place to put plugin initialization code.
 		"""
 		self.__gobject_init__()
+		self._keybindings = {} # used internally to track registered keybindings
 
 
 	def cleanup(self):

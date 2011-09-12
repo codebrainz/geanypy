@@ -39,7 +39,8 @@ static GtkWidget *loader_item = NULL;
 static PyObject *manager = NULL;
 static gchar *plugin_dir = NULL;
 static SignalManager *signal_manager = NULL;
-
+static GtkWidget *manager_dlg = NULL;
+static GSList *sub_plugins = NULL;
 
 static void
 GeanyPy_start_interpreter(void)
@@ -161,6 +162,72 @@ GeanyPy_install_console(void)
 }
 
 
+static gchar *py_plugin_get_name(PyObject *py_plugin)
+{
+	gchar *name = NULL;
+	PyObject *str;
+
+	g_return_val_if_fail(py_plugin != NULL, NULL);
+	g_return_val_if_fail(py_plugin != Py_None, NULL);
+
+	if (PyObject_HasAttrString(py_plugin, "__plugin_name__"))
+	{
+		str = PyObject_GetAttrString(py_plugin, "__plugin_name__");
+		if (str)
+		{
+			if (PyString_Check(str))
+				name = g_strdup(PyString_AsString(str));
+			Py_DECREF(str);
+		}
+	}
+	return name;
+}
+
+static void on_manager_plugin_activate(GObject *mgr, PyObject *plugin, gpointer user_data)
+{
+	gchar *name;
+	SubPlugin *sub;
+
+	g_return_if_fail(plugin != NULL);
+
+	sub = subplugin_new(plugin);
+
+	if (sub)
+	{
+		sub_plugins = g_slist_append(sub_plugins, sub);
+		name = py_plugin_get_name(plugin);
+		ui_set_statusbar(TRUE, "GeanyPy loaded plugin: %s", name);
+		g_free(name);
+	}
+
+}
+
+static void on_manager_plugin_deactivate(GObject *mgr, PyObject *plugin, gpointer user_data)
+{
+	gchar *name;
+	SubPlugin *sub;
+	GSList *iter = NULL;
+
+	g_return_if_fail(plugin != NULL);
+
+	name = py_plugin_get_name(plugin);
+
+	for (iter = sub_plugins; iter != NULL; iter = g_slist_next(iter))
+	{
+		sub = (SubPlugin *) iter->data;
+		if (sub->plugin == plugin)
+		{
+			sub_plugins = g_slist_remove(sub_plugins, sub);
+			subplugin_free(sub);
+			ui_set_statusbar(TRUE, "GeanyPy unloaded plugin: %s", name);
+			break;
+		}
+	}
+
+	g_free(name);
+}
+
+
 static void
 GeanyPy_init_manager(const gchar *dir)
 {
@@ -196,6 +263,15 @@ GeanyPy_init_manager(const gchar *dir)
 		g_warning(_("Unable to instantiate new PluginManager"));
 		return;
 	}
+
+	/* TODO: should call gobject_check() here first */
+	manager_dlg = GTK_WIDGET(pygobject_get(manager));
+
+	g_signal_connect(G_OBJECT(manager_dlg), "plugin-activate",
+		G_CALLBACK(on_manager_plugin_activate), NULL);
+	g_signal_connect(G_OBJECT(manager_dlg), "plugin-deactivate",
+		G_CALLBACK(on_manager_plugin_deactivate), NULL);
+
 }
 
 
