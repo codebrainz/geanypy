@@ -71,6 +71,7 @@ extern "C" {
 #include <dlfcn.h>
 
 #include <gtk/gtk.h>
+#include <gdk/gdkkeysyms.h>
 #include <pygobject.h>
 #include <pygtk/pygtk.h>
 #include <geanyplugin.h>
@@ -90,6 +91,7 @@ extern "C" {
 #include "project.h"
 #include "scintilla.h"
 #include "signalmanager.h"
+#include "subplugin.h"
 #include "ui_utils.h"
 
 

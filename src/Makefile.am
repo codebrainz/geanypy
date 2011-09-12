@@ -30,5 +30,6 @@ geanypy_la_SOURCES			=	app.c \
 								scintilla.c scintilla.h \
 								search.c \
 								signalmanager.c signalmanager.h \
+								subplugin.c \
 								templates.c \
 								ui_utils.c ui_utils.h

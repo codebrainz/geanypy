@@ -21,6 +21,7 @@
 
 #include "geanypy.h"
 
+
 GeanyPlugin		*geany_plugin;
 GeanyData		*geany_data;
 GeanyFunctions	*geany_functions;
@@ -223,11 +224,44 @@ on_python_plugin_loader_activate(GtkMenuItem *item, gpointer user_data)
 }
 
 
+#if 0
+/* DELETE ME */
+static void on_sample_1_kb(guint key_id)
+{
+	g_debug("on_sample_1_kb() called");
+}
+
+static void test_subplugin(void)
+{
+	PluginInfo inf = { "Sample Plugin", "A sample plugin.", "0.01",
+						"Matthew Brush <mbrush@codebrainz.ca>" };
+	SubPlugin *plug = subplugin_new(&inf);
+
+	subplugin_keybindings_set_item(plug, 0, (GeanyKeyCallback) on_sample_1_kb,
+		GDK_q, GDK_CONTROL_MASK, "Test binding #1", NULL);
+	subplugin_keybindings_set_item(plug, 1, NULL, 0, 0, "Test Binding #2", NULL);
+
+	inf.name = "Another Test Plugin";
+	inf.description = "Another sample plugin.";
+	inf.version = "1.0";
+	inf.author = "Matthew Brush <mbrush@codebrainz.ca>";
+
+	plug = subplugin_new(&inf);
+
+	subplugin_keybindings_set_item(plug, 0, NULL, 0, 0, "Another Test Uno", NULL);
+}
+#endif
+
+
 void plugin_init(GeanyData *data)
 {
     GeanyPy_start_interpreter();
     signal_manager = signal_manager_new(geany_plugin);
     GeanyPy_install_console();
+
+#if 0
+    test_subplugin();
+#endif
 
     plugin_dir = g_build_filename(geany->app->configdir,
                     "plugins", "geanypy", "plugins", NULL);
