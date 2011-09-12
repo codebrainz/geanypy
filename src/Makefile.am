@@ -12,7 +12,7 @@ geanypy_la_SOURCES			=	app.c \
 								dialogs.c \
 								document.c document.h \
 								editor.c editor.h \
-								encoding.c \
+								encoding.c encoding.h \
 								filetypes.c \
 								geanypy.h \
 								highlighting.c \

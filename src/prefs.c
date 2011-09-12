@@ -40,7 +40,8 @@ Prefs_get_property(Prefs *self, const gchar *prop_name)
 
 	if (g_str_equal(prop_name, "default_open_path") && self->prefs->default_open_path)
 		return PyString_FromString(self->prefs->default_open_path);
-	Py_RETURN_FALSE;
+
+	Py_RETURN_NONE;
 }
 GEANYPY_PROPS_READONLY(Prefs);
 
@@ -116,7 +117,7 @@ ToolPrefs_get_property(ToolPrefs *self, const gchar *prop_name)
 	else if (g_str_equal(prop_name, "term_cmd") && self->tool_prefs->term_cmd)
 		return PyString_FromString(self->tool_prefs->term_cmd);
 
-	Py_RETURN_FALSE;
+	Py_RETURN_NONE;
 }
 GEANYPY_PROPS_READONLY(ToolPrefs);
 

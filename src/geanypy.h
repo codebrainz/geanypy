@@ -84,6 +84,7 @@ extern "C" {
 #include "plugin-config.h"
 #include "document.h"
 #include "editor.h"
+#include "encoding.h"
 #include "filetypes.h"
 #include "plugin.h"
 #include "project.h"
