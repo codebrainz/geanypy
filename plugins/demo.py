@@ -11,8 +11,8 @@ class DemoPlugin(geany.Plugin):
     def __init__(self):
         geany.Plugin.__init__(self)
         print("Demo plugin initializing")
-        doc = geany.document.new()
-        doc.editor.sci.set_text("Hello from the Demo plugin")
+        doc = geany.document.new_file()
+        doc.editor.scintilla.set_text("Hello from the Demo plugin")
 
     def cleanup(self):
         print("Demo plugin cleaning up")
