@@ -56,6 +56,7 @@ GeanyPy_start_interpreter(void)
 
     /* Import the C modules */
     initapp();
+    initbindings();
     initdialogs();
     initdocument();
     initeditor();

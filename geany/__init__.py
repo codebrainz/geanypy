@@ -8,6 +8,7 @@ though no real attempt is made to mimic that structure here.
 """
 
 import app
+import bindings
 import console
 import dialogs
 import document
@@ -64,6 +65,9 @@ tool_prefs = ToolPrefs()
 
 # GObject to connect signal handlers on and which emits signals.
 signals = SignalManager()
+
+# Initialize the keybindings manager
+bindings.init()
 
 import plugin
 from plugin import Plugin

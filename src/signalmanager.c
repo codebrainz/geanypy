@@ -168,6 +168,7 @@ static void on_document_save(GObject *geany_object, GeanyDocument *doc, SignalMa
 
 static gboolean on_editor_notify(GObject *geany_object, GeanyEditor *editor, SCNotification *nt, SignalManager *man)
 {
+#if 0
 	gboolean res = FALSE;
 	PyObject *py_ed, *py_notif;
 	py_ed = (PyObject *) Editor_create_new_from_geany_editor(editor);
@@ -176,6 +177,9 @@ static gboolean on_editor_notify(GObject *geany_object, GeanyEditor *editor, SCN
 	Py_XDECREF(py_ed);
 	Py_XDECREF(py_notif);
 	return res;
+#else
+	return FALSE;
+#endif
 }
 
 
