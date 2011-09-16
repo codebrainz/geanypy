@@ -89,8 +89,7 @@ static void signal_manager_connect_signals(SignalManager *man)
 	plugin_signal_connect(geany_plugin, NULL, "document-open", TRUE, G_CALLBACK(on_document_open), man);
 	plugin_signal_connect(geany_plugin, NULL, "document-reload", TRUE, G_CALLBACK(on_document_reload), man);
 	plugin_signal_connect(geany_plugin, NULL, "document-save", TRUE, G_CALLBACK(on_document_save), man);
-	/* FIXME: Causing segfaults sometimes */
-	/*plugin_signal_connect(geany_plugin, NULL, "editor-notify", TRUE, G_CALLBACK(on_editor_notify), man);*/
+	plugin_signal_connect(geany_plugin, NULL, "editor-notify", TRUE, G_CALLBACK(on_editor_notify), man);
 	plugin_signal_connect(geany_plugin, NULL, "geany-startup-complete", TRUE, G_CALLBACK(on_geany_startup_complete), man);
 	plugin_signal_connect(geany_plugin, NULL, "project-close", TRUE, G_CALLBACK(on_project_close), man);
 	plugin_signal_connect(geany_plugin, NULL, "project-dialog-confirmed", TRUE, G_CALLBACK(on_project_dialog_confirmed), man);
@@ -167,8 +166,6 @@ static void on_document_save(GObject *geany_object, GeanyDocument *doc, SignalMa
 }
 
 
-/* Causing segfault for some reason (GIL?) */
-/*
 static gboolean on_editor_notify(GObject *geany_object, GeanyEditor *editor, SCNotification *nt, SignalManager *man)
 {
 	gboolean res = FALSE;
@@ -180,7 +177,6 @@ static gboolean on_editor_notify(GObject *geany_object, GeanyEditor *editor, SCN
 	Py_XDECREF(py_notif);
 	return res;
 }
-*/
 
 
 static void on_geany_startup_complete(GObject *geany_object, SignalManager *man)

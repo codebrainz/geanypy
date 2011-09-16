@@ -53,7 +53,7 @@ PyTypeObject NotifyHeaderType = {
 	PyObject_HEAD_INIT(NULL)
 	0,												/* ob_size */
 	"geany.scintilla.NotifyHeader",					/* tp_name */
-	sizeof(Scintilla),								/* tp_basicsize */
+	sizeof(NotifyHeader),							/* tp_basicsize */
 	0,												/* tp_itemsize */
 	(destructor) NotifyHeader_dealloc,				/* tp_dealloc */
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,		/* tp_print - tp_as_buffer */

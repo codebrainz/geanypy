@@ -112,7 +112,7 @@ PyTypeObject NotificationType = {
 	PyObject_HEAD_INIT(NULL)
 	0,												/* ob_size */
 	"geany.scintilla.Notification",					/* tp_name */
-	sizeof(Scintilla),								/* tp_basicsize */
+	sizeof(Notification),								/* tp_basicsize */
 	0,												/* tp_itemsize */
 	(destructor) Notification_dealloc,				/* tp_dealloc */
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,		/* tp_print - tp_as_buffer */
