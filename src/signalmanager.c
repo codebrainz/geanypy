@@ -206,7 +206,7 @@ static void on_project_dialog_confirmed(GObject *geany_object, GtkWidget *notebo
 static void on_project_dialog_create(GObject *geany_object, GtkWidget *notebook, SignalManager *man)
 {
 	PyObject *gob = (PyObject *) pygobject_new(G_OBJECT(notebook));
-	g_signal_emit_by_name(man->obj, "project-dialog-confirmed", gob);
+	g_signal_emit_by_name(man->obj, "project-dialog-create", gob);
 	Py_XDECREF(gob);
 }
 
