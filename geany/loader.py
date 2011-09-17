@@ -21,6 +21,21 @@ class PluginLoader(object):
 		self.restore_loaded_plugins()
 
 
+	def update_loaded_plugins_file(self):
+		for path in self.plugin_dirs:
+			if os.path.isdir(path):
+				try:
+					state_file = os.path.join(path, '.loaded_plugins')
+					with open(state_file, 'w') as f:
+						for plugfn in self.plugins:
+							f.write("%s\n" % plugfn)
+				except IOError as err:
+					if err.errno == 13: #perms
+						pass
+					else:
+						raise
+
+
 	def restore_loaded_plugins(self):
 
 		for path in self.plugin_dirs:
@@ -95,6 +110,7 @@ class PluginLoader(object):
 			if avail.filename == filename:
 				inst = avail.cls()
 				self.plugins[filename] = inst
+				self.update_loaded_plugins_file()
 				return inst
 
 
@@ -104,6 +120,7 @@ class PluginLoader(object):
 			plugin = self.plugins[filename]
 			plugin.cleanup()
 			del self.plugins[filename]
+			self.update_loaded_plugins_file()
 		except KeyError:
 			print("Unable to unload plugin '%s': it's not loaded" % filename)
 
@@ -127,5 +144,4 @@ class PluginLoader(object):
 		try:
 			return hasattr(self.plugins[filename], 'show_configure')
 		except KeyError:
-			print "** no configure: %s" % filename
 			return None

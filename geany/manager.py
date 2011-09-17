@@ -144,7 +144,9 @@ class PluginManager(gtk.Dialog):
 					glib.markup_escape_text(plugin_info.author),
 					glib.markup_escape_text(plugin_info.filename))
 
-			list_store.append([False, lbl, plugin_info.filename])
+			loaded = plugin_info.filename in self.loader.plugins
+
+			list_store.append([loaded, lbl, plugin_info.filename])
 
 
 	def on_selected_plugin_changed(self, treeview, model):
