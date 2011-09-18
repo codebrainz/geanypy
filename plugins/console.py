@@ -65,6 +65,7 @@ class ConsolePlugin(geany.Plugin):
 		self.swin.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_ALWAYS)
 		self.console = geany.console.Console(banner = self.banner,
 							use_rlcompleter = self.use_rl_completer)
+		self.console.connect("populate-popup", self.on_console_populate_popup)
 
 		# apply appearance settings
 		self.font = self.font
@@ -161,6 +162,16 @@ class ConsolePlugin(geany.Plugin):
 			str(self._use_rl_completer).lower())
 		self.save_config()
 	use_rl_completer = property(_get_use_rl_completer, _set_use_rl_completer)
+
+
+	def on_console_populate_popup(self, textview, menu, data=None):
+		item = gtk.SeparatorMenuItem()
+		item.show()
+		menu.append(item)
+		item = gtk.ImageMenuItem(stock_id=gtk.STOCK_PREFERENCES)
+		item.show()
+		menu.append(item)
+		item.connect("activate", lambda w,d=None: self.show_configure())
 
 
 	def on_banner_changed(self, text_buf, data=None):
