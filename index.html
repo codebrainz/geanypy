@@ -17,20 +17,20 @@
 		width: 700px;
     }
     h1 {
-		font-size: 3.8em; color: #e5ba4c; margin-bottom: 3px;
+		font-size: 3.8em; color: #F6E976; margin-bottom: 3px;
 		font-family: Geneva, Verdana, “Lucida Sans”, “Lucida Grande”, “Lucida Sans Unicode”, sans-serif;
 	}
     h1 .small { font-size: 0.4em; }
     h1 a { text-decoration: none }
     h2 {
-		font-size: 1.5em; color: #e5ba4c;
+		font-size: 1.5em; color: #F6E976;
 		font-family: Geneva, Verdana, “Lucida Sans”, “Lucida Grande”, “Lucida Sans Unicode”, sans-serif;
 	}
     h3 {
-		text-align: center; color: #e5ba4c;
+		text-align: center; color: #F6E976;
 		font-family: Geneva, Verdana, “Lucida Sans”, “Lucida Grande”, “Lucida Sans Unicode”, sans-serif;
 	}
-    a { color: #e5ba4c; }
+    a { color: #F6E976; }
     .description { font-size: 1.2em; margin-bottom: 30px; margin-top: 30px; font-style: italic;}
     .download { float: right; }
     pre { background: #000; color: #fff; padding: 15px; border: 1px solid white;}
@@ -58,7 +58,36 @@
       Write plugins in Python!
     </div>
 
-    <p>GeanyPy is a set of Python C extensions which wrap Geany's regular C API for plugins.  It allows writing custom Geany plugins in the Python language and interact with Geany's exposed plugin API.</p><h2>Dependencies</h2>
+    <p>GeanyPy is a set of Python C extensions which wrap Geany's regular C
+    API for plugins.  It allows writing custom Geany plugins in the Python
+    language and interact with Geany's exposed plugin API.</p>
+    <p>Here's the HelloWorld example plugin from
+    <a href="http://www.geany.org/manual/reference/howto.html">Geany's Plugin HowTo</a>
+     using GeanyPy:</p>
+    <pre>import gtk
+import geany
+
+class HelloWorld(geany.Plugin):
+
+    __plugin_name__ = "HelloWorld"
+    __plugin_version__ = "1.0"
+    __plugin_description__ = "Just another tool to say hello world"
+    __plugin_author__ = "John Doe (john.doe@example.org)"
+
+    def __init__(self):
+        self.menu_item = gtk.MenuItem("Hello World")
+        self.menu_item.show()
+        geany.main_widgets.tools_menu.append(self.menu_item)
+        self.menu_item.connect("activate", self.on_hello_item_clicked)
+
+    def cleanup(self):
+        self.menu_item.destroy()
+
+    def on_hello_item_clicked(widget, data):
+        geany.dialogs.show_msgbox("Hello World")</pre>
+</p>
+
+<h2>Dependencies</h2>
 <p>To build GeanyPy you need the following dependencies:
 
 <ul>
@@ -68,6 +97,20 @@
 </ul>
 
 See Geany's documentation/website for information on compiling it from the Subversion or Git repositories.</p>
+
+
+    <h2>Download</h2>
+    <p>
+      You can download this project in either
+      <a href="http://github.com/codebrainz/geanypy/zipball/master">zip</a> or
+      <a href="http://github.com/codebrainz/geanypy/tarball/master">tar</a> formats.
+    </p>
+    <p>You can also clone the project with <a href="http://git-scm.com">Git</a>
+      by running:
+      <pre>$ git clone git://github.com/codebrainz/geanypy</pre>
+    </p>
+
+
 <h2>Install</h2>
 <p>First you need to know where Geany is installed:
 
@@ -81,6 +124,7 @@ $ make
 # make install</pre>
 
 You should be able to force a specific version of Python to be used, by using the <code>PYTHON_VERSION</code> environment variable, but I've only tested with 2.6.6 so far. I imagine 2.7 series will also work fine.</p>
+
 <h2>License</h2>
 <p>GPLv2</p>
 <h2>Authors</h2>
@@ -91,18 +135,6 @@ You should be able to force a specific version of Python to be used, by using th
 <h2>Contact</h2>
 <p>Matthew Brush (codebrainz [at] codebrainz [dot] ca)
 <br/>      </p>
-
-
-    <h2>Download</h2>
-    <p>
-      You can download this project in either
-      <a href="http://github.com/codebrainz/geanypy/zipball/master">zip</a> or
-      <a href="http://github.com/codebrainz/geanypy/tarball/master">tar</a> formats.
-    </p>
-    <p>You can also clone the project with <a href="http://git-scm.com">Git</a>
-      by running:
-      <pre>$ git clone git://github.com/codebrainz/geanypy</pre>
-    </p>
 
     <div class="footer">
       get the source code on GitHub : <a href="http://github.com/codebrainz/geanypy">codebrainz/geanypy</a>
