@@ -41,7 +41,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'GeanyPy'
-copyright = u'2011, Matthew Brush <mbrush@codebrainz.ca>'
+copyright = u'2011, Matthew Brush (mbrush [at] codebrainz [dot] ca)'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
