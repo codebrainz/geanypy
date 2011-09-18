@@ -49,11 +49,13 @@ class PluginManager(gtk.Dialog):
 
 		self.btn_help = gtk.Button(stock=gtk.STOCK_HELP)
 		self.btn_help.set_border_width(6)
+		self.btn_help.set_no_show_all(True)
 		action_area.pack_start(self.btn_help, False, True, 0)
 		action_area.set_child_secondary(self.btn_help, True)
 
 		self.btn_prefs = gtk.Button(stock=gtk.STOCK_PREFERENCES)
 		self.btn_prefs.set_border_width(6)
+		self.btn_prefs.set_no_show_all(True)
 		action_area.pack_start(self.btn_prefs, False, True, 0)
 		action_area.set_child_secondary(self.btn_prefs, True)
 
@@ -63,7 +65,6 @@ class PluginManager(gtk.Dialog):
 
 
 	def on_help_button_clicked(self, button, treeview, model):
-		print("Help clicked")
 		path = treeview.get_cursor()[0]
 		iter = model.get_iter(path)
 		filename = model.get_value(iter, 2)
@@ -76,7 +77,6 @@ class PluginManager(gtk.Dialog):
 
 
 	def on_preferences_button_clicked(self, button, treeview, model):
-		print("Preferences clicked")
 		path = treeview.get_cursor()[0]
 		iter = model.get_iter(path)
 		filename = model.get_value(iter, 2)
@@ -163,7 +163,6 @@ class PluginManager(gtk.Dialog):
 			self.btn_help.set_visible(True)
 		else:
 			self.btn_help.set_visible(False)
-
 
 
 	def on_plugin_load_toggled(self, cell, path, model):
