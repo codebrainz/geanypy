@@ -34,6 +34,7 @@
     .description { font-size: 1.2em; margin-bottom: 30px; margin-top: 30px; font-style: italic;}
     .download { float: right; }
     pre { background: #000; color: #fff; padding: 15px; border: 1px solid white;}
+    .code_block { background: #000; color: #fff; padding: 15px; border: 1px solid white;}
     hr { border: 0; width: 80%; border-bottom: 1px solid #aaa}
     .footer { text-align:center; padding-top:30px; font-style: italic; }
   </style>
@@ -58,8 +59,9 @@
       Write plugins in Python!
     </div>
 
-    <p>GeanyPy is a set of Python C extensions which wrap Geany's regular C
-    API for plugins.  It allows writing custom Geany plugins in the Python
+    <p>GeanyPy is a set of Python C extensions which wrap
+    <a href="http://www.geany.org/manual/reference/index.html">Geany's regular C
+    plugin API</a>.  It allows writing custom Geany plugins in the Python
     language and interact with Geany's exposed plugin API.</p>
     <p>Here's the HelloWorld example plugin from
     <a href="http://www.geany.org/manual/reference/howto.html">Geany's Plugin HowTo</a>
@@ -86,19 +88,30 @@ class HelloWorld(geany.Plugin):
     def on_hello_item_clicked(widget, data):
         geany.dialogs.show_msgbox("Hello World")</pre>
 </p>
+<p>For more information, see the
+<a href="https://github.com/codebrainz/geanypy/blob/master/README.markdown">README file</a>.</p>
 
 <h2>Dependencies</h2>
 <p>To build GeanyPy you need the following dependencies:
 
 <ul>
-<li>Python 2.6+ and development files (I don't think Python 3 will work).</li>
-<li>Geany 0.21+ and development files (from SVN)</li>
-<li>PyGTK 2.0 and development files</li>
+<li><a href="http://www.python.org/download/releases/2.7.2/">Python 2.6+</a> or greater and development files.</li>
+<li><a href="http://files.uvena.de/geany/geany_svn.tar.gz">Geany 0.21</a> or greater and development files.</li>
+<li><a href="http://www.pygtk.org/downloads.html">PyGTK</a> and development files.</li>
 </ul>
 
-See Geany's documentation/website for information on compiling it from the Subversion or Git repositories.</p>
+See <a href="http://www.geany.org/manual/current/index.html#installation">Geany's manual</a> for information on compiling it from the Subversion or Git repositories.</p>
 
-
+<p>If you're using a Debian-based distro, you can probably use the following command
+to install the dependencies (except for Geany 0.21 currently):</p>
+<br />
+<p>
+	<code class="code_block">
+		$ apt-get install <a href="apt:python,python-dev,python-gtk2,python-gtk2-dev">
+			python python-dev python-gtk2 python-gtk2-dev</a>
+	</code>
+</p>
+<br />
     <h2>Download</h2>
     <p>
       You can download this project in either
