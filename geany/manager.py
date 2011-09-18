@@ -87,12 +87,10 @@ class PluginManager(gtk.Dialog):
 
 
 	def activate_plugin(self, filename):
-		print("Activate plugin: %s" % filename)
 		self.loader.load_plugin(filename)
 
 
 	def deactivate_plugin(self, filename):
-		print("Deactivate plugin: %s" % filename)
 		self.loader.unload_plugin(filename)
 
 

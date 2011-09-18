@@ -111,6 +111,8 @@ class PluginLoader(object):
 				inst = avail.cls()
 				self.plugins[filename] = inst
 				self.update_loaded_plugins_file()
+				geany.ui_utils.set_statusbar('GeanyPy: plugin activated: %s' %
+					inst.name, True)
 				return inst
 
 
@@ -118,9 +120,12 @@ class PluginLoader(object):
 
 		try:
 			plugin = self.plugins[filename]
+			name = plugin.name
 			plugin.cleanup()
 			del self.plugins[filename]
 			self.update_loaded_plugins_file()
+			geany.ui_utils.set_statusbar('GeanyPy: plugin deactivated: %s' %
+				name, True)
 		except KeyError:
 			print("Unable to unload plugin '%s': it's not loaded" % filename)
 
