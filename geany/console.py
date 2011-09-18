@@ -452,6 +452,7 @@ class _Console(_ReadLine, code.InteractiveInterpreter):
                  start_script=None):
         _ReadLine.__init__(self)
 
+
         code.InteractiveInterpreter.__init__(self, locals)
         self.locals["__console__"] = self
 
@@ -638,7 +639,6 @@ def _create_widget(start_script):
     console = Console(banner="Geany Python Console",
                           use_rlcompleter=False,
                           start_script=start_script)
-    console.modify_font(pango.FontDescription("Monospace 8"))
     return console
 
 def _make_window(start_script="import geany\n"):

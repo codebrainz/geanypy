@@ -93,74 +93,6 @@ GeanyPy_stop_interpreter(void)
 
 
 static void
-GeanyPy_install_console(void)
-{
-    PyObject *module, *console, *console_inst, *args, *kwargs;
-    PyGObject *console_gobject;
-    GtkWidget *console_widget, *scroll;
-    PangoFontDescription *pfd;
-
-    module = PyImport_ImportModule("geany.console");
-    if (module == NULL)
-    {
-        g_warning(_("Failed to import console module"));
-        return;
-    }
-
-    console = PyObject_GetAttrString(module, "Console");
-    Py_DECREF(module);
-
-    if (console == NULL)
-    {
-        g_warning(_("Failed to retrieve Console from console module"));
-        return;
-    }
-
-    args = Py_BuildValue("()");
-    kwargs = Py_BuildValue("{s:s, s:s}",
-                "banner", _("Geany Python Console"),
-                "start_script", "import geany\n");
-
-    console_inst = PyObject_Call(console, args, kwargs);
-    Py_DECREF(console);
-    Py_DECREF(args);
-    Py_DECREF(kwargs);
-
-    if (console_inst == NULL)
-    {
-        g_warning(_("Unable to instantiate new Console"));
-        return;
-    }
-
-    console_gobject = (PyGObject *) console_inst;
-    console_widget = GTK_WIDGET(console_gobject->obj);
-    Py_DECREF(console_inst);
-
-    if (console_widget == NULL)
-    {
-        g_warning(_("Failed to get GtkWidget for Console"));
-        return;
-    }
-
-    pfd = pango_font_description_from_string("Monospace 9");
-    gtk_widget_modify_font(console_widget, pfd);
-    pango_font_description_free(pfd);
-
-    scroll = gtk_scrolled_window_new(NULL, NULL);
-    gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scroll),
-        GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-    gtk_container_add(GTK_CONTAINER(scroll), console_widget);
-
-    gtk_notebook_append_page(
-        GTK_NOTEBOOK(geany->main_widgets->message_window_notebook),
-        scroll,
-        gtk_label_new("Python"));
-
-    gtk_widget_show_all(scroll);
-}
-
-
-static void
 GeanyPy_init_manager(const gchar *dir)
 {
     PyObject *module, *man, *args;
@@ -227,7 +159,6 @@ void plugin_init(GeanyData *data)
 {
     GeanyPy_start_interpreter();
     signal_manager = signal_manager_new(geany_plugin);
-    GeanyPy_install_console();
 
     plugin_dir = g_build_filename(geany->app->configdir,
                     "plugins", "geanypy", "plugins", NULL);
