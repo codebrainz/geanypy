@@ -53,6 +53,7 @@ class ConsolePlugin(geany.Plugin):
 
 	def on_save_config_timeout(self, data=None):
 		self.cfg.write(open(self.cfg_path, 'w'))
+		return False
 
 
 	def install_console(self):
