@@ -52,28 +52,36 @@
     <p>GeanyPy is a set of Python C extensions which wrap Geany's regular C API for plugins.  It allows writing custom Geany plugins in the Python language and interact with Geany's exposed plugin API.</p><h2>Dependencies</h2>
 <p>To build GeanyPy you need the following dependencies:
 
-Python 2.6+ and development files (I don't think Python 3 will work).
-Geany 0.21+ and development files (from SVN)
-PyGTK 2.0 and development files
+<ul>
+<li>Python 2.6+ and development files (I don't think Python 3 will work).</li>
+<li>Geany 0.21+ and development files (from SVN)</li>
+<li>PyGTK 2.0 and development files</li>
+</ul>
 
 See Geany's documentation/website for information on compiling it from the Subversion or Git repositories.</p>
 <h2>Install</h2>
 <p>First you need to know where Geany is installed:
 
-$ GEANY_PREFIX=`pkg-config --variable=prefix geany`
+<pre>$ GEANY_PREFIX=`pkg-config --variable=prefix geany`</pre>
+
 The you can install as normal:
 
-$ ./autogen.sh
+<pre>$ ./autogen.sh
 $ ./configure --prefix=$GEANY_PREFIX
 $ make
-# make install
-You should be able to force a specific version of Python to be used, by using the PYTHON_VERSION environment variable, but I've only tested with 2.6.6 so far. I imagine 2.7 series will also work fine.</p>
+# make install</pre>
+
+You should be able to force a specific version of Python to be used, by using the <code>PYTHON_VERSION</code> environment variable, but I've only tested with 2.6.6 so far. I imagine 2.7 series will also work fine.</p>
 <h2>License</h2>
 <p>GPLv2</p>
 <h2>Authors</h2>
-<p>Matthew Brush (codebrainz [at] codebrainz [dot] ca)<br/>Colomban Wendling (ban [at] herbesfolles [dot] org)<br/><br/>      </p>
+<p>Matthew Brush (codebrainz [at] codebrainz [dot] ca)
+<br/>Colomban Wendling (ban [at] herbesfolles [dot] org)
+<br/>
+<br/>      </p>
 <h2>Contact</h2>
-<p>Matthew Brush (codebrainz [at] codebrainz [dot] ca)<br/>      </p>
+<p>Matthew Brush (codebrainz [at] codebrainz [dot] ca)
+<br/>      </p>
 
 
     <h2>Download</h2>
