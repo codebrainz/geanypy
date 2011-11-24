@@ -454,7 +454,7 @@ Document_open_file(PyObject *self, PyObject *args, PyObject *kwargs)
 	static gchar *kwlist[] = { "filename", "read_only", "filetype",
 		"forced_enc", NULL };
 
-	if (PyArg_ParseTupleAndKeywords(args, kwargs, "s|iOz", &filename,
+	if (PyArg_ParseTupleAndKeywords(args, kwargs, "s|iOz", kwlist, &filename,
 		&read_only, &py_ft, &forced_encoding))
 	{
 		if (py_ft != NULL && py_ft != Py_None)
