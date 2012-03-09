@@ -76,32 +76,48 @@ class PluginLoader(object):
 
 		for d in self.plugin_dirs:
 			if os.path.isdir(d):
-				for f in os.listdir(d):
-					if f.endswith('.py'):
-						filename = os.path.abspath(os.path.join(d, f))
-						if filename.endswith("test.py"):
-							continue
-						text = open(filename).read()
-						module_name = os.path.basename(filename)[:-3]
-						try:
-							module = imp.load_source(module_name, filename)
-						except ImportError:
-							continue
-						for k, v in module.__dict__.iteritems():
-							if k == geany.Plugin.__name__:
-								continue
-							try:
-								if issubclass(v, geany.Plugin):
-									inf = PluginInfo(
-											filename,
-											getattr(v, '__plugin_name__'),
-											getattr(v, '__plugin_version__', ''),
-											getattr(v, '__plugin_description__', ''),
-											getattr(v, '__plugin_author__', ''),
-											v)
-									yield inf
-							except TypeError:
-								continue
+				for current_file in os.listdir(d):
+					#check inside folders inside the plugins dir so we can load .py files here as plugins
+					current_path=os.path.abspath(os.path.join(d, current_file))
+					if os.path.isdir(current_path):
+						for plugin_folder_file in os.listdir(current_path):
+							if plugin_folder_file.endswith('.py'):
+								#loop around results if its fails to load will never reach yield
+								for p in self.load_plugin_info(current_path,plugin_folder_file):
+									yield p
+									
+					#not a sub directory so if it ends with .py lets just attempt to load it as a plugin
+					if current_file.endswith('.py'):
+						#loop around results if its fails to load will never reach yield
+						for p in self.load_plugin_info(d,current_file):
+							yield p
+								
+	def load_plugin_info(self,d,f):
+		filename = os.path.abspath(os.path.join(d, f))
+		if filename.endswith("test.py"):
+			pass
+		text = open(filename).read()
+		module_name = os.path.basename(filename)[:-3]
+		try:
+			module = imp.load_source(module_name, filename)
+		except ImportError:
+			pass
+		for k, v in module.__dict__.iteritems():
+			if k == geany.Plugin.__name__:
+				continue
+			try:
+				if issubclass(v, geany.Plugin):
+					inf = PluginInfo(
+							filename,
+							getattr(v, '__plugin_name__'),
+							getattr(v, '__plugin_version__', ''),
+							getattr(v, '__plugin_description__', ''),
+							getattr(v, '__plugin_author__', ''),
+							v)
+					yield inf
+					
+			except TypeError:
+				continue
 
 
 	def load_plugin(self, filename):
