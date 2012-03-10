@@ -37,14 +37,16 @@ class PluginLoader(object):
 
 
 	def restore_loaded_plugins(self):
-
-		for path in self.plugin_dirs:
-			if os.path.isdir(path):
-				state_file = os.path.join(path, '.loaded_plugins')
-				if os.path.isfile(state_file):
-					loaded_plugins = list(f.strip() for f in open(state_file) if f.strip())
-					for filename in loaded_plugins:
-						self.load_plugin(filename)
+		loaded_plugins = []
+		for path in reversed(self.plugin_dirs):
+			state_file = os.path.join(path, ".loaded_plugins")
+			if os.path.exists(state_file):
+				for line in open(state_file):
+					line = line.strip()
+					if line not in loaded_plugins:
+						loaded_plugins.append(line)
+		for filename in loaded_plugins:
+			self.load_plugin(filename)
 
 
 	def load_all_plugins(self):
