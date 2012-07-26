@@ -310,7 +310,7 @@ UiUtils_is_keyval_enter_or_return(PyObject *module, PyObject *args, PyObject *kw
 	 static gchar *kwlist[] = { "text", "log", NULL };
 
 	 if (PyArg_ParseTupleAndKeywords(args, kwargs, "s|i", kwlist, &text, &log))
-		 ui_set_statusbar((gboolean) log, text);
+		 ui_set_statusbar((gboolean) log, "%s", text);
 
 	 Py_RETURN_NONE;
  }
