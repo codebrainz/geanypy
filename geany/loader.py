@@ -102,24 +102,26 @@ class PluginLoader(object):
 		module_name = os.path.basename(filename)[:-3]
 		try:
 			module = imp.load_source(module_name, filename)
-		except ImportError:
-			pass
-		for k, v in module.__dict__.iteritems():
-			if k == geany.Plugin.__name__:
-				continue
-			try:
-				if issubclass(v, geany.Plugin):
-					inf = PluginInfo(
-							filename,
-							getattr(v, '__plugin_name__'),
-							getattr(v, '__plugin_version__', ''),
-							getattr(v, '__plugin_description__', ''),
-							getattr(v, '__plugin_author__', ''),
-							v)
-					yield inf
-					
-			except TypeError:
-				continue
+		except ImportError as exc:
+			print "Error: failed to import settings module ({})".format(exc)
+			module=None
+		if module:	
+			for k, v in module.__dict__.iteritems():
+				if k == geany.Plugin.__name__:
+					continue
+				try:
+					if issubclass(v, geany.Plugin):
+						inf = PluginInfo(
+								filename,
+								getattr(v, '__plugin_name__'),
+								getattr(v, '__plugin_version__', ''),
+								getattr(v, '__plugin_description__', ''),
+								getattr(v, '__plugin_author__', ''),
+								v)
+						yield inf
+						
+				except TypeError:
+					continue
 
 
 	def load_plugin(self, filename):
