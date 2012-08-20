@@ -1,0 +1,39 @@
+GeanyPy on Windows
+==================
+
+I'll try and keep a usable Windows build available for Windows users. To
+update your GeanyPy when a newer installer is made, run the uninstaller
+which is named `geanypy-uninstaller.exe` and can be found in the installation
+directory. Once the old version is uninstalled, run the updated installer and
+it will re-install the newer build of GeanyPy.
+
+Keep your plugins in your user directory, not in the system-wide installation
+directory and all settings and plugins should remain intact between upgrades.
+
+Before installing GeanyPy on Windows, make sure to install the dependencies:
+
+* [Geany 1.22][geany]
+* [Python 2.7.3][python]
+* [PyGTK+ 2.24.2 "All-in-one"][pygtk]
+
+Get the Geany installer for Windows *without* GTK+ bundled. A newer version
+will be installed with the PyGTK+ "all-in-one" installer. For PyGTK+ get
+one of the `pygtk-all-in-one-2.24.x.win32-py2.7.msi` files and it will install
+a newer/better GTK+ version that one included with the bundled Geany installer.
+That installer also takes care of other dependencies like PyGObject and PyCairo.
+For Python, any of the 2.7.x series should do fine.
+
+Once you have the dependencies installed, then download GeanPy from:
+
+    https://github.com/downloads/codebrainz/geanypy/GeanyPy-Installer.exe
+
+Run the installer and when it asks you where to install the files to, select
+the directory where Geany was installed, usually:
+
+    C:\Program Files\Geany
+
+Restart Geany and activate the GeanyPy plugin through the plugin manager.
+
+[geany]: http://www.geany.org/Download/Releases/
+[python]: http://www.python.org/download/
+[pygtk]: http://ftp.gnome.org/pub/GNOME/binaries/win32/pygtk/2.24/
