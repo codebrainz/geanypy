@@ -64,17 +64,12 @@ static void
 GeanyPy_start_interpreter(void)
 {
     gchar *init_code;
+    gchar *py_dir = NULL;
 
-#if 0
-    /* This prevents a crash in the dynload thingy */
-	if (dlopen(GEANYPY_PYTHON_LIBRARY, RTLD_LAZY | RTLD_GLOBAL) == NULL)
-    {
-        g_warning(_("Unable to pre-load Python library."));
-        return;
-    }
-#endif
-#if 1
-	{
+
+#ifndef GEANYPY_WINDOWS
+	{ /* Prevents a crash in the dynload thingy
+		 TODO: is this or the old dlopen version even needed? */
 		GModule *mod = g_module_open(GEANYPY_PYTHON_LIBRARY, G_MODULE_BIND_LAZY);
 		if (!mod) {
 			g_warning(_("Unable to pre-load Python library."));
@@ -104,13 +99,35 @@ GeanyPy_start_interpreter(void)
     inittemplates();
     initui_utils();
 
+#ifdef GEANYPY_WINDOWS
+	{ /* On windows, get path at runtime since we don't really know where
+	   * Geany is installed ahead of time. */
+		gchar *geany_base_dir;
+		geany_base_dir = g_win32_get_package_installation_directory_of_module(NULL);
+		if (geany_base_dir)
+		{
+			py_dir = g_build_filename(geany_base_dir, "lib", "geanypy", NULL);
+			g_free(geany_base_dir);
+		}
+		if (!g_file_test(py_dir, G_FILE_TEST_EXISTS))
+		{
+			g_critical("The path to the `geany' module was not found: %s", py_dir);
+			g_free(py_dir);
+			py_dir = g_strdup(""); /* will put current dir on path? */
+		}
+	}
+#else
+	py_dir = g_strdup(GEANYPY_PYTHON_DIR);
+#endif
+
     /* Adjust Python path to find wrapper package (geany) */
     init_code = g_strdup_printf(
         "import os, sys\n"
         "path = '%s'.replace('~', os.path.expanduser('~'))\n"
         "sys.path.append(path)\n"
-        "import geany",
-        GEANYPY_PYTHON_DIR);
+        "import geany\n", py_dir);
+    g_free(py_dir);
+
     PyRun_SimpleString(init_code);
     g_free(init_code);
 
@@ -128,6 +145,7 @@ static void
 GeanyPy_init_manager(const gchar *dir)
 {
     PyObject *module, *man, *args;
+    gchar *sys_plugin_dir = NULL;
 
     g_return_if_fail(dir != NULL);
 
@@ -147,7 +165,39 @@ GeanyPy_init_manager(const gchar *dir)
         return;
     }
 
-    args = Py_BuildValue("([s, s])", GEANYPY_PLUGIN_DIR, dir);
+#ifdef GEANYPY_WINDOWS
+	{ /* Detect the system plugin's dir at runtime on Windows since we
+	   * don't really know where Geany is installed. */
+		gchar *geany_base_dir;
+		geany_base_dir = g_win32_get_package_installation_directory_of_module(NULL);
+		if (geany_base_dir)
+		{
+			sys_plugin_dir = g_build_filename(geany_base_dir, "lib", "geanypy", "plugins", NULL);
+			g_free(geany_base_dir);
+		}
+		if (!g_file_test(sys_plugin_dir, G_FILE_TEST_EXISTS))
+		{
+			g_warning(_("System plugin directory not found."));
+			g_free(sys_plugin_dir);
+			sys_plugin_dir = NULL;
+		}
+	}
+#else
+	sys_plugin_dir = g_strdup(GEANYPY_PLUGIN_DIR);
+#endif
+
+
+	g_log(G_LOG_DOMAIN, G_LOG_LEVEL_INFO, "User plugins: %s", dir);
+
+	if (sys_plugin_dir)
+	{
+		g_log(G_LOG_DOMAIN, G_LOG_LEVEL_INFO, "System plugins: %s", sys_plugin_dir);
+		args = Py_BuildValue("([s, s])", sys_plugin_dir, dir);
+		g_free(sys_plugin_dir);
+	}
+	else
+		args = Py_BuildValue("([s])", dir);
+
     manager = PyObject_CallObject(man, args);
     if (PyErr_Occurred())
 		PyErr_Print();
@@ -193,15 +243,8 @@ plugin_init(GeanyData *data)
     GeanyPy_start_interpreter();
     signal_manager = signal_manager_new(geany_plugin);
 
-#ifndef GEANYPY_WINDOWS
-	/* On *nix, use user's configuration directory. */
     plugin_dir = g_build_filename(geany->app->configdir,
 		"plugins", "geanypy", "plugins", NULL);
-#else
-	/* On Windows, use Geany prefix's plugin directory, ie.
-	 *   `C:\Program Files\Geany\lib` */
-	plugin_dir = g_strdup(GEANYPY_PLUGIN_DIR);
-#endif
 
     if (!g_file_test(plugin_dir, G_FILE_TEST_IS_DIR))
     {

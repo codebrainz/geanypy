@@ -74,11 +74,6 @@ extern "C" {
 #include <errno.h>
 #include <string.h>
 
-/* TODO: is it even needed, can just use GModule? */
-#if 0
-#  include <dlfcn.h>
-#endif
-
 #include <gtk/gtk.h>
 #include <pygobject.h>
 
@@ -97,6 +92,10 @@ extern "C" {
 #include <ScintillaWidget.h>
 
 #include <geanyplugin.h>
+
+#ifndef G_LOG_DOMAIN
+#  define G_LOG_DOMAIN "GeanyPy"
+#endif
 
 #ifndef GEANYPY_WINDOWS
 #  include "plugin-config.h"
