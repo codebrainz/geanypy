@@ -110,7 +110,7 @@ Scintilla_find_text(Scintilla *self, PyObject *args, PyObject *kwargs)
 	gint pos = -1, flags = 0;
 	glong start_chr = 0, end_chr = 0;
 	gchar *search_text;
-	struct Sci_TextToFind ttf = { 0 };
+	struct Sci_TextToFind ttf = { { 0 } };
 	static gchar *kwlist[] = { "text", "flags", "start_char", "end_char", NULL };
 
 	SCI_RET_IF_FAIL(self);

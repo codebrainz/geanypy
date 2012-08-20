@@ -69,6 +69,7 @@ SignalManager *signal_manager_new(GeanyPlugin *geany_plugin)
 
 void signal_manager_free(SignalManager *man)
 {
+	g_return_if_fail(man != NULL);
 	Py_XDECREF(man->py_obj);
 	g_free(man);
 }

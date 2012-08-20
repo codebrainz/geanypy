@@ -126,8 +126,6 @@ PyMethodDef DialogsModule_methods[] = {
 
 PyMODINIT_FUNC initdialogs(void)
 {
-    PyObject *m;
-
-    m = Py_InitModule3("dialogs", DialogsModule_methods,
-			"Wrappers around Geany's dialog functions.");
+    Py_InitModule3("dialogs", DialogsModule_methods,
+		"Wrappers around Geany's dialog functions.");
 }

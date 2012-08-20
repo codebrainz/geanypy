@@ -49,6 +49,5 @@ PyMethodDef MainModule_methods[] = {
 
 PyMODINIT_FUNC initmain(void)
 {
-	PyObject *m = Py_InitModule3("main", MainModule_methods,
-					"Main program related functions.");
+	Py_InitModule3("main", MainModule_methods, "Main program related functions.");
 }

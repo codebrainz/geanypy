@@ -76,7 +76,5 @@ PyMethodDef NavqueueModule_methods[] = {
 
 PyMODINIT_FUNC initnavqueue(void)
 {
-	PyObject *m;
-	m = Py_InitModule3("navqueue", NavqueueModule_methods,
-			"Simple code navigation.");
+	Py_InitModule3("navqueue", NavqueueModule_methods, "Simple code navigation.");
 }

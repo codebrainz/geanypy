@@ -21,17 +21,18 @@
 
 #include "geanypy.h"
 
-GeanyPlugin		*geany_plugin;
-GeanyData		*geany_data;
-GeanyFunctions	*geany_functions;
+G_MODULE_EXPORT GeanyPlugin		*geany_plugin;
+G_MODULE_EXPORT GeanyData		*geany_data;
+G_MODULE_EXPORT GeanyFunctions	*geany_functions;
 
 
-PLUGIN_VERSION_CHECK(211)
+G_MODULE_EXPORT PLUGIN_VERSION_CHECK(211)
 
-PLUGIN_SET_INFO(_("GeanyPy"),
-				_("Python plugins support"),
-				"1.0",
-				"Matthew Brush <mbrush@codebrainz.ca>")
+G_MODULE_EXPORT PLUGIN_SET_INFO(
+	_("GeanyPy"),
+	_("Python plugins support"),
+	"1.0",
+	"Matthew Brush <mbrush@codebrainz.ca>")
 
 
 static GtkWidget *loader_item = NULL;
@@ -40,17 +41,48 @@ static gchar *plugin_dir = NULL;
 static SignalManager *signal_manager = NULL;
 
 
+/* Forward declarations to prevent compiler warnings. */
+PyMODINIT_FUNC initapp(void);
+PyMODINIT_FUNC initdialogs(void);
+PyMODINIT_FUNC initdocument(void);
+PyMODINIT_FUNC initeditor(void);
+PyMODINIT_FUNC initencoding(void);
+PyMODINIT_FUNC initfiletypes(void);
+PyMODINIT_FUNC inithighlighting(void);
+PyMODINIT_FUNC initmain(void);
+PyMODINIT_FUNC initmsgwin(void);
+PyMODINIT_FUNC initnavqueue(void);
+PyMODINIT_FUNC initprefs(void);
+PyMODINIT_FUNC initproject(void);
+PyMODINIT_FUNC initscintilla(void);
+PyMODINIT_FUNC initsearch(void);
+PyMODINIT_FUNC inittemplates(void);
+PyMODINIT_FUNC initui_utils(void);
+
+
 static void
 GeanyPy_start_interpreter(void)
 {
     gchar *init_code;
 
+#if 0
     /* This prevents a crash in the dynload thingy */
 	if (dlopen(GEANYPY_PYTHON_LIBRARY, RTLD_LAZY | RTLD_GLOBAL) == NULL)
     {
         g_warning(_("Unable to pre-load Python library."));
         return;
     }
+#endif
+#if 1
+	{
+		GModule *mod = g_module_open(GEANYPY_PYTHON_LIBRARY, G_MODULE_BIND_LAZY);
+		if (!mod) {
+			g_warning(_("Unable to pre-load Python library."));
+			return;
+		}
+		g_module_close(mod);
+	}
+#endif
 
     Py_Initialize();
 
@@ -117,7 +149,7 @@ GeanyPy_init_manager(const gchar *dir)
 
     args = Py_BuildValue("([s, s])", GEANYPY_PLUGIN_DIR, dir);
     manager = PyObject_CallObject(man, args);
-    if (PyErr_Occurred)
+    if (PyErr_Occurred())
 		PyErr_Print();
     Py_DECREF(man);
     Py_DECREF(args);
@@ -155,13 +187,21 @@ on_python_plugin_loader_activate(GtkMenuItem *item, gpointer user_data)
 }
 
 
-void plugin_init(GeanyData *data)
+G_MODULE_EXPORT void
+plugin_init(GeanyData *data)
 {
     GeanyPy_start_interpreter();
     signal_manager = signal_manager_new(geany_plugin);
 
+#ifndef GEANYPY_WINDOWS
+	/* On *nix, use user's configuration directory. */
     plugin_dir = g_build_filename(geany->app->configdir,
-                    "plugins", "geanypy", "plugins", NULL);
+		"plugins", "geanypy", "plugins", NULL);
+#else
+	/* On Windows, use Geany prefix's plugin directory, ie.
+	 *   `C:\Program Files\Geany\lib` */
+	plugin_dir = g_strdup(GEANYPY_PLUGIN_DIR);
+#endif
 
     if (!g_file_test(plugin_dir, G_FILE_TEST_IS_DIR))
     {
@@ -179,15 +219,15 @@ void plugin_init(GeanyData *data)
         GeanyPy_init_manager(plugin_dir);
 
     loader_item = gtk_menu_item_new_with_label(_("Python Plugin Manager"));
-    gtk_widget_set_sensitive(loader_item, plugin_dir != NULL);
-    gtk_menu_append(GTK_MENU(geany->main_widgets->tools_menu), loader_item);
-    gtk_widget_show(loader_item);
-    g_signal_connect(loader_item, "activate",
-        G_CALLBACK(on_python_plugin_loader_activate), NULL);
+	gtk_widget_set_sensitive(loader_item, plugin_dir != NULL);
+	gtk_menu_append(GTK_MENU(geany->main_widgets->tools_menu), loader_item);
+	gtk_widget_show(loader_item);
+	g_signal_connect(loader_item, "activate",
+		G_CALLBACK(on_python_plugin_loader_activate), NULL);
 }
 
 
-void plugin_cleanup(void)
+G_MODULE_EXPORT void plugin_cleanup(void)
 {
     signal_manager_free(signal_manager);
     Py_XDECREF(manager);

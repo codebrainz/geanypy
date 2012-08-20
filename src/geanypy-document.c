@@ -118,6 +118,8 @@ Document_get_property(Document *self, const gchar *prop_name)
 		else
 			Py_RETURN_NONE;
 	}
+
+	Py_RETURN_NONE;
 }
 
 
@@ -371,7 +373,6 @@ Document_find_by_real_path(PyObject *self, PyObject *args, PyObject *kwargs)
 static PyObject*
 Document_get_current(PyObject *self)
 {
-	Document *py_doc;
 	GeanyDocument *doc;
 
 	doc = document_get_current();

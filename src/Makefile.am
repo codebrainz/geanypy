@@ -8,27 +8,27 @@ geanypy_la_CPPFLAGS			=	@GEANY_CFLAGS@ @PYGTK_CFLAGS@ @PYTHON_CPPFLAGS@ \
 								-UHAVE_CONFIG_H
 geanypy_la_LIBADD			=	@GEANY_LIBS@ @PYGTK_LIBS@ @PYTHON_LDFLAGS@ \
 								@PYTHON_EXTRA_LIBS@ @PYTHON_EXTRA_LDFLAGS@
-geanypy_la_SOURCES			=	app.c \
-								dialogs.c \
-								document.c document.h \
-								editor.c editor.h \
-								encoding.c encoding.h \
-								filetypes.c \
-								geanypy.h \
-								highlighting.c \
-								indentprefs.c \
-								interfaceprefs.c \
-								main.c \
-								mainwidgets.c \
-								msgwindow.c \
-								navqueue.c \
-								plugin.c plugin.h \
-								prefs.c \
-								project.c project.h \
-								scinotification.c \
-								scinotifyheader.c \
-								scintilla.c scintilla.h \
-								search.c \
-								signalmanager.c signalmanager.h \
-								templates.c \
-								ui_utils.c ui_utils.h
+geanypy_la_SOURCES			=	geanypy-app.c \
+								geanypy-dialogs.c \
+								geanypy-document.c geanypy-document.h \
+								geanypy-editor.c geanypy-editor.h \
+								geanypy-encoding.c geanypy-encoding.h \
+								geanypy-filetypes.c \
+								geanypy-geanypy.h \
+								geanypy-highlighting.c \
+								geanypy-indentprefs.c \
+								geanypy-interfaceprefs.c \
+								geanypy-main.c \
+								geanypy-mainwidgets.c \
+								geanypy-msgwindow.c \
+								geanypy-navqueue.c \
+								geanypy-plugin.c geanypy-plugin.h \
+								geanypy-prefs.c \
+								geanypy-project.c geanypy-project.h \
+								geanypy-scinotification.c \
+								geanypy-scinotifyheader.c \
+								geanypy-scintilla.c geanypy-scintilla.h \
+								geanypy-search.c \
+								geanypy-signalmanager.c geanypy-signalmanager.h \
+								geanypy-templates.c \
+								geanypy-uiutils.c geanypy-uiutils.h

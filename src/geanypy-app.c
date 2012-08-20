@@ -20,6 +20,7 @@ static int
 App_init(App *self)
 {
 	g_return_val_if_fail(self != NULL, -1);
+	g_return_val_if_fail(geany_data, -1);
 	self->app = geany_data->app;
 	return 0;
 }

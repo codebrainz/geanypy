@@ -22,10 +22,15 @@
 
 #ifndef GEANYPY_H__
 #define GEANYPY_H__
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+/* For plain make file build using Mingw on Windows */
+#if defined(__MINGW32__) && defined(GEANYPY_WINDOWS_BUILD)
+#  define GEANYPY_WINDOWS 1
+#endif
 
 #include <Python.h>
 #ifndef PyMODINIT_FUNC
@@ -68,12 +73,22 @@ extern "C" {
 #include <stdlib.h>
 #include <errno.h>
 #include <string.h>
-#include <dlfcn.h>
+
+/* TODO: is it even needed, can just use GModule? */
+#if 0
+#  include <dlfcn.h>
+#endif
 
 #include <gtk/gtk.h>
 #include <pygobject.h>
-#include <pygtk/pygtk.h>
-#include <geanyplugin.h>
+
+#ifndef GEANYPY_WINDOWS
+/* Used with the results of `pkg-config --cflags pygtk-2.0` */
+#  include <pygtk/pygtk.h>
+#else
+/* On windows the path of pygtk.h is directly an include dir */
+#  include <pygtk.h>
+#endif
 
 #ifndef GTK
 #  define GTK
@@ -81,19 +96,25 @@ extern "C" {
 #include <Scintilla.h>
 #include <ScintillaWidget.h>
 
-#include "plugin-config.h"
-#include "document.h"
-#include "editor.h"
-#include "encoding.h"
-#include "filetypes.h"
-#include "plugin.h"
-#include "project.h"
-#include "scintilla.h"
-#include "signalmanager.h"
-#include "ui_utils.h"
+#include <geanyplugin.h>
+
+#ifndef GEANYPY_WINDOWS
+#  include "plugin-config.h"
+#endif
+
+#include "geanypy-document.h"
+#include "geanypy-editor.h"
+#include "geanypy-encoding.h"
+#include "geanypy-filetypes.h"
+#include "geanypy-plugin.h"
+#include "geanypy-project.h"
+#include "geanypy-scintilla.h"
+#include "geanypy-signalmanager.h"
+#include "geanypy-uiutils.h"
 
 
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
+
 #endif /* GEANYPY_H__ */

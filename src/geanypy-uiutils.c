@@ -156,11 +156,11 @@ UiUtils_dialog_vbox_new(PyObject *module, PyObject *args, PyObject *kwargs)
 static PyObject *
 UiUtils_entry_add_clear_icon(PyObject *module, PyObject *args, PyObject *kwargs)
 {
-	PyObject *py_ent;
+	PyObject *py_ent = NULL;
 	GObject *ent;
 	static gchar *kwlist[] = { "entry", NULL };
 
-	if (PyArg_ParseTupleAndKeywords(args, kwargs, "O", kwlist, *py_ent))
+	if (PyArg_ParseTupleAndKeywords(args, kwargs, "O", kwlist, &py_ent))
 	{
 		GOB_CHECK(py_ent, 1);
 		ent = pygobject_get(py_ent);
