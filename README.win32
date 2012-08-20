@@ -19,9 +19,13 @@ Before installing GeanyPy on Windows, make sure to install the dependencies:
 Get the Geany installer for Windows *without* GTK+ bundled. A newer version
 will be installed with the PyGTK+ "all-in-one" installer. For PyGTK+ get
 one of the `pygtk-all-in-one-2.24.x.win32-py2.7.msi` files and it will install
-a newer/better GTK+ version that one included with the bundled Geany installer.
+a newer/better GTK+ version than one included with the bundled Geany installer.
 That installer also takes care of other dependencies like PyGObject and PyCairo.
 For Python, any of the 2.7.x series should do fine.
+
+**Note:** In order for Geany to detect the GTK+ installation, you may need
+to add the GTK+ `bin` directory to your `PATH` environment variable. It's
+quite easy and there's [instructions online][setpath].
 
 Once you have the dependencies installed, then download GeanPy from:
 
@@ -37,3 +41,4 @@ Restart Geany and activate the GeanyPy plugin through the plugin manager.
 [geany]: http://www.geany.org/Download/Releases/
 [python]: http://www.python.org/download/
 [pygtk]: http://ftp.gnome.org/pub/GNOME/binaries/win32/pygtk/2.24/
+[setpath]: http://www.computerhope.com/issues/ch000549.htm
