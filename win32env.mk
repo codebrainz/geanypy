@@ -30,6 +30,8 @@ PYGTK_SRCDIR = C:/Gtk/Python/pygtk-2.24.0
 # Shouldn't need to change anything below here
 # ============================================
 
+GEANYPY_VERSION = 0.1
+
 CC = $(MINGW_PREFIX)/bin/gcc.exe
 MAKE = $(MINGW_PREFIX)/bin/mingw32-make.exe
 RM_F = -del /f /q

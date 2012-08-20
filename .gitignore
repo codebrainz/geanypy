@@ -40,3 +40,6 @@ Makefile.in
 /.backup/
 /docs/build/*
 /docs/buildpushdocs.sh
+
+/geanypy-0.1/
+/geanypy-0.1.exe
