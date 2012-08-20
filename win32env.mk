@@ -21,12 +21,15 @@ GEANY_PREFIX = C:/Program Files/Geany
 # Note: official installer doesn't isntall headers, so need from source
 GEANY_SRCDIR = C:/Documents and Settings/User/My Documents/Projects/Geany/geany
 
-# Where PyGObject and PyGTK source code is
+# Where PyGObject and PyGTK source code trees are
 # Note: official installer doesn't install headers, so need from source
 PYGOBJECT_SRCDIR = C:/Gtk/Python/pygobject-2.28.6
 PYGTK_SRCDIR = C:/Gtk/Python/pygtk-2.24.0
 
+# For making an .exe installer, path to NSIS `makensis.exe` program
+MAKE_NSIS = C:/Program Files/NSIS/makensis.exe
 
+# ======================================================================
 # Shouldn't need to change anything below here
 # ============================================
 

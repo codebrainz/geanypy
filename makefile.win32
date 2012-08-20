@@ -19,10 +19,4 @@ uninstall:
 	-rmdir /S /Q "$(GEANY_PREFIX)/lib/geanypy/"
 
 dist: all
-	-mkdir geanypy-$(GEANYPY_VERSION)\geany
-	-mkdir geanypy-$(GEANYPY_VERSION)\plugins
-	-copy /Y src\geanypy.dll geanypy-$(GEANYPY_VERSION)
-	-copy /Y geany\*.py geanypy-$(GEANYPY_VERSION)\geany
-	-copy /Y plugins\*.py geanypy-$(GEANYPY_VERSION)\plugins
-	-copy /Y README.markdown geanypy-$(GEANYPY_VERSION)\README
-	-7z a -sfx7z.sfx geanypy-$(GEANYPY_VERSION).exe geanypy-$(GEANYPY_VERSION)\
+	$(MAKE_NSIS) geanypy.nsi
