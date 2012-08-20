@@ -90,6 +90,4 @@ far.  I imagine 2.7 series will also work fine.
 Running on Windows
 ------------------
 
-Good luck!  Let me know how it goes :)
-
-(Really, it should be possible with some tweaking)
+See `README.win32` for more information.
