@@ -72,7 +72,7 @@ GeanyPy_start_interpreter(void)
 		 TODO: is this or the old dlopen version even needed? */
 		GModule *mod = g_module_open(GEANYPY_PYTHON_LIBRARY, G_MODULE_BIND_LAZY);
 		if (!mod) {
-			g_warning(_("Unable to pre-load Python library."));
+			g_warning(_("Unable to pre-load Python library: %s."), g_module_error());
 			return;
 		}
 		g_module_close(mod);
