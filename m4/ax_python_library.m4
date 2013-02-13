@@ -14,7 +14,10 @@ from distutils.sysconfig import get_config_vars
 from os.path import join as path_join
 
 cvars = get_config_vars()
-print(path_join(cvars[['LIBDIR']], cvars[['LDLIBRARY']]))
+# support multiarch-enabled distributions like Ubuntu
+if not 'MULTIARCH' in cvars.keys():
+    cvars[['MULTIARCH']] = ''
+print(path_join(cvars[['LIBDIR']], cvars[['MULTIARCH']], cvars[['LDLIBRARY']]))
 EOD`
 
 	AC_SUBST([PYTHON_LIBRARY], [$ax_python_library])
