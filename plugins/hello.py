@@ -1,4 +1,4 @@
-import gtk
+from gi.repository import Gtk
 import geany
 
 class HelloWorld(geany.Plugin):
@@ -9,7 +9,7 @@ class HelloWorld(geany.Plugin):
     __plugin_author__ = "John Doe <john.doe@example.org>"
 
     def __init__(self):
-        self.menu_item = gtk.MenuItem("Hello World")
+        self.menu_item = Gtk.MenuItem("Hello World")
         self.menu_item.show()
         geany.main_widgets.tools_menu.append(self.menu_item)
         self.menu_item.connect("activate", self.on_hello_item_clicked)

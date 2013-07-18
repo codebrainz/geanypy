@@ -3,56 +3,54 @@ A simple analog of `GeanyObject` in the C API, that is, an object to emit
 all signals on.  The signals are emitted from the C code in signalmanager.c,
 where the Geany types get wrapped in PyObject types.
 """
+from gi.repository import GObject
 
-import gobject
 
+class SignalManager(GObject.GObject):
+    """
+    Manages callback functions for events emitted by Geany's internal GObject.
+    """
+    __gsignals__ = {
+        'build-start':                (GObject.SignalFlags.RUN_LAST, None,
+                                        ()),
+        'document-activate':        (GObject.SignalFlags.RUN_LAST, None,
+                                        (object,)),
+        'document-before-save':        (GObject.SignalFlags.RUN_LAST, None,
+                                        (object,)),
+        'document-close':            (GObject.SignalFlags.RUN_LAST, None,
+                                        (object,)),
+        'document-filetype-set':    (GObject.SignalFlags.RUN_LAST, None,
+                                        (object, object)),
+        'document-new':                (GObject.SignalFlags.RUN_LAST, None,
+                                        (object,)),
+        'document-open':            (GObject.SignalFlags.RUN_LAST, None,
+                                        (object,)),
+        'document-reload':            (GObject.SignalFlags.RUN_LAST, None,
+                                        (object,)),
+        'document-save':            (GObject.SignalFlags.RUN_LAST, None,
+                                        (object,)),
+        'editor-notify':            (GObject.SignalFlags.RUN_LAST, GObject.TYPE_BOOLEAN,
+                                        (object, object)),
+        'geany-startup-complete':    (GObject.SignalFlags.RUN_LAST, None,
+                                        ()),
+        'project-close':             (GObject.SignalFlags.RUN_LAST, None,
+                                        ()),
+        'project-dialog-confirmed':    (GObject.SignalFlags.RUN_LAST, None,
+                                        (object,)),
+        'project-dialog-open':        (GObject.SignalFlags.RUN_LAST, None,
+                                        (object,)),
+        'project-dialog-close':        (GObject.SignalFlags.RUN_LAST, None,
+                                        (object,)),
+        'project-open':                (GObject.SignalFlags.RUN_LAST, None,
+                                        (object,)),
+        'project-save':                (GObject.SignalFlags.RUN_LAST, None,
+                                        (object,)),
+        'update-editor-menu':        (GObject.SignalFlags.RUN_LAST, None,
+                                        (GObject.TYPE_STRING, GObject.TYPE_INT,
+                                        object)),
+    } # __gsignals__
 
-class SignalManager(gobject.GObject):
-	"""
-	Manages callback functions for events emitted by Geany's internal GObject.
-	"""
-	__gsignals__ = {
-		'build-start':				(gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
-										()),
-		'document-activate':		(gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
-										(gobject.TYPE_PYOBJECT,)),
-		'document-before-save':		(gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
-										(gobject.TYPE_PYOBJECT,)),
-		'document-close':			(gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
-										(gobject.TYPE_PYOBJECT,)),
-		'document-filetype-set':	(gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
-										(gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT)),
-		'document-new':				(gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
-										(gobject.TYPE_PYOBJECT,)),
-		'document-open':			(gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
-										(gobject.TYPE_PYOBJECT,)),
-		'document-reload':			(gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
-										(gobject.TYPE_PYOBJECT,)),
-		'document-save':			(gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
-										(gobject.TYPE_PYOBJECT,)),
-		'editor-notify':			(gobject.SIGNAL_RUN_LAST, gobject.TYPE_BOOLEAN,
-										(gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT)),
-		'geany-startup-complete':	(gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
-										()),
-		'project-close': 			(gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
-										()),
-		'project-dialog-confirmed':	(gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
-										(gobject.TYPE_PYOBJECT,)),
-		'project-dialog-open':		(gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
-										(gobject.TYPE_PYOBJECT,)),
-		'project-dialog-close':		(gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
-										(gobject.TYPE_PYOBJECT,)),
-		'project-open':				(gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
-										(gobject.TYPE_PYOBJECT,)),
-		'project-save':				(gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
-										(gobject.TYPE_PYOBJECT,)),
-		'update-editor-menu':		(gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE,
-										(gobject.TYPE_STRING, gobject.TYPE_INT,
-										gobject.TYPE_PYOBJECT)),
-	} # __gsignals__
+    def __init__(self):
+        super(SignalManager, self).__init__()
 
-	def __init__(self):
-		self.__gobject_init__()
-
-gobject.type_register(SignalManager)
-
+GObject.type_register(SignalManager)
