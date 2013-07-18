@@ -80,7 +80,9 @@ GeanyPy_start_interpreter(void)
 #endif
 
     Py_Initialize();
-
+    #if GTK_CHECK_VERSION(3, 2, 0)
+        PySys_SetArgv(0, "[]");
+    #endif
     /* Import the C modules */
     initapp();
     initdialogs();

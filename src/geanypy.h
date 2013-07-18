@@ -78,11 +78,11 @@ extern "C" {
 #include <pygobject.h>
 
 #ifndef GEANYPY_WINDOWS
-/* Used with the results of `pkg-config --cflags pygtk-2.0` */
-#  include <pygtk/pygtk.h>
-#else
 /* On windows the path of pygtk.h is directly an include dir */
 #  include <pygtk.h>
+#elseif GTK_CHECK_VERSION(2, 18, 0)
+/* Used with the results of `pkg-config --cflags pygtk-2.0` */
+#  include <pygtk/pygtk.h>
 #endif
 
 #ifndef GTK
