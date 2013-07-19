@@ -11,13 +11,7 @@ class PluginLoader(object):
     plugins = {}
 
     def __init__(self, plugin_dirs):
-
         self.plugin_dirs = plugin_dirs
-
-        #self.available_plugins = []
-        #for plugin in self.iter_plugin_info():
-            #self.available_plugins.append(plugin)
-
         self.restore_loaded_plugins()
 
 
