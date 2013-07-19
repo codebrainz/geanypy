@@ -80,8 +80,8 @@ GeanyPy_start_interpreter(void)
 #endif
 
     Py_Initialize();
-    #if GTK_CHECK_VERSION(3, 2, 0)
-        PySys_SetArgv(0, "[]");
+    #if GTK_CHECK_VERSION(3, 0, 0)
+    PySys_SetArgv(0, "[]");
     #endif
     /* Import the C modules */
     initapp();
@@ -150,7 +150,6 @@ GeanyPy_init_manager(const gchar *dir)
     gchar *sys_plugin_dir = NULL;
 
     g_return_if_fail(dir != NULL);
-
     module = PyImport_ImportModule("geany.manager");
     if (module == NULL)
     {
@@ -265,7 +264,7 @@ plugin_init(GeanyData *data)
 
     loader_item = gtk_menu_item_new_with_label(_("Python Plugin Manager"));
 	gtk_widget_set_sensitive(loader_item, plugin_dir != NULL);
-	gtk_menu_append(GTK_MENU(geany->main_widgets->tools_menu), loader_item);
+	gtk_menu_shell_append(GTK_MENU_SHELL(geany->main_widgets->tools_menu), loader_item);
 	gtk_widget_show(loader_item);
 	g_signal_connect(loader_item, "activate",
 		G_CALLBACK(on_python_plugin_loader_activate), NULL);
