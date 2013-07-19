@@ -27,7 +27,7 @@ class ConsolePlugin(geany.Plugin):
     _builder = None
 
     def __init__(self):
-        geany.Plugin.__init__(self)
+        super(ConsolePlugin, self).__init__()
         self.load_config()
         self.install_console()
 
