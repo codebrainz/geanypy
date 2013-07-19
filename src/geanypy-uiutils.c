@@ -420,16 +420,18 @@ PyMODINIT_FUNC initui_utils(void)
 {
 	PyObject *m;
     #if GTK_CHECK_VERSION(2, 18, 0)
-        init_pygobject();
-        init_pygtk();
-        m = PyImport_ImportModule("gobject");
-        if (m)
-        {
-            PyGObject_Type = (PyTypeObject *) PyObject_GetAttrString(m, "GObject");
-            Py_XDECREF(m);
-        }
+    init_pygobject();
+    init_pygtk();
+    m = PyImport_ImportModule("gobject");
+    #else
+    pygobject_init(-1, -1, -1);
+    m = PyImport_ImportModule("gi._gobject");
     #endif
-
+    if (m)
+    {
+        PyGObject_Type = (PyTypeObject *) PyObject_GetAttrString(m, "GObject");
+        Py_XDECREF(m);
+    }
     InterfacePrefsType.tp_new = PyType_GenericNew;
 	if (PyType_Ready(&InterfacePrefsType) < 0)
 		return;
