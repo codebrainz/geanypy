@@ -2,11 +2,11 @@ geanyplugin_LTLIBRARIES		=	geanypy.la
 geanyplugindir				=	$(libdir)/geany
 
 geanypy_la_LDFLAGS			=	-module -avoid-version -Wl,--export-dynamic
-geanypy_la_CPPFLAGS			=	@GEANY_CFLAGS@ @PYGTK_CFLAGS@ @PYTHON_CPPFLAGS@ \
+geanypy_la_CPPFLAGS			=	@GEANY_CFLAGS@ @PYGOBJECT_CFLAGS@ @PYTHON_CPPFLAGS@ \
 								-DGEANYPY_PYTHON_DIR="\"$(libdir)/geany/geanypy\"" \
 								-DGEANYPY_PLUGIN_DIR="\"$(datadir)/geany/geanypy/plugins\"" \
 								-UHAVE_CONFIG_H
-geanypy_la_LIBADD			=	@GEANY_LIBS@ @PYGTK_LIBS@ @PYTHON_LDFLAGS@ \
+geanypy_la_LIBADD			=	@GEANY_LIBS@ @PYGOBJECT_LIBS@ @PYTHON_LDFLAGS@ \
 								@PYTHON_EXTRA_LIBS@ @PYTHON_EXTRA_LDFLAGS@
 geanypy_la_SOURCES			=	geanypy-app.c \
 								geanypy-dialogs.c \
