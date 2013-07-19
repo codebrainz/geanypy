@@ -14,9 +14,9 @@ class PluginLoader(object):
 
         self.plugin_dirs = plugin_dirs
 
-        self.available_plugins = []
-        for plugin in self.iter_plugin_info():
-            self.available_plugins.append(plugin)
+        #self.available_plugins = []
+        #for plugin in self.iter_plugin_info():
+            #self.available_plugins.append(plugin)
 
         self.restore_loaded_plugins()
 
@@ -126,7 +126,7 @@ class PluginLoader(object):
 
     def load_plugin(self, filename):
 
-        for avail in self.available_plugins:
+        for avail in self.iter_plugin_info():
             if avail.filename == filename:
                 inst = avail.cls()
                 self.plugins[filename] = inst

@@ -63,7 +63,7 @@ class PluginManager(Gtk.Dialog):
         path = treeview.get_cursor()[0]
         iter = model.get_iter(path)
         filename = model.get_value(iter, 2)
-        for plugin in self.loader.available_plugins:
+        for plugin in self.loader.iter_plugin_info():
             if plugin.filename == filename:
                 plugin.cls.show_help()
                 break
@@ -121,10 +121,10 @@ class PluginManager(Gtk.Dialog):
 
 
     def load_sorted_plugins_info(self, list_store):
-        plugin_info_list = list(self.loader.iter_plugin_info())
+        #plugin_info_list = list(self.loader.iter_plugin_info())
         #plugin_info_list.sort(key=lambda pi: pi[1])
 
-        for plugin_info in plugin_info_list:
+        for plugin_info in self.loader.iter_plugin_info():
         
             lbl = str('<big><b>%s</b></big> <small>%s</small>\n%s\n' +
                 '<small><b>Author:</b> %s\n' +
@@ -135,9 +135,9 @@ class PluginManager(Gtk.Dialog):
                     GLib.markup_escape_text(plugin_info.author),
                     GLib.markup_escape_text(plugin_info.filename))
         
-        loaded = plugin_info.filename in self.loader.plugins
+            loaded = plugin_info.filename in self.loader.plugins
         
-        list_store.append([loaded, lbl, plugin_info.filename])
+            list_store.append([loaded, lbl, plugin_info.filename])
 
     
     def on_selected_plugin_changed(self, treeview, model):

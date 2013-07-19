@@ -5,8 +5,8 @@ import geany.console
 from gi.repository import GObject, Gtk, Gdk, Pango
 
 
-WIDGET_STATES = [ Gtk.StateFlags.NORMAL, Gtk.StateFlags.ACTIVE, Gtk.StateFlags.PRELIGHT,
-    Gtk.StateFlags.SELECTED, Gtk.StateFlags.INSENSITIVE ]
+WIDGET_STATES = [ Gtk.StateType.NORMAL, Gtk.StateType.ACTIVE, Gtk.StateType.PRELIGHT,
+    Gtk.StateType.SELECTED, Gtk.StateType.INSENSITIVE ]
 
 
 class ConsolePlugin(geany.Plugin):
@@ -191,11 +191,8 @@ class ConsolePlugin(geany.Plugin):
     def show_configure(self):
         dialog = Gtk.Dialog("Configure Python Console",
                             geany.main_widgets.window,
-                            Gtk.DialogType.MODAL | Gtk.DialogType.DESTROY_WITH_PARENT,
+                            Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
                             (Gtk.STOCK_CLOSE, Gtk.ResponseType.ACCEPT))
-
-        dialog.set_has_separator(True)
-
         content_area = dialog.get_content_area()
         content_area.set_border_width(6)
 
@@ -206,11 +203,12 @@ class ConsolePlugin(geany.Plugin):
         lbl.set_use_markup(True)
         lbl.set_markup("<b>General</b>")
 
-        fra_general = Gtk.Frame("")
+        fra_general = Gtk.Frame()
         fra_general.set_shadow_type(Gtk.ShadowType.NONE)
         fra_general.set_label_widget(lbl)
 
-        al_general = Gtk.Alignment(0.0, 0.0, 1.0, 1.0)
+        al_general = Gtk.Alignment()
+        al_general.set(0.0, 0.0, 1.0, 1.0)
         al_general.set_padding(0, 0, 12, 0)
         fra_general.add(al_general)
 
@@ -259,11 +257,12 @@ class ConsolePlugin(geany.Plugin):
         lbl.set_use_markup(True)
         lbl.set_markup("<b>Appearances</b>")
 
-        fra_appearances = Gtk.Frame("")
+        fra_appearances = Gtk.Frame()
         fra_appearances.set_shadow_type(Gtk.ShadowType.NONE)
         fra_appearances.set_label_widget(lbl)
 
-        al_appearances = Gtk.Alignment(0.0, 0.0, 1.0, 1.0)
+        al_appearances = Gtk.Alignment()
+        al_appearances.set(0.0, 0.0, 1.0, 1.0)
         al_appearances.set_padding(0, 0, 12, 0)
         fra_appearances.add(al_appearances)
 
