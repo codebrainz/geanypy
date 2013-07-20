@@ -88,7 +88,7 @@ PyObject * kb_manager_init(PyObject *module)
 	if (manager.initialized)
 		Py_RETURN_TRUE;
 
-	manager.kg_name = name_to_key("GeanyPy" /* FIXME: use plugin name */);
+	manager.kg_name = name_to_key(geany_plugin->info->name /* FIXME: use plugin name */);
 	manager.group = plugin_set_key_group(geany_plugin, manager.kg_name, KB_MAX,
 							(GeanyKeyGroupCallback) on_keybinding_activate);
 
