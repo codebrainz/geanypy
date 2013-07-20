@@ -43,6 +43,7 @@ static SignalManager *signal_manager = NULL;
 
 /* Forward declarations to prevent compiler warnings. */
 PyMODINIT_FUNC initapp(void);
+PyMODINIT_FUNC initbindings(void);
 PyMODINIT_FUNC initdialogs(void);
 PyMODINIT_FUNC initdocument(void);
 PyMODINIT_FUNC initeditor(void);
@@ -85,6 +86,7 @@ GeanyPy_start_interpreter(void)
     #endif
     /* Import the C modules */
     initapp();
+    initbindings();
     initdialogs();
     initdocument();
     initeditor();
