@@ -1,12 +1,24 @@
+try:
+    from gi import pygtkcompat
+except ImportError:
+    pygtkcompat = None
+
+if pygtkcompat is not None:
+    pygtkcompat.enable() 
+    pygtkcompat.enable_gtk(version='3.0')
+
 import os
 from ConfigParser import SafeConfigParser
 import geany
 import geany.console
-from gi.repository import GObject, Gtk, Gdk, Pango
+import gobject
+import gtk
+import gtk.gdk as gdk
+import pango
 
 
-WIDGET_STATES = [ Gtk.StateType.NORMAL, Gtk.StateType.ACTIVE, Gtk.StateType.PRELIGHT,
-    Gtk.StateType.SELECTED, Gtk.StateType.INSENSITIVE ]
+WIDGET_STATES = [ gtk.STATE_NORMAL, gtk.STATE_ACTIVE, gtk.STATE_PRELIGHT,
+    gtk.STATE_SELECTED, gtk.STATE_INSENSITIVE ]
 
 
 class ConsolePlugin(geany.Plugin):
@@ -45,7 +57,7 @@ class ConsolePlugin(geany.Plugin):
 
 
     def save_config(self):
-        GObject.idle_add(self.on_save_config_timeout)
+        gobject.idle_add(self.on_save_config_timeout)
 
 
     def on_save_config_timeout(self, data=None):
@@ -59,8 +71,8 @@ class ConsolePlugin(geany.Plugin):
         self.banner = self.banner
         self.use_rl_completer = self.use_rl_completer
 
-        self.swin = Gtk.ScrolledWindow()
-        self.swin.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.ALWAYS)
+        self.swin = gtk.ScrolledWindow()
+        self.swin.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_ALWAYS)
         self.console = geany.console.Console(banner = self.banner,
                             use_rlcompleter = self.use_rl_completer)
         self.console.connect("populate-popup", self.on_console_populate_popup)
@@ -72,7 +84,7 @@ class ConsolePlugin(geany.Plugin):
 
         self.swin.add(self.console)
         geany.main_widgets.message_window_notebook.append_page(self.swin,
-            Gtk.Label("Python"))
+            gtk.Label("Python"))
 
         self.swin.show_all()
         self.save_config()
@@ -88,7 +100,7 @@ class ConsolePlugin(geany.Plugin):
         return self._font
     def _set_font(self, font):
         self._font = font
-        font_desc = Pango.FontDescription(font)
+        font_desc = pango.FontDescription(font)
         self.console.modify_font(font_desc)
         if not self.cfg.has_section('appearances'):
             self.cfg.add_section('appearances')
@@ -104,7 +116,7 @@ class ConsolePlugin(geany.Plugin):
         return self._bg
     def _set_bg(self, bg):
         self._bg = bg
-        color = Gdk.color_parse(self._bg)
+        color = gdk.color_parse(self._bg)
         for state in WIDGET_STATES:
             self.console.modify_bg(state, color)
             self.console.modify_base(state, color)
@@ -122,7 +134,7 @@ class ConsolePlugin(geany.Plugin):
         return self._fg
     def _set_fg(self, fg):
         self._fg = fg
-        color = Gdk.color_parse(self._fg)
+        color = gdk.color_parse(self._fg)
         for state in WIDGET_STATES:
             self.console.modify_fg(state, color)
             self.console.modify_text(state, color)
@@ -163,10 +175,10 @@ class ConsolePlugin(geany.Plugin):
 
 
     def on_console_populate_popup(self, textview, menu, data=None):
-        item = Gtk.SeparatorMenuItem()
+        item = gtk.SeparatorMenuItem()
         item.show()
         menu.append(item)
-        item = Gtk.ImageMenuItem(stock_id=Gtk.STOCK_PREFERENCES)
+        item = gtk.ImageMenuItem(stock_id=gtk.STOCK_PREFERENCES)
         item.show()
         menu.append(item)
         item.connect("activate", lambda w,d=None: self.show_configure())
@@ -189,114 +201,115 @@ class ConsolePlugin(geany.Plugin):
 
 
     def show_configure(self):
-        dialog = Gtk.Dialog("Configure Python Console",
+        dialog = gtk.Dialog("Configure Python Console",
                             geany.main_widgets.window,
-                            Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                            (Gtk.STOCK_CLOSE, Gtk.ResponseType.ACCEPT))
+                            gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
+                            (gtk.STOCK_CLOSE, gtk.RESPONSE_ACCEPT))
+
+        #dialog.set_has_separator(True)
+
         content_area = dialog.get_content_area()
         content_area.set_border_width(6)
 
-        vbox = Gtk.VBox(spacing=6)
+        vbox = gtk.VBox(spacing=6)
         vbox.set_border_width(6)
 
-        lbl = Gtk.Label()
+        lbl = gtk.Label()
         lbl.set_use_markup(True)
         lbl.set_markup("<b>General</b>")
 
-        fra_general = Gtk.Frame()
-        fra_general.set_shadow_type(Gtk.ShadowType.NONE)
+        fra_general = gtk.Frame()
+        fra_general.set_shadow_type(gtk.SHADOW_NONE)
         fra_general.set_label_widget(lbl)
 
-        al_general = Gtk.Alignment()
-        al_general.set(0.0, 0.0, 1.0, 1.0)
+        al_general = gtk.Alignment(0.0, 0.0, 1.0, 1.0)
         al_general.set_padding(0, 0, 12, 0)
         fra_general.add(al_general)
 
-        tbl = Gtk.Table(3, 2, False)
+        tbl = gtk.Table(3, 2, False)
         tbl.set_row_spacings(6)
         tbl.set_col_spacings(6)
         tbl.set_border_width(6)
 
-        lbl = Gtk.Label("Banner:")
+        lbl = gtk.Label("Banner:")
         lbl.set_alignment(0.0, 0.0)
 
-        tvw = Gtk.TextView()
+        tvw = gtk.TextView()
         tvw.get_buffer().set_text(self.banner)
         tvw.get_buffer().connect("changed", self.on_banner_changed)
 
-        swin = Gtk.ScrolledWindow()
-        swin.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
-        swin.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
+        swin = gtk.ScrolledWindow()
+        swin.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+        swin.set_shadow_type(gtk.SHADOW_ETCHED_IN)
         swin.add(tvw)
 
-        tbl.attach(lbl, 0, 1, 0, 1, Gtk.AttachOptions.FILL, Gtk.AttachOptions.FILL, 0, 0)
-        tbl.attach(swin, 1, 2, 0, 1, Gtk.AttachOptions.EXPAND | Gtk.AttachOptions.FILL, Gtk.AttachOptions.EXPAND | Gtk.AttachOptions.FILL, 0, 0)
+        tbl.attach(lbl, 0, 1, 0, 1, gtk.FILL, gtk.FILL, 0, 0)
+        tbl.attach(swin, 1, 2, 0, 1, gtk.EXPAND | gtk.FILL, gtk.EXPAND | gtk.FILL, 0, 0)
 
-        lbl = Gtk.Label("")
+        lbl = gtk.Label("")
         lbl.set_alignment(0.0, 0.5)
 
-        check = Gtk.CheckButton("Use Readline")
+        check = gtk.CheckButton("Use Readline")
         if self.use_rl_completer:
             check.set_active(True)
         check.connect("toggled", self.on_use_rl_completer_toggled)
 
-        tbl.attach(lbl, 0, 1, 1, 2, Gtk.AttachOptions.FILL, Gtk.AttachOptions.FILL, 0, 0)
-        tbl.attach(check, 1, 2, 1, 2, Gtk.AttachOptions.FILL, Gtk.AttachOptions.FILL, 0, 0)
+        tbl.attach(lbl, 0, 1, 1, 2, gtk.FILL, gtk.FILL, 0, 0)
+        tbl.attach(check, 1, 2, 1, 2, gtk.FILL, gtk.FILL, 0, 0)
 
-        lbl = Gtk.Label("")
+        lbl = gtk.Label("")
         lbl.set_alignment(0.0, 0.5)
         lbl.set_use_markup(True)
         lbl.set_markup('<span size="small" style="italic">' +
             'Note: General settings will be applied when console is reloaded.' +
             '</span>')
-        tbl.attach(lbl, 0, 2, 2, 3, Gtk.AttachOptions.FILL, Gtk.AttachOptions.FILL, 0, 0)
+        tbl.attach(lbl, 0, 2, 2, 3, gtk.FILL, gtk.FILL, 0, 0)
 
         al_general.add(tbl)
 
-        lbl = Gtk.Label()
+        lbl = gtk.Label()
         lbl.set_use_markup(True)
         lbl.set_markup("<b>Appearances</b>")
 
-        fra_appearances = Gtk.Frame()
-        fra_appearances.set_shadow_type(Gtk.ShadowType.NONE)
+        fra_appearances = gtk.Frame()
+        fra_appearances.set_shadow_type(gtk.SHADOW_NONE)
         fra_appearances.set_label_widget(lbl)
 
-        al_appearances = Gtk.Alignment()
-        al_appearances.set(0.0, 0.0, 1.0, 1.0)
+        al_appearances = gtk.Alignment(0.0, 0.0, 1.0, 1.0)
         al_appearances.set_padding(0, 0, 12, 0)
         fra_appearances.add(al_appearances)
 
-        tbl = Gtk.Table(3, 2, False)
+        tbl = gtk.Table(3, 2, False)
         tbl.set_row_spacings(6)
         tbl.set_col_spacings(6)
         tbl.set_border_width(6)
 
-        lbl = Gtk.Label("Font:")
+        lbl = gtk.Label("Font:")
         lbl.set_alignment(0.0, 0.5)
 
-        btn = Gtk.FontButton(self.font)
+        btn = gtk.FontButton(self.font)
         btn.connect("font-set", self.on_font_changed)
 
-        tbl.attach(lbl, 0, 1, 0, 1, Gtk.AttachOptions.FILL, Gtk.AttachOptions.FILL, 0, 0)
-        tbl.attach(btn, 1, 2, 0, 1, Gtk.AttachOptions.FILL | Gtk.AttachOptions.EXPAND, Gtk.AttachOptions.FILL, 0, 0)
+        tbl.attach(lbl, 0, 1, 0, 1, gtk.FILL, gtk.FILL, 0, 0)
+        tbl.attach(btn, 1, 2, 0, 1, gtk.FILL | gtk.EXPAND, gtk.FILL, 0, 0)
 
-        lbl = Gtk.Label("FG Color:")
+        lbl = gtk.Label("FG Color:")
         lbl.set_alignment(0.0, 0.5)
 
-        btn = Gtk.ColorButton(Gdk.color_parse(self.fg))
+        btn = gtk.ColorButton(gdk.color_parse(self.fg))
         btn.connect("color-set", self.on_fg_color_changed)
 
-        tbl.attach(lbl, 0, 1, 1, 2, Gtk.AttachOptions.FILL, Gtk.AttachOptions.FILL, 0, 0)
-        tbl.attach(btn, 1, 2, 1, 2, Gtk.AttachOptions.FILL | Gtk.AttachOptions.EXPAND, Gtk.AttachOptions.FILL, 0, 0)
+        tbl.attach(lbl, 0, 1, 1, 2, gtk.FILL, gtk.FILL, 0, 0)
+        tbl.attach(btn, 1, 2, 1, 2, gtk.FILL | gtk.EXPAND, gtk.FILL, 0, 0)
 
-        lbl = Gtk.Label("BG Color:")
+        lbl = gtk.Label("BG Color:")
         lbl.set_alignment(0.0, 0.5)
 
-        btn = Gtk.ColorButton(Gdk.color_parse(self.bg))
+        btn = gtk.ColorButton(gdk.color_parse(self.bg))
         btn.connect("color-set", self.on_bg_color_changed)
 
-        tbl.attach(lbl, 0, 1, 2, 3, Gtk.AttachOptions.FILL, Gtk.AttachOptions.FILL, 0, 0)
-        tbl.attach(btn, 1, 2, 2, 3, Gtk.AttachOptions.FILL | Gtk.AttachOptions.EXPAND, Gtk.AttachOptions.FILL, 0, 0)
+        tbl.attach(lbl, 0, 1, 2, 3, gtk.FILL, gtk.FILL, 0, 0)
+        tbl.attach(btn, 1, 2, 2, 3, gtk.FILL | gtk.EXPAND, gtk.FILL, 0, 0)
 
         al_appearances.add(tbl)
 
