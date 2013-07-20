@@ -9,6 +9,7 @@ geanypy_la_CPPFLAGS			=	@GEANY_CFLAGS@ @PYGOBJECT_CFLAGS@ @PYTHON_CPPFLAGS@ \
 geanypy_la_LIBADD			=	@GEANY_LIBS@ @PYGOBJECT_LIBS@ @PYTHON_LDFLAGS@ \
 								@PYTHON_EXTRA_LIBS@ @PYTHON_EXTRA_LDFLAGS@
 geanypy_la_SOURCES			=	geanypy-app.c \
+								geanypy-bindings.c \
 								geanypy-dialogs.c \
 								geanypy-document.c geanypy-document.h \
 								geanypy-editor.c geanypy-editor.h \
