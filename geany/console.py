@@ -351,7 +351,7 @@ class _ReadLine(object):
         self.__delete(iter, end)
 
     def __get_width(self):
-        if not (gtk.get_realized()):
+        if not (self.get_realized()):
             return 80
         layout = pango.Layout(self.get_pango_context())
         letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
