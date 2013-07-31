@@ -195,11 +195,11 @@ GeanyPy_init_manager(const gchar *dir)
 	if (sys_plugin_dir)
 	{
 		g_log(G_LOG_DOMAIN, G_LOG_LEVEL_INFO, "System plugins: %s", sys_plugin_dir);
-		args = Py_BuildValue("([s, s])", sys_plugin_dir, dir);
+		args = Py_BuildValue("(O, [s, s])", pygobject_new(G_OBJECT(geany_data->main_widgets->window)), sys_plugin_dir, dir);
 		g_free(sys_plugin_dir);
 	}
 	else
-		args = Py_BuildValue("([s])", dir);
+		args = Py_BuildValue("(O, [s])", pygobject_new(G_OBJECT(geany_data->main_widgets->window)), dir);
 
     manager = PyObject_CallObject(man, args);
     if (PyErr_Occurred())
