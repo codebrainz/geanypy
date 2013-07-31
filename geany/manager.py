@@ -17,7 +17,7 @@ from loader import PluginLoader
 class PluginManager(gtk.Dialog):
 
     def __init__(self, parent=None, plugin_dirs=[]):
-        super(PluginManager, self).__init__(title="Plugin Manager", parent=parent)
+        super(PluginManager, self).__init__(title="Plugin Manager", parent=parent, flags=gtk.DIALOG_DESTROY_WITH_PARENT | gtk.DIALOG_MODAL)
         self.loader = PluginLoader(plugin_dirs)
 
         self.set_default_size(400, 450)
