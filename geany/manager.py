@@ -34,8 +34,9 @@ class PluginManager(gtk.Dialog):
         vbox.pack_start(lbl, False, False, 0)
 
         sw = gtk.ScrolledWindow()
-        sw.set_hexpand(True)
-        sw.set_vexpand(True)
+        if hasattr(sw, 'set_hexpand'):
+            sw.set_hexpand(True)
+            sw.set_vexpand(True)
         sw.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
         sw.set_shadow_type(gtk.SHADOW_ETCHED_IN)
         vbox.pack_start(sw, True, True, 0)

@@ -423,8 +423,8 @@ PyMODINIT_FUNC initui_utils(void)
     pygobject_init(-1, -1, -1);
     m = PyImport_ImportModule("gi._gobject");
     #else
-    init_pygobject()
-    init_pygtk()
+    init_pygobject();
+    init_pygtk();
     m = PyImport_ImportModule("gobject");
     #endif
     if (m)

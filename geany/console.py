@@ -294,7 +294,7 @@ class _ReadLine(object):
             handled = False
 
         if not handled:
-            return parent_type.do_key_press_event(self, event.key)
+            return parent_type.do_key_press_event(self, event.key if hasattr(event, "key") else event)
         else:
             return True
 
