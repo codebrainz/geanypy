@@ -295,8 +295,7 @@ class ConsolePlugin(geany.Plugin):
 
         lbl = gtk.Label("FG Color:")
         lbl.set_alignment(0.0, 0.5)
-
-        btn = gtk.ColorButton(gdk.color_parse(self.fg))
+        btn = gtk.ColorButton(color=gdk.color_parse(self.fg))
         btn.connect("color-set", self.on_fg_color_changed)
 
         tbl.attach(lbl, 0, 1, 1, 2, gtk.FILL, gtk.FILL, 0, 0)
@@ -305,7 +304,7 @@ class ConsolePlugin(geany.Plugin):
         lbl = gtk.Label("BG Color:")
         lbl.set_alignment(0.0, 0.5)
 
-        btn = gtk.ColorButton(gdk.color_parse(self.bg))
+        btn = gtk.ColorButton(color=gdk.color_parse(self.bg))
         btn.connect("color-set", self.on_bg_color_changed)
 
         tbl.attach(lbl, 0, 1, 2, 3, gtk.FILL, gtk.FILL, 0, 0)
