@@ -19,7 +19,7 @@ AC_PROG_SED
 # Check for headers, libraries and packages
 AC_CHECK_HEADERS([stdio.h string.h dlfcn.h])
 PKG_CHECK_MODULES([GEANY], [geany >= 0.21])
-PKG_CHECK_MODULES([PYGOBJECT], [pygobject-3.0])
+GP_CHECK_GTK3([PKG_CHECK_MODULES([PYGOBJECT], [pygobject-3.0])], [PKG_CHECK_MODULES([PYGTK], [pygtk-2.0])])
 AX_PYTHON_DEVEL([>= '2.6'])
 AX_PYTHON_LIBRARY(,[AC_MSG_ERROR([Cannot determine location of the Python DSO])])
 AC_SUBST([PYTHON])
