@@ -1,90 +1,74 @@
-try:
-    from gi import pygtkcompat
-except ImportError:
-    pygtkcompat = None
-
-if pygtkcompat is not None:
-    pygtkcompat.enable() 
-    pygtkcompat.enable_gtk(version='3.0')
-
-import gtk
-import gobject
-import glib
+from gi.repository import GObject, GLib, Gtk 
 from htmlentitydefs import name2codepoint
 from loader import PluginLoader
 
-
-class PluginManager(gtk.Dialog):
-
+class PluginManager(Gtk.Dialog):
     def __init__(self, parent=None, plugin_dirs=[]):
-        super(PluginManager, self).__init__(title="Plugin Manager", parent=parent, flags=gtk.DIALOG_DESTROY_WITH_PARENT | gtk.DIALOG_MODAL)
+        super(PluginManager, self).__init__(title="Plugin Manager", parent=parent, flags=Gtk.DialogFlags.DESTROY_WITH_PARENT | Gtk.DialogFlags.MODAL)
         self.loader = PluginLoader(plugin_dirs)
-
         self.set_default_size(400, 450)
-        icon = self.render_icon(gtk.STOCK_PREFERENCES, gtk.ICON_SIZE_MENU)
+        icon = self.render_icon(Gtk.STOCK_PREFERENCES, Gtk.IconSize.MENU)
         self.set_icon(icon)
-
+        
         self.connect("response", lambda w,d: self.hide())
-
-        vbox = gtk.VBox(False, 12)
+        
+        vbox = Gtk.VBox(False, 12)
         vbox.set_border_width(12)
-
-        lbl = gtk.Label("Choose plugins to load or unload:")
+        
+        lbl = Gtk.Label("Choose plugins to load or unload:")
         lbl.set_alignment(0.0, 0.5)
         vbox.pack_start(lbl, False, False, 0)
-
-        sw = gtk.ScrolledWindow()
-        if hasattr(sw, 'set_hexpand'):
-            sw.set_hexpand(True)
-            sw.set_vexpand(True)
-        sw.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
-        sw.set_shadow_type(gtk.SHADOW_ETCHED_IN)
+        
+        sw = Gtk.ScrolledWindow()
+        sw.set_hexpand(True)
+        sw.set_vexpand(True)
+        sw.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
+        sw.set_shadow_type(Gtk.ShadowType.ETCHED_IN)
         vbox.pack_start(sw, True, True, 0)
-
-        self.treeview = gtk.TreeView()
+        
+        self.treeview = Gtk.TreeView()
         sw.add(self.treeview)
-
+        
         vbox.show_all()
-
+        
         self.get_content_area().add(vbox)
-
+        
         action_area = self.get_action_area()
         action_area.set_spacing(0)
         action_area.set_homogeneous(False)
-
-        btn = gtk.Button(stock=gtk.STOCK_CLOSE)
+        
+        btn = Gtk.Button(stock=Gtk.STOCK_CLOSE)
         btn.set_border_width(6)
-        btn.connect("clicked", lambda x: self.response(gtk.RESPONSE_CLOSE))
+        btn.connect("clicked", lambda x: self.response(Gtk.ResponseType.CLOSE))
         action_area.pack_start(btn, False, True, 0)
         btn.show()
-
-        self.btn_help = gtk.Button(stock=gtk.STOCK_HELP)
+        
+        self.btn_help = Gtk.Button(stock=Gtk.STOCK_HELP)
         self.btn_help.set_border_width(6)
         self.btn_help.set_no_show_all(True)
         action_area.pack_start(self.btn_help, False, True, 0)
         action_area.set_child_secondary(self.btn_help, True)
-
-        self.btn_prefs = gtk.Button(stock=gtk.STOCK_PREFERENCES)
+        
+        self.btn_prefs = Gtk.Button(stock=Gtk.STOCK_PREFERENCES)
         self.btn_prefs.set_border_width(6)
         self.btn_prefs.set_no_show_all(True)
         action_area.pack_start(self.btn_prefs, False, True, 0)
         action_area.set_child_secondary(self.btn_prefs, True)
-
+        
         action_area.show()
-
+        
         self.load_plugins_list()
-
 
     def on_help_button_clicked(self, button, treeview, model):
         path = treeview.get_cursor()[0]
         iter = model.get_iter(path)
         filename = model.get_value(iter, 2)
-        for plugin in self.loader.available_plugins:
+        for plugin in self.loader.iter_plugin_info():
             if plugin.filename == filename:
                 plugin.cls.show_help()
                 break
-        else:
-            print("Plugin does not support help function")
+            else:
+                print("Plugin does not support help function")
 
 
     def on_preferences_button_clicked(self, button, treeview, model):
@@ -106,76 +90,74 @@ class PluginManager(gtk.Dialog):
 
 
     def load_plugins_list(self):
-        liststore = gtk.ListStore(gobject.TYPE_BOOLEAN, str, str)
+        liststore = Gtk.ListStore(GObject.TYPE_BOOLEAN, str, str)
 
         self.btn_help.connect("clicked",
-            self.on_help_button_clicked, self.treeview, liststore)
+        self.on_help_button_clicked, self.treeview, liststore)
 
         self.btn_prefs.connect("clicked",
-            self.on_preferences_button_clicked, self.treeview, liststore)
+        self.on_preferences_button_clicked, self.treeview, liststore)
 
         self.treeview.set_model(liststore)
         self.treeview.set_headers_visible(False)
         self.treeview.set_grid_lines(True)
 
-        check_renderer = gtk.CellRendererToggle()
+        check_renderer = Gtk.CellRendererToggle()
         check_renderer.set_radio(False)
         check_renderer.connect('toggled', self.on_plugin_load_toggled, liststore)
-        text_renderer = gtk.CellRendererText()
-
-        check_column = gtk.TreeViewColumn(None, check_renderer, active=0)
-        text_column = gtk.TreeViewColumn(None, text_renderer, markup=1)
-
+        text_renderer = Gtk.CellRendererText()
+        check_column = Gtk.TreeViewColumn(None, check_renderer, active=0)
+        text_column = Gtk.TreeViewColumn(None, text_renderer, markup=1)
+        
         self.treeview.append_column(check_column)
         self.treeview.append_column(text_column)
-
+        
         self.treeview.connect('row-activated',
-            self.on_row_activated, check_renderer, liststore)
+        self.on_row_activated, check_renderer, liststore)
         self.treeview.connect('cursor-changed',
-            self.on_selected_plugin_changed, liststore)
-
+        self.on_selected_plugin_changed, liststore)
+        
         self.load_sorted_plugins_info(liststore)
 
 
     def load_sorted_plugins_info(self, list_store):
-
-        plugin_info_list = list(self.loader.iter_plugin_info())
+        #plugin_info_list = list(self.loader.iter_plugin_info())
         #plugin_info_list.sort(key=lambda pi: pi[1])
 
-        for plugin_info in plugin_info_list:
-
+        for plugin_info in self.loader.iter_plugin_info():
+        
             lbl = str('<big><b>%s</b></big> <small>%s</small>\n%s\n' +
-                    '<small><b>Author:</b> %s\n' +
-                    '<b>Filename:</b> %s</small>') % (
-                    glib.markup_escape_text(plugin_info.name),
-                    glib.markup_escape_text(plugin_info.version),
-                    glib.markup_escape_text(plugin_info.description),
-                    glib.markup_escape_text(plugin_info.author),
-                    glib.markup_escape_text(plugin_info.filename))
-
+                '<small><b>Author:</b> %s\n' +
+                '<b>Filename:</b> %s</small>') % (
+                    GLib.markup_escape_text(plugin_info.name),
+                    GLib.markup_escape_text(plugin_info.version),
+                    GLib.markup_escape_text(plugin_info.description),
+                    GLib.markup_escape_text(plugin_info.author),
+                    GLib.markup_escape_text(plugin_info.filename))
+        
             loaded = plugin_info.filename in self.loader.plugins
-
+        
             list_store.append([loaded, lbl, plugin_info.filename])
 
-
+    
     def on_selected_plugin_changed(self, treeview, model):
-
+        
         path = treeview.get_cursor()[0]
         iter = model.get_iter(path)
         filename = model.get_value(iter, 2)
         active = model.get_value(iter, 0)
-
+        
         if self.loader.plugin_has_configure(filename):
             self.btn_prefs.set_visible(True)
         else:
             self.btn_prefs.set_visible(False)
-
+        
         if self.loader.plugin_has_help(filename):
             self.btn_help.set_visible(True)
         else:
             self.btn_help.set_visible(False)
-
-
+        
+        
     def on_plugin_load_toggled(self, cell, path, model):
         active = not cell.get_active()
         iter = model.get_iter(path)
@@ -184,7 +166,7 @@ class PluginManager(gtk.Dialog):
             self.activate_plugin(model.get_value(iter, 2))
         else:
             self.deactivate_plugin(model.get_value(iter, 2))
-
-
+        
+        
     def on_row_activated(self, tvw, path, view_col, cell, model):
         self.on_plugin_load_toggled(cell, path, model)
