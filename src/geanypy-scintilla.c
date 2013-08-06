@@ -150,6 +150,69 @@ Scintilla_get_char_at(Scintilla *self, PyObject *args, PyObject *kwargs)
 
 
 static PyObject *
+Scintilla_set_char_at(Scintilla *self, PyObject *args, PyObject *kwargs)
+{
+	gint pos=-1;
+	gchar repl_chr='\0';
+	static gchar *kwlist[] = { "pos", "ch", NULL };
+
+	SCI_RET_IF_FAIL(self);
+
+	if (PyArg_ParseTupleAndKeywords(args, kwargs, "ic", kwlist, &pos, &repl_chr))
+	{
+		if (pos > -1 && pos < sci_get_length(self->sci) && repl_chr != '\0')
+		{
+			gchar s[2] = {0};
+			gint old_start, old_end;
+			s[0] = repl_chr;
+			// Store old values so we don't mess up Geany
+			old_start = scintilla_send_message(self->sci, SCI_GETTARGETSTART, 0, 0);
+			old_end = scintilla_send_message(self->sci, SCI_GETTARGETEND, 0, 0);
+			// Set target to our position for 1 char and replace target with ours
+			scintilla_send_message(self->sci, SCI_SETTARGETSTART, pos, 0);
+			scintilla_send_message(self->sci, SCI_SETTARGETEND, pos + 1, 0);
+			scintilla_send_message(self->sci, SCI_REPLACETARGET, -1, (sptr_t) s);
+			// Put back old values to avoid tripping up Geany
+			scintilla_send_message(self->sci, SCI_SETTARGETSTART, old_start, 0);
+			scintilla_send_message(self->sci, SCI_SETTARGETEND, old_end, 0);
+		}
+	}
+
+	Py_RETURN_NONE;
+}
+
+
+static PyObject *
+Scintilla_del_char_at(Scintilla *self, PyObject *args, PyObject *kwargs)
+{
+	gint pos=-1;
+	static gchar *kwlist[] = { "pos", NULL };
+
+	SCI_RET_IF_FAIL(self);
+
+	if (PyArg_ParseTupleAndKeywords(args, kwargs, "i", kwlist, &pos))
+	{
+		if (pos > -1 && pos < sci_get_length(self->sci))
+		{
+			gint old_start, old_end;
+			// Store old values so we don't mess up Geany
+			old_start = scintilla_send_message(self->sci, SCI_GETTARGETSTART, 0, 0);
+			old_end = scintilla_send_message(self->sci, SCI_GETTARGETEND, 0, 0);
+			// Set target to our position for 1 char and replace target with ours
+			scintilla_send_message(self->sci, SCI_SETTARGETSTART, pos, 0);
+			scintilla_send_message(self->sci, SCI_SETTARGETEND, pos + 1, 0);
+			scintilla_send_message(self->sci, SCI_REPLACETARGET, -1, (sptr_t) "");
+			// Put back old values to avoid tripping up Geany
+			scintilla_send_message(self->sci, SCI_SETTARGETSTART, old_start, 0);
+			scintilla_send_message(self->sci, SCI_SETTARGETEND, old_end, 0);
+		}
+	}
+
+	Py_RETURN_NONE;
+}
+
+
+static PyObject *
 Scintilla_get_col_from_position(Scintilla *self, PyObject *args, PyObject *kwargs)
 {
 	gint pos, col;
@@ -792,6 +855,10 @@ static PyMethodDef Scintilla_methods[] = {
 		"Finds text in the document." },
 	{ "get_char_at", (PyCFunction) Scintilla_get_char_at, METH_KEYWORDS,
 		"Gets the character at a position." },
+	{ "set_char_at", (PyCFunction) Scintilla_set_char_at, METH_KEYWORDS,
+		"Sets the character at a position." },
+	{ "del_char_at", (PyCFunction) Scintilla_del_char_at, METH_KEYWORDS,
+		"Deletes the character at a position." },
 	{ "get_col_from_position", (PyCFunction) Scintilla_get_col_from_position, METH_KEYWORDS,
 		"Gets the column number relative to the start of the line that "
 		"pos is on." },

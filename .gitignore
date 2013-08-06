@@ -17,6 +17,7 @@
 /Makefile
 /src/Makefile
 /geany/Makefile
+/geanypy/Makefile
 /plugins/Makefile
 Makefile.in
 /configure
