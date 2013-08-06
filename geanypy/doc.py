@@ -8,7 +8,16 @@ class Document(object):
     into one object for convenience.
     """
 
-    def __init__(self, doc_):
+    def __init__(self, initial_text='', doc_=None):
+        """ Initializes a new document instance, optionally providing
+            some initial text. The doc_ argument is private and should
+            not be used by user code. It's the geany.document.Document
+            being wrapped and if it's left at its default None value
+            (which it should always be for user code), a new document
+            will be opened, otherwise the instance wraps an already
+            existing geany.document.Document (FYI). """
+        if doc_ is None:
+            doc_ = geany.document.new_file(initial_text=initial_text)
         self.doc_ = doc_
         if not self.doc_.is_valid:
             raise ArgumentError("Document wrapper requires a valid document")
@@ -301,21 +310,21 @@ class Document(object):
     @staticmethod
     def current():
         " Returns the current/active document. "
-        return Document(geany.document.get_current())
+        return Document(doc_=geany.document.get_current())
 
     @staticmethod
     def list_documents():
         " Returns a list of documents, in no particular order. "
         raw_docs = geany.document.get_documents_list()
-        return list( Document(d) for d in raw_docs )
+        return list( Document(doc_=d) for d in raw_docs )
 
     @staticmethod
     def open(filename=None):
         " Opens a new file or one with the supplied filename, if given. "
         if filename is None:
-            return Document(geany.document.new_file())
+            return Document(doc_=geany.document.new_file())
         else:
-            return Document(geany.document.open_file(filename))
+            return Document(doc_=geany.document.open_file(filename))
 
     @staticmethod
     def new():
