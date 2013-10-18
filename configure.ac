@@ -12,6 +12,9 @@ LT_INIT([disable-static])
 # Configure build system and tools
 AM_SILENT_RULES([yes])
 
+#fix for modern automake
+m4_ifdef([AM_PROG_AR], [AM_PROG_AR])
+
 # Check for utilities
 AC_PROG_CC
 AC_PROG_SED
