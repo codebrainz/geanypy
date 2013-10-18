@@ -6,7 +6,7 @@ AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_SRCDIR([src/geanypy-plugin.c])
 AC_CONFIG_HEADERS([src/plugin-config.h])
-AM_INIT_AUTOMAKE([1.11.1 -Wall -Werror foreign])
+AM_INIT_AUTOMAKE([1.11.1 -Wall foreign])
 LT_INIT([disable-static])
 
 # Configure build system and tools
