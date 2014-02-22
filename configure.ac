@@ -7,7 +7,6 @@ AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_SRCDIR([src/geanypy-plugin.c])
 AC_CONFIG_HEADERS([src/plugin-config.h])
 AM_INIT_AUTOMAKE([1.11.1 -Wall foreign])
-LT_INIT([disable-static])
 
 # Configure build system and tools
 AM_SILENT_RULES([yes])
@@ -18,6 +17,7 @@ m4_ifdef([AM_PROG_AR], [AM_PROG_AR])
 # Check for utilities
 AC_PROG_CC
 AC_PROG_SED
+LT_INIT([disable-static])
 
 # Check for headers, libraries and packages
 AC_CHECK_HEADERS([stdio.h string.h dlfcn.h])
