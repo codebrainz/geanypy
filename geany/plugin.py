@@ -36,6 +36,8 @@ directory (something like ~/.config/geany/plugins/geanypy/plugins).  Only
 files with a `.py` extension will be loaded.
 """
 
+from geany.logger import PluginLogger
+
 
 class Plugin(object):
 	"""
@@ -61,7 +63,7 @@ class Plugin(object):
 		When the plugin is loaded its __init__() function will be called
 		so that's a good place to put plugin initialization code.
 		"""
-
+		self.logger = PluginLogger(self.name)
 
 
 	def cleanup(self):

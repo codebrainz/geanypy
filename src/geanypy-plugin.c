@@ -48,6 +48,7 @@ PyMODINIT_FUNC initdocument(void);
 PyMODINIT_FUNC initeditor(void);
 PyMODINIT_FUNC initencoding(void);
 PyMODINIT_FUNC initfiletypes(void);
+PyMODINIT_FUNC initglog(void);
 PyMODINIT_FUNC inithighlighting(void);
 PyMODINIT_FUNC initmain(void);
 PyMODINIT_FUNC initmsgwin(void);
@@ -88,6 +89,7 @@ GeanyPy_start_interpreter(void)
     initeditor();
     initencoding();
     initfiletypes();
+    initglog();
     inithighlighting();
     initmain();
     initmsgwin();
