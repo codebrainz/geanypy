@@ -17,6 +17,7 @@ import encoding
 import filetypes
 import highlighting
 import loader
+import glog
 import main
 import manager
 import msgwindow
@@ -44,6 +45,7 @@ __all__ = [ "Plugin",
             "main_widgets",
             "interface_prefs",
             "app",
+            "glog",
             "general_prefs",
             "search_prefs",
             "template_prefs",

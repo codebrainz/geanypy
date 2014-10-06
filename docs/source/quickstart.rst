@@ -119,3 +119,48 @@ To put it into context, here's a plugin that mimics the plugin in
 Hopefully this makes it clear how to write a Python plugin using GeanyPy.  This
 sample plugin is provided with GeanyPy if you want to try it out.
 
+Logging
+=======
+
+GeanyPy provides a logging adapter to log from Python to GLib's logging system
+which enables plugins to log messages to Geany's Help->Debug Messages window.
+To use it, simply call the base class' constructor in your __init__() method
+and use the new `self.logger` attribute.
+The logger attribute of `geany.Plugin` emulates a Python `logging.Logger` object
+and provides its logging functions:
+
+* **log** (*lvl, msg, \*args, \*\*kwargs*)
+* **debug** (*msg, \*args, \*\*kwargs*)
+* **info** (*msg, \*args, \*\*kwargs*)
+* **message** (*msg, \*args, \*\*kwargs*)
+* **warning** (*msg, \*args, \*\*kwargs*)
+* **error** (*msg, \*args, \*\*kwargs*)
+* **exception** (*msg, \*args, \*\*kwargs*)
+* **critical** (*msg, \*args, \*\*kwargs*)
+
+The function `message` maps to the GLib log level `G_LOG_LEVEL_MESSAGE`which does not
+exist in Python but still can be used.
+The keyword argument `exc_info` is supported for all logger methods with
+the same semantics as in Python (see
+`Python logging documentation <https://docs.python.org/2/library/logging.html>`_ for details).
+However, the keyword argument `extra` is not supported and will be ignored.
+Since you cannot define your own formatter for the GLib logging system, passing
+the `extra` keyword argument does not make any sense.
+
+Here is an example::
+
+    import geany
+
+    class HelloWorldLogger(geany.Plugin):
+
+        __plugin_name__ = "HelloWorldLogger"
+        __plugin_version__ = "1.0"
+        __plugin_description__ = "Just another tool to log hello world"
+        __plugin_author__ = "John Doe <john.doe@example.org>"
+
+        def __init__(self):
+            geany.Plugin.__init__(self)
+            self.logger.info(u'Hello World')
+
+        def cleanup(self):
+            self.logger.debug(u'Bye Bye from HelloWorldLogger')
