@@ -41,3 +41,5 @@ AC_CONFIG_FILES([
     plugins/Makefile
 ])
 AC_OUTPUT
+m4_pattern_allow([AM_PROG_AR])
+AM_PROG_AR

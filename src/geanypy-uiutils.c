@@ -3,7 +3,7 @@
 
 #define GOB_CHECK(pyobj, arg) \
 	{ \
-		if (!pyobj || pyobj == Py_None || !pygobject_check(pyobj, PyGObject_Type)) \
+		if (!pyobj || pyobj == Py_None || !pygobject_check(pyobj, PyGobject_Type))                                     \
 		{ \
 			PyErr_SetString(PyExc_ValueError, \
 				"argument " #arg " must inherit from a gobject.GObject type"); \
@@ -23,7 +23,7 @@
 	}
 
 
-static PyTypeObject *PyGObject_Type = NULL;
+static PyTypeObject *PyGobject_Type = NULL;
 
 
 static PyObject *
@@ -429,7 +429,7 @@ PyMODINIT_FUNC initui_utils(void)
     #endif
     if (m)
     {
-        PyGObject_Type = (PyTypeObject *) PyObject_GetAttrString(m, "GObject");
+        PyGobject_Type = (PyTypeObject *) PyObject_GetAttrString(m, "GObject");
         Py_XDECREF(m);
     }
 	InterfacePrefsType.tp_new = PyType_GenericNew;
