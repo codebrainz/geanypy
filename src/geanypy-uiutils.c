@@ -429,7 +429,7 @@ PyMODINIT_FUNC initui_utils(void)
     #endif
     if (m)
     {
-        PyGobject_Type = (PyTypeObject *) PyObject_GetAttrString(m, "GObject");
+        PyGobject_Type = (PyTypeObject *) PyObject_GetAttrString(m, "_PyGObject_API");
         Py_XDECREF(m);
     }
 	InterfacePrefsType.tp_new = PyType_GenericNew;
