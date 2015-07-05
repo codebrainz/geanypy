@@ -271,9 +271,11 @@ plugin_init(GeanyData *data)
 		G_CALLBACK(on_python_plugin_loader_activate), NULL);
 }
 
-
 G_MODULE_EXPORT void plugin_cleanup(void)
 {
+	PyObject* m = PyObject_GetAttrString(manager, "deactivate_all_plugins");
+	PyObject_CallObject(m, NULL);
+
     signal_manager_free(signal_manager);
     Py_XDECREF(manager);
 	GeanyPy_stop_interpreter();
