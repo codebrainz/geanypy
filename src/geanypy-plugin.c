@@ -273,8 +273,14 @@ plugin_init(GeanyData *data)
 
 G_MODULE_EXPORT void plugin_cleanup(void)
 {
-	PyObject* m = PyObject_GetAttrString(manager, "deactivate_all_plugins");
-	PyObject_CallObject(m, NULL);
+    PyObject* deactivate_all_plugins = PyObject_GetAttrString(manager, "deactivate_all_plugins");
+    if (deactivate_all_plugins == NULL)
+    {
+        g_warning(_("Unable to get deactivate_all_plugins() method on plugin manager"));
+        return;
+    }
+    PyObject_CallObject(deactivate_all_plugins, NULL);
+    Py_DECREF(deactivate_all_plugins);
 
     signal_manager_free(signal_manager);
     Py_XDECREF(manager);
