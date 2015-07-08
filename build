@@ -1,0 +1,1 @@
+make clean && make -j8 && sudo make install && sudo cp src/.libs/geanypy.so /usr/lib/x86_64-linux-gnu/geany/geanypy.so
