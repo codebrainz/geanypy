@@ -49,7 +49,7 @@ class PluginManager(gtk.Dialog):
 
 		btn_refresh = gtk.Button(stock=gtk.STOCK_REFRESH)
 		btn_refresh.set_border_width(6)
-		btn_refresh.connect("clicked", lambda x: self.load_sorted_plugins_info())
+		btn_refresh.connect("clicked", lambda x: self.on_refresh_plugins())
 		action_area.pack_start(btn_refresh, False, True, 0)
 		btn_refresh.show()
 
@@ -69,6 +69,9 @@ class PluginManager(gtk.Dialog):
 
 		self.load_plugins_list()
 
+	def on_refresh_plugins(self):
+		print("not implemented yet")
+		pass
 
 	def on_help_button_clicked(self, button, treeview, model):
 		path = treeview.get_cursor()[0]
