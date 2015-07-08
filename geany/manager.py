@@ -47,6 +47,12 @@ class PluginManager(gtk.Dialog):
 		action_area.pack_start(btn, False, True, 0)
 		btn.show()
 
+		btn_refresh = gtk.Button(stock=gtk.STOCK_REFRESH)
+		btn_refresh.set_border_width(6)
+		btn_refresh.connect("clicked", lambda x: self.load_sorted_plugins_info())
+		action_area.pack_start(btn_refresh, False, True, 0)
+		btn_refresh.show()
+
 		self.btn_help = gtk.Button(stock=gtk.STOCK_HELP)
 		self.btn_help.set_border_width(6)
 		self.btn_help.set_no_show_all(True)
@@ -97,21 +103,21 @@ class PluginManager(gtk.Dialog):
 		self.loader.unload_all_plugins()
 
 	def load_plugins_list(self):
-		liststore = gtk.ListStore(gobject.TYPE_BOOLEAN, str, str)
+		self.liststore = gtk.ListStore(gobject.TYPE_BOOLEAN, str, str)
 
 		self.btn_help.connect("clicked",
-			self.on_help_button_clicked, self.treeview, liststore)
+			self.on_help_button_clicked, self.treeview, self.liststore)
 
 		self.btn_prefs.connect("clicked",
-			self.on_preferences_button_clicked, self.treeview, liststore)
+			self.on_preferences_button_clicked, self.treeview, self.liststore)
 
-		self.treeview.set_model(liststore)
+		self.treeview.set_model(self.liststore)
 		self.treeview.set_headers_visible(False)
 		self.treeview.set_grid_lines(True)
 
 		check_renderer = gtk.CellRendererToggle()
 		check_renderer.set_radio(False)
-		check_renderer.connect('toggled', self.on_plugin_load_toggled, liststore)
+		check_renderer.connect('toggled', self.on_plugin_load_toggled, self.liststore)
 		text_renderer = gtk.CellRendererText()
 
 		check_column = gtk.TreeViewColumn(None, check_renderer, active=0)
@@ -121,15 +127,16 @@ class PluginManager(gtk.Dialog):
 		self.treeview.append_column(text_column)
 
 		self.treeview.connect('row-activated',
-			self.on_row_activated, check_renderer, liststore)
+			self.on_row_activated, check_renderer, self.liststore)
 		self.treeview.connect('cursor-changed',
-			self.on_selected_plugin_changed, liststore)
+			self.on_selected_plugin_changed, self.liststore)
 
-		self.load_sorted_plugins_info(liststore)
+		self.load_sorted_plugins_info()
 
 
-	def load_sorted_plugins_info(self, list_store):
+	def load_sorted_plugins_info(self):
 
+		self.liststore.clear()
 		plugin_info_list = list(self.loader.iter_plugin_info())
 		#plugin_info_list.sort(key=lambda pi: pi[1])
 
@@ -146,7 +153,7 @@ class PluginManager(gtk.Dialog):
 
 			loaded = plugin_info.filename in self.loader.plugins
 
-			list_store.append([loaded, lbl, plugin_info.filename])
+			self.liststore.append([loaded, lbl, plugin_info.filename])
 
 
 	def on_selected_plugin_changed(self, treeview, model):
