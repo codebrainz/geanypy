@@ -73,10 +73,10 @@ class PluginManager(gtk.Dialog):
 		print("not implemented yet")
 		pass
 
-	def on_help_button_clicked(self, button, treeview, model):
-		path = treeview.get_cursor()[0]
-		iter = model.get_iter(path)
-		filename = model.get_value(iter, 2)
+	def on_help_button_clicked(self, button):
+		path = self.treeview.get_cursor()[0]
+		iter = self.liststore.get_iter(path)
+		filename = self.liststore.get_value(iter, 2)
 		for plugin in self.loader.available_plugins:
 			if plugin.filename == filename:
 				plugin.cls.show_help()
@@ -85,10 +85,10 @@ class PluginManager(gtk.Dialog):
 			print("Plugin does not support help function")
 
 
-	def on_preferences_button_clicked(self, button, treeview, model):
-		path = treeview.get_cursor()[0]
-		iter = model.get_iter(path)
-		filename = model.get_value(iter, 2)
+	def on_preferences_button_clicked(self, button):
+		path = self.treeview.get_cursor()[0]
+		iter = self.liststore.get_iter(path)
+		filename = self.liststore.get_value(iter, 2)
 		try:
 			self.loader.plugins[filename].show_configure()
 		except KeyError:
@@ -109,10 +109,10 @@ class PluginManager(gtk.Dialog):
 		self.liststore = gtk.ListStore(gobject.TYPE_BOOLEAN, str, str)
 
 		self.btn_help.connect("clicked",
-			self.on_help_button_clicked, self.treeview, self.liststore)
+			self.on_help_button_clicked)
 
 		self.btn_prefs.connect("clicked",
-			self.on_preferences_button_clicked, self.treeview, self.liststore)
+			self.on_preferences_button_clicked)
 
 		self.treeview.set_model(self.liststore)
 		self.treeview.set_headers_visible(False)
@@ -120,7 +120,7 @@ class PluginManager(gtk.Dialog):
 
 		check_renderer = gtk.CellRendererToggle()
 		check_renderer.set_radio(False)
-		check_renderer.connect('toggled', self.on_plugin_load_toggled, self.liststore)
+		check_renderer.connect('toggled', self.on_plugin_load_toggled)
 		text_renderer = gtk.CellRendererText()
 
 		check_column = gtk.TreeViewColumn(None, check_renderer, active=0)
@@ -130,9 +130,9 @@ class PluginManager(gtk.Dialog):
 		self.treeview.append_column(text_column)
 
 		self.treeview.connect('row-activated',
-			self.on_row_activated, check_renderer, self.liststore)
+			self.on_row_activated, check_renderer)
 		self.treeview.connect('cursor-changed',
-			self.on_selected_plugin_changed, self.liststore)
+			self.on_selected_plugin_changed)
 
 		self.load_sorted_plugins_info()
 
@@ -159,12 +159,12 @@ class PluginManager(gtk.Dialog):
 			self.liststore.append([loaded, lbl, plugin_info.filename])
 
 
-	def on_selected_plugin_changed(self, treeview, model):
+	def on_selected_plugin_changed(self, treeview):
 
-		path = treeview.get_cursor()[0]
-		iter = model.get_iter(path)
-		filename = model.get_value(iter, 2)
-		active = model.get_value(iter, 0)
+		path = self.treeview.get_cursor()[0]
+		iter = self.liststore.get_iter(path)
+		filename = self.liststore.get_value(iter, 2)
+		active = self.liststore.get_value(iter, 0)
 
 		if self.loader.plugin_has_configure(filename):
 			self.btn_prefs.set_visible(True)
@@ -177,15 +177,15 @@ class PluginManager(gtk.Dialog):
 			self.btn_help.set_visible(False)
 
 
-	def on_plugin_load_toggled(self, cell, path, model):
+	def on_plugin_load_toggled(self, cell, path):
 		active = not cell.get_active()
-		iter = model.get_iter(path)
-		model.set_value(iter, 0, active)
+		iter = self.liststore.get_iter(path)
+		self.liststore.set_value(iter, 0, active)
 		if active:
-			self.activate_plugin(model.get_value(iter, 2))
+			self.activate_plugin(self.liststore.get_value(iter, 2))
 		else:
-			self.deactivate_plugin(model.get_value(iter, 2))
+			self.deactivate_plugin(self.liststore.get_value(iter, 2))
 
 
-	def on_row_activated(self, tvw, path, view_col, cell, model):
-		self.on_plugin_load_toggled(cell, path, model)
+	def on_row_activated(self, tvw, path, view_col, cell):
+		self.on_plugin_load_toggled(cell, path)
