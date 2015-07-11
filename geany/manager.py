@@ -89,6 +89,7 @@ class PluginManager(gtk.Dialog):
 	def activate_plugin(self, filename):
 		self.loader.load_plugin(filename)
 
+
 	def deactivate_plugin(self, filename):
 		self.loader.unload_plugin(filename)
 
