@@ -49,15 +49,15 @@ class PluginManager(gtk.Dialog):
 
 		self.btn_help = gtk.Button(stock=gtk.STOCK_HELP)
 		self.btn_help.set_border_width(6)
-		self.btn_help.set_no_show_all(True)
 		action_area.pack_start(self.btn_help, False, True, 0)
 		action_area.set_child_secondary(self.btn_help, True)
+		self.btn_help.show()
 
 		self.btn_prefs = gtk.Button(stock=gtk.STOCK_PREFERENCES)
 		self.btn_prefs.set_border_width(6)
-		self.btn_prefs.set_no_show_all(True)
 		action_area.pack_start(self.btn_prefs, False, True, 0)
 		action_area.set_child_secondary(self.btn_prefs, True)
+		self.btn_prefs.show()
 
 		action_area.show()
 
@@ -155,14 +155,14 @@ class PluginManager(gtk.Dialog):
 		active = model.get_value(iter, 0)
 
 		if self.loader.plugin_has_configure(filename):
-			self.btn_prefs.set_visible(True)
+			self.btn_prefs.set_sensitive(True)
 		else:
-			self.btn_prefs.set_visible(False)
+			self.btn_prefs.set_sensitive(False)
 
 		if self.loader.plugin_has_help(filename):
-			self.btn_help.set_visible(True)
+			self.btn_help.set_sensitive(True)
 		else:
-			self.btn_help.set_visible(False)
+			self.btn_help.set_sensitive(False)
 
 
 	def on_plugin_load_toggled(self, cell, path, model):
