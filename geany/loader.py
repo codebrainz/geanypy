@@ -13,12 +13,13 @@ class PluginLoader(object):
 	def __init__(self, plugin_dirs):
 
 		self.plugin_dirs = plugin_dirs
-
+		self.loaded = []
 		self.available_plugins = []
 		for plugin in self.iter_plugin_info():
 			self.available_plugins.append(plugin)
 
 		self.restore_loaded_plugins()
+
 
 
 	def update_loaded_plugins_file(self):
@@ -63,16 +64,9 @@ class PluginLoader(object):
 
 
 	def unload_all_plugins(self):
-
-		for plugin in self.plugins:
-			self.unload_plugin(plugin)
-
-
-	def reload_all_plugins(self):
-
-		self.unload_all_plugins()
-		self.load_all_plugins()
-
+		tloaded = list(self.loaded)
+		for filename in tloaded:
+			self.unload_plugin(filename)
 
 	def iter_plugin_info(self):
 
@@ -87,13 +81,13 @@ class PluginLoader(object):
 								#loop around results if its fails to load will never reach yield
 								for p in self.load_plugin_info(current_path,plugin_folder_file):
 									yield p
-									
+
 					#not a sub directory so if it ends with .py lets just attempt to load it as a plugin
 					if current_file.endswith('.py'):
 						#loop around results if its fails to load will never reach yield
 						for p in self.load_plugin_info(d,current_file):
 							yield p
-								
+
 	def load_plugin_info(self,d,f):
 		filename = os.path.abspath(os.path.join(d, f))
 		if filename.endswith("test.py"):
@@ -105,7 +99,7 @@ class PluginLoader(object):
 		except ImportError as exc:
 			print "Error: failed to import settings module ({})".format(exc)
 			module=None
-		if module:	
+		if module:
 			for k, v in module.__dict__.iteritems():
 				if k == geany.Plugin.__name__:
 					continue
@@ -119,7 +113,7 @@ class PluginLoader(object):
 								getattr(v, '__plugin_author__', ''),
 								v)
 						yield inf
-						
+
 				except TypeError:
 					continue
 
@@ -128,6 +122,7 @@ class PluginLoader(object):
 
 		for avail in self.available_plugins:
 			if avail.filename == filename:
+				self.loaded.append(filename)
 				inst = avail.cls()
 				self.plugins[filename] = inst
 				self.update_loaded_plugins_file()
@@ -142,6 +137,7 @@ class PluginLoader(object):
 			plugin = self.plugins[filename]
 			name = plugin.name
 			plugin.cleanup()
+			self.loaded.remove(filename)
 			del self.plugins[filename]
 			self.update_loaded_plugins_file()
 			geany.ui_utils.set_statusbar('GeanyPy: plugin deactivated: %s' %
@@ -170,3 +166,14 @@ class PluginLoader(object):
 			return hasattr(self.plugins[filename], 'show_configure')
 		except KeyError:
 			return None
+
+	def refresh_plugins(self):
+
+		tloaded = list(self.loaded)
+		self.unload_all_plugins()
+		self.available_plugins = []
+		for plugin in self.iter_plugin_info():
+			self.available_plugins.append(plugin)
+			if plugin.filename in tloaded:
+				self.load_plugin(plugin.filename)
+				print 'refreshed ' + plugin.filename
