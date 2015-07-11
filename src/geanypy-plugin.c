@@ -264,11 +264,11 @@ plugin_init(GeanyData *data)
         GeanyPy_init_manager(plugin_dir);
 
     loader_item = gtk_menu_item_new_with_label(_("Python Plugin Manager"));
-    gtk_widget_set_sensitive(loader_item, plugin_dir != NULL);
-    gtk_menu_append(GTK_MENU(geany->main_widgets->tools_menu), loader_item);
-    gtk_widget_show(loader_item);
-    g_signal_connect(loader_item, "activate",
-            G_CALLBACK(on_python_plugin_loader_activate), NULL);
+	gtk_widget_set_sensitive(loader_item, plugin_dir != NULL);
+	gtk_menu_append(GTK_MENU(geany->main_widgets->tools_menu), loader_item);
+	gtk_widget_show(loader_item);
+	g_signal_connect(loader_item, "activate",
+			G_CALLBACK(on_python_plugin_loader_activate), NULL);
 }
 
 G_MODULE_EXPORT void plugin_cleanup(void)
