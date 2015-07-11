@@ -268,7 +268,7 @@ plugin_init(GeanyData *data)
 	gtk_menu_append(GTK_MENU(geany->main_widgets->tools_menu), loader_item);
 	gtk_widget_show(loader_item);
 	g_signal_connect(loader_item, "activate",
-			G_CALLBACK(on_python_plugin_loader_activate), NULL);
+		G_CALLBACK(on_python_plugin_loader_activate), NULL);
 }
 
 G_MODULE_EXPORT void plugin_cleanup(void)
