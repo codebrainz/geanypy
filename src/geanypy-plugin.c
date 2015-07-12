@@ -221,10 +221,10 @@ GeanyPy_show_manager(void)
 
     g_return_if_fail(manager != NULL);
 
-    show_method = PyObject_GetAttrString(manager, "show_all");
+    show_method = PyObject_GetAttrString(manager, "on_show_manager");
     if (show_method == NULL)
     {
-        g_warning(_("Unable to get show_all() method on plugin manager"));
+        g_warning(_("Unable to get on_show_manager() method on plugin manager"));
         return;
     }
     PyObject_CallObject(show_method, NULL);
