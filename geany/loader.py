@@ -62,10 +62,10 @@ class PluginLoader(object):
 				print("  Author: %s" % plug.author)
 
 
-	def unload_all_plugins(self):
+	def unload_all_plugins(self, update_file=True):
 
 		for plugin in self.plugins:
-			self.unload_plugin(plugin)
+			self.unload_plugin(plugin, update_file)
 
 
 	def reload_all_plugins(self):
@@ -136,14 +136,15 @@ class PluginLoader(object):
 				return inst
 
 
-	def unload_plugin(self, filename):
+	def unload_plugin(self, filename, update_file=True):
 
 		try:
 			plugin = self.plugins[filename]
 			name = plugin.name
 			plugin.cleanup()
 			del self.plugins[filename]
-			self.update_loaded_plugins_file()
+			if update_file:
+				self.update_loaded_plugins_file()
 			geany.ui_utils.set_statusbar('GeanyPy: plugin deactivated: %s' %
 				name, True)
 		except KeyError:
