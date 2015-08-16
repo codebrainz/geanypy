@@ -12,6 +12,7 @@ The :mod:`geany` modules:
     app.rst
     dialogs.rst
     document.rst
+    keybindings.rst
 
 The :mod:`geany` package and module
 ===================================

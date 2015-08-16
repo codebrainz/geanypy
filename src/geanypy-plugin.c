@@ -50,6 +50,7 @@ PyMODINIT_FUNC initencoding(void);
 PyMODINIT_FUNC initfiletypes(void);
 PyMODINIT_FUNC initglog(void);
 PyMODINIT_FUNC inithighlighting(void);
+PyMODINIT_FUNC initkeybindings(void);
 PyMODINIT_FUNC initmain(void);
 PyMODINIT_FUNC initmsgwin(void);
 PyMODINIT_FUNC initnavqueue(void);
@@ -59,6 +60,7 @@ PyMODINIT_FUNC initscintilla(void);
 PyMODINIT_FUNC initsearch(void);
 PyMODINIT_FUNC inittemplates(void);
 PyMODINIT_FUNC initui_utils(void);
+PyMODINIT_FUNC cleanupkeybindings(void);
 
 
 static void
@@ -91,6 +93,7 @@ GeanyPy_start_interpreter(void)
     initfiletypes();
     initglog();
     inithighlighting();
+    initkeybindings();
     initmain();
     initmsgwin();
     initnavqueue();
@@ -138,6 +141,7 @@ GeanyPy_start_interpreter(void)
 static void
 GeanyPy_stop_interpreter(void)
 {
+	cleanupkeybindings();
     if (Py_IsInitialized())
         Py_Finalize();
 }

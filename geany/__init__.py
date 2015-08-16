@@ -15,6 +15,7 @@ import editor
 import encoding
 import filetypes
 import highlighting
+import keybindings
 import loader
 import glog
 import main
@@ -43,6 +44,7 @@ __all__ = [ "Plugin",
             "reload_configuration",
             "main_widgets",
             "interface_prefs",
+            "keybindings",
             "app",
             "glog",
             "general_prefs",
