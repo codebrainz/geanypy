@@ -39,6 +39,8 @@ static GtkWidget *loader_item = NULL;
 static PyObject *manager = NULL;
 static gchar *plugin_dir = NULL;
 static SignalManager *signal_manager = NULL;
+static GtkToolItem* toolbar_button = NULL;
+
 
 
 /* Forward declarations to prevent compiler warnings. */
@@ -269,11 +271,25 @@ plugin_init(GeanyData *data)
 	gtk_widget_show(loader_item);
 	g_signal_connect(loader_item, "activate",
 		G_CALLBACK(on_python_plugin_loader_activate), NULL);
-}
 
+	toolbar_button = gtk_tool_button_new_from_stock(GTK_STOCK_ADD);
+	if (toolbar_button != NULL)
+	{
+		plugin_add_toolbar_item(geany_plugin, toolbar_button);
+		ui_add_document_sensitive(GTK_WIDGET(toolbar_button));
+
+		g_signal_connect(toolbar_button, "clicked",
+			G_CALLBACK(on_python_plugin_loader_activate), NULL);
+
+		gtk_widget_show(GTK_WIDGET(toolbar_button));
+	}
+}
 
 G_MODULE_EXPORT void plugin_cleanup(void)
 {
+	if (toolbar_button != NULL)
+		gtk_widget_destroy(GTK_WIDGET(toolbar_button));
+
     PyObject* deactivate_all_plugins = PyObject_GetAttrString(manager,
             "deactivate_all_plugins");
     if (deactivate_all_plugins != NULL)
@@ -282,7 +298,6 @@ G_MODULE_EXPORT void plugin_cleanup(void)
         if (r)
             Py_DECREF(r);
         Py_DECREF(deactivate_all_plugins);
-
     }
 
     signal_manager_free(signal_manager);
