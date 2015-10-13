@@ -36,8 +36,8 @@ directory (something like ~/.config/geany/plugins/geanypy/plugins).  Only
 files with a `.py` extension will be loaded.
 """
 
-from geany.logger import PluginLogger
 
+from geany.logger import PluginLogger
 
 class Plugin(object):
 	"""
@@ -50,7 +50,6 @@ class Plugin(object):
 	#__plugin_description__ = None
 	#__plugin_version__ = None
 	#__plugin_author__ = None
-
 
 	_events = {
 		"document-open": [],
