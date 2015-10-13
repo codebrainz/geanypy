@@ -3,20 +3,21 @@ import gobject
 import glib
 from htmlentitydefs import name2codepoint
 from loader import PluginLoader
+from gtk import Dialog
 
-
-class PluginManager(gtk.Dialog):
+class PluginManager():
 
 	def __init__(self, plugin_dirs=[]):
-		gtk.Dialog.__init__(self, title="Plugin Manager")
 		self.loader = PluginLoader(plugin_dirs)
+		self.gui_visible = False
 
-		self.set_default_size(400, 450)
-		self.set_has_separator(True)
-		icon = self.render_icon(gtk.STOCK_PREFERENCES, gtk.ICON_SIZE_MENU)
-		self.set_icon(icon)
-
-		self.connect("response", lambda w,d: self.hide())
+	def create_gui(self):
+		self.dialog = Dialog(title="GeanyPy Plugin Manager")
+		self.dialog.set_default_size(400, 450)
+		self.dialog.set_has_separator(True)
+		icon = self.dialog.render_icon(gtk.STOCK_PREFERENCES, gtk.ICON_SIZE_MENU)
+		self.dialog.set_icon(icon)
+		self.dialog.connect("destroy", self.on_destroy)
 
 		vbox = gtk.VBox(False, 12)
 		vbox.set_border_width(12)
@@ -35,15 +36,15 @@ class PluginManager(gtk.Dialog):
 
 		vbox.show_all()
 
-		self.get_content_area().add(vbox)
+		self.dialog.get_content_area().add(vbox)
 
-		action_area = self.get_action_area()
+		action_area = self.dialog.get_action_area()
 		action_area.set_spacing(0)
 		action_area.set_homogeneous(False)
 
 		btn = gtk.Button(stock=gtk.STOCK_CLOSE)
 		btn.set_border_width(6)
-		btn.connect("clicked", lambda x: self.response(gtk.RESPONSE_CLOSE))
+		btn.connect("clicked", lambda w: self.dialog.destroy())
 		action_area.pack_start(btn, False, True, 0)
 		btn.show()
 
@@ -62,6 +63,15 @@ class PluginManager(gtk.Dialog):
 		action_area.show()
 
 		self.load_plugins_list()
+		self.dialog.show()
+		self.gui_visible = True
+
+	def on_destroy(self, w):
+		self.gui_visible = False
+
+	def on_show_manager(self):
+		if not self.gui_visible:
+			self.create_gui()
 
 
 	def on_help_button_clicked(self, button, treeview, model):
@@ -94,7 +104,7 @@ class PluginManager(gtk.Dialog):
 		self.loader.unload_plugin(filename)
 
 	def deactivate_all_plugins(self):
-		self.response(gtk.RESPONSE_CLOSE)
+		self.dialog.destroy()
 		self.loader.unload_all_plugins()
 
 	def load_plugins_list(self):
