@@ -38,8 +38,9 @@ files with a `.py` extension will be loaded.
 
 
 from geany.logger import PluginLogger
+from geany.pluginbase import PluginBase
 
-class Plugin(object):
+class Plugin(PluginBase):
 	"""
 	Base class for all plugins.  All plugins must inherit from this in order
 	to be properly detected.
@@ -57,7 +58,8 @@ class Plugin(object):
 	}
 
 
-	def __init__(self):
+	def __init__(self, ctx=None):
+		PluginBase.__init__(self, ctx)
 		"""
 		When the plugin is loaded its __init__() function will be called
 		so that's a good place to put plugin initialization code.
