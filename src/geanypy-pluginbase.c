@@ -28,7 +28,7 @@ PluginBase_set_kb_group(GeanyPyPluginBase *self, PyObject *args, PyObject *kwarg
 		{
 			Py_INCREF(py_callback);
 			group = plugin_set_key_group_full(self->plugin, section_name, count,
-			                                  (GeanyKeyGroupFunc) call_key, py_callback, Py_DecRef);
+				(GeanyKeyGroupFunc) call_key, py_callback, (GDestroyNotify) Py_DecRef);
 		}
 		else
 			group = plugin_set_key_group(self->plugin, section_name, count, NULL);
@@ -70,7 +70,7 @@ PluginBase_set_kb_item(GeanyPyPluginBase *self, PyObject *args, PyObject *kwargs
 		{
 			Py_INCREF(py_callback);
 			keybindings_set_item_full(group, id, (guint) key, (GdkModifierType) mod, name, label,
-									  menu_item, (GeanyKeyBindingFunc) call_key, py_callback, Py_DecRef);
+				menu_item, (GeanyKeyBindingFunc) call_key, py_callback, (GDestroyNotify) Py_DecRef);
 		}
 		else
 			keybindings_set_item(group, id, NULL, (guint) key, (GdkModifierType) mod, name, label,
