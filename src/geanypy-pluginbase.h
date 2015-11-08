@@ -1,7 +1,8 @@
 /*
  * plugin.h
  *
- * Copyright 2011 Matthew Brush <mbrush@codebrainz.ca>
+ * Copyright 2011-2015 Matthew Brush <mbrush@codebrainz.ca>
+ * Copyright 2015 Thomas Martitz <kugel@rockbox.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,20 +21,21 @@
  *
  */
 
-#ifndef PLUGIN_H
-#define PLUGIN_H
+#ifndef GEANYPY_PLUGINBASE_H
+#define GEANYPY_PLUGINBASE_H
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-extern GeanyData *geany_data;
+typedef struct
+{
+	PyObject_HEAD
+	GeanyPlugin *plugin;
+} GeanyPyPluginBase;
 
-
-#ifndef PyMODINIT_FUNC
-#define PyMODINIT_FUNC void
-#endif
+extern PyTypeObject PluginBaseType;
 
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
-#endif /* PLUGIN_H */
+#endif /* GEANYPY_PLUGINBASE_H */

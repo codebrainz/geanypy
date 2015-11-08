@@ -106,6 +106,7 @@ extern "C" {
 #include "geanypy-encoding.h"
 #include "geanypy-filetypes.h"
 #include "geanypy-plugin.h"
+#include "geanypy-pluginbase.h"
 #include "geanypy-project.h"
 #include "geanypy-scintilla.h"
 #include "geanypy-signalmanager.h"

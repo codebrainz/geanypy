@@ -16,6 +16,7 @@ SOURCES = \
 	geanypy-msgwindow.c \
 	geanypy-navqueue.c \
 	geanypy-plugin.c \
+	geanypy-pluginbase.c \
 	geanypy-prefs.c \
 	geanypy-project.c \
 	geanypy-scinotification.c \

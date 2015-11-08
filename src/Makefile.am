@@ -24,6 +24,7 @@ geanypy_la_SOURCES			=	geanypy-app.c \
 								geanypy-msgwindow.c \
 								geanypy-navqueue.c \
 								geanypy-plugin.c geanypy-plugin.h \
+								geanypy-pluginbase.c geanypy-pluginbase.h \
 								geanypy-prefs.c \
 								geanypy-project.c geanypy-project.h \
 								geanypy-scinotification.c \
