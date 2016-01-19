@@ -43,6 +43,7 @@ static SignalManager *signal_manager = NULL;
 
 /* Forward declarations to prevent compiler warnings. */
 PyMODINIT_FUNC initapp(void);
+PyMODINIT_FUNC initbindings(void);
 PyMODINIT_FUNC initdialogs(void);
 PyMODINIT_FUNC initdocument(void);
 PyMODINIT_FUNC initeditor(void);
@@ -81,9 +82,12 @@ GeanyPy_start_interpreter(void)
 #endif
 
     Py_Initialize();
-
+    #if GTK_CHECK_VERSION(3, 0, 0)
+    PySys_SetArgv(0, "[]");
+    #endif
     /* Import the C modules */
     initapp();
+    initbindings();
     initdialogs();
     initdocument();
     initeditor();
@@ -150,7 +154,6 @@ GeanyPy_init_manager(const gchar *dir)
     gchar *sys_plugin_dir = NULL;
 
     g_return_if_fail(dir != NULL);
-
     module = PyImport_ImportModule("geany.manager");
     if (module == NULL)
     {
@@ -194,11 +197,11 @@ GeanyPy_init_manager(const gchar *dir)
 	if (sys_plugin_dir)
 	{
 		g_log(G_LOG_DOMAIN, G_LOG_LEVEL_INFO, "System plugins: %s", sys_plugin_dir);
-		args = Py_BuildValue("([s, s])", sys_plugin_dir, dir);
+		args = Py_BuildValue("(O, [s, s])", pygobject_new(G_OBJECT(geany_data->main_widgets->window)), sys_plugin_dir, dir);
 		g_free(sys_plugin_dir);
 	}
 	else
-		args = Py_BuildValue("([s])", dir);
+		args = Py_BuildValue("(O, [s])", pygobject_new(G_OBJECT(geany_data->main_widgets->window)), dir);
 
     manager = PyObject_CallObject(man, args);
     if (PyErr_Occurred())
@@ -265,7 +268,7 @@ plugin_init(GeanyData *data)
 
     loader_item = gtk_menu_item_new_with_label(_("Python Plugin Manager"));
 	gtk_widget_set_sensitive(loader_item, plugin_dir != NULL);
-	gtk_menu_append(GTK_MENU(geany->main_widgets->tools_menu), loader_item);
+	gtk_menu_shell_append(GTK_MENU_SHELL(geany->main_widgets->tools_menu), loader_item);
 	gtk_widget_show(loader_item);
 	g_signal_connect(loader_item, "activate",
 		G_CALLBACK(on_python_plugin_loader_activate), NULL);

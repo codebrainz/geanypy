@@ -9,7 +9,7 @@ class DemoPlugin(geany.Plugin):
     __plugin_author__ = "Matthew Brush <mbrush@codebrainz.ca>"
 
     def __init__(self):
-        geany.Plugin.__init__(self)
+        super(DemoPlugin, self).__init__()
         print("Demo plugin initializing")
         doc = geany.document.new_file()
         doc.editor.scintilla.set_text("Hello from the Demo plugin")

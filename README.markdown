@@ -60,12 +60,27 @@ To build GeanyPy you need the following dependencies:
 
 * Python 2.6+ and development files (I don't think Python 3 will work).
 * Geany 0.21+ and development files (from SVN)
+
+** For Gtk2 **
+
 * PyGTK 2.0 and development files
+
+** For Gtk3 **
+
+* GObject Introspection is needed [pygtk not needed.]
 
 On Debian/Ubuntu, the (non-Geany) dependencies can be installed like this:
 
-    $ apt-get install python python-dev python-gtk2 python-gtk2-dev
+    $ sudo apt-get install python python-dev
 
+** For Gtk2 **
+
+    $ sudo apt-get install python-gtk2 python-gtk2-dev
+
+** For Gtk3 **
+
+    $ sudo apt-get install python-gi python-gi-dev
+    
 See Geany's documentation/website for information on compiling it from the
 Subversion or Git repositories.
 

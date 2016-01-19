@@ -37,6 +37,14 @@
 # inside: GtkTextView is not a terminal.
 # The use case is: you have a python program, you create this widget,
 # and inspect your program interiors.
+try:
+    from gi import pygtkcompat
+except ImportError:
+    pygtkcompat = None
+
+if pygtkcompat is not None:
+    pygtkcompat.enable() 
+    pygtkcompat.enable_gtk(version='3.0')
 
 import gtk
 import gtk.gdk as gdk
@@ -160,7 +168,7 @@ class _ReadLine(object):
             self.thaw_undo()
 
         self.__move_cursor_to(iter)
-        self.scroll_to_mark(self.cursor, 0.2)
+        self.scroll_to_mark(self.cursor, 0.2, use_align=False, xalign=0.5, yalign=0.5)
 
         self.in_raw_input = True
 
@@ -177,7 +185,7 @@ class _ReadLine(object):
         if iter.compare(self.__get_start()) >= 0 and \
            iter.compare(self.__get_end()) <= 0:
                 buffer.move_mark_by_name("cursor", iter)
-                self.scroll_to_mark(self.cursor, 0.2)
+                self.scroll_to_mark(self.cursor, 0.2, use_align=False, xalign=0.5, yalign=0.5)
 
     def __insert(self, iter, text):
         self.do_insert = True
@@ -286,7 +294,7 @@ class _ReadLine(object):
             handled = False
 
         if not handled:
-            return parent_type.do_key_press_event(self, event)
+            return parent_type.do_key_press_event(self, event.key if hasattr(event, "key") else event)
         else:
             return True
 
@@ -296,7 +304,7 @@ class _ReadLine(object):
         if not new_text is None:
             self.__replace_line(new_text)
         self.__move_cursor(0)
-        self.scroll_to_mark(self.cursor, 0.2)
+        self.scroll_to_mark(self.cursor, 0.2, use_align=False, xalign=0.5, yalign=0.5)
 
     def __get_cursor(self):
         return self.buffer.get_iter_at_mark(self.cursor)
@@ -343,7 +351,7 @@ class _ReadLine(object):
         self.__delete(iter, end)
 
     def __get_width(self):
-        if not (self.flags() & gtk.REALIZED):
+        if not (self.get_realized()):
             return 80
         layout = pango.Layout(self.get_pango_context())
         letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
@@ -386,7 +394,7 @@ class _ReadLine(object):
         self.__insert(iter, "%s%s%s" % (self.ps, line_start, line_end))
         iter.set_line_offset(len(self.ps) + len(line_start))
         self.__move_cursor_to(iter)
-        self.scroll_to_mark(self.cursor, 0.2)
+        self.scroll_to_mark(self.cursor, 0.2, use_align=False, xalign=0.5, yalign=0.5)
 
     def __complete(self):
         text = self.__get_text(self.__get_start(), self.__get_cursor())
