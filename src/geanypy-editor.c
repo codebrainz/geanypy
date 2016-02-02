@@ -58,7 +58,7 @@ Editor_get_property(Editor *self, const gchar *prop_name)
 		PyObject *py_doc;
 		py_doc = (PyObject *) Document_create_new_from_geany_document(
 									self->editor->document);
-		if (py_doc && py_doc != Py_None)
+		if (!py_doc || py_doc == Py_None)
 			Py_RETURN_NONE;
 		return py_doc;
 	}
