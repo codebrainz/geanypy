@@ -292,7 +292,7 @@ static PyMethodDef Editor_methods[] = {
 	{ "indicator_set_on_range", (PyCFunction) Editor_indicator_set_on_range, METH_KEYWORDS,
 		"Sets an indicator on the range specified." },
 	{ "insert_snippet", (PyCFunction) Editor_insert_snippet, METH_KEYWORDS,
-		"Replces all special sequences in snippet and inserts it at "
+		"Replaces all special sequences in snippet and inserts it at "
 		"the specified position." },
 	{ "insert_text_block", (PyCFunction) Editor_insert_text_block, METH_KEYWORDS,
 		"Inserts text, replacing tab chars and newline chars accordingly "
