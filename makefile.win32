@@ -8,11 +8,10 @@ clean:
 	$(MAKE) -C src -f makefile.win32 clean
 
 install:
-	-mkdir "$(GEANY_PREFIX)/lib/geanypy/plugins"
 	-mkdir "$(GEANY_PREFIX)/lib/geanypy/geany"
 	-copy /Y src\geanypy.dll "$(GEANY_PREFIX)/lib/"
 	-copy /Y geany\*.py "$(GEANY_PREFIX)/lib/geanypy/geany/"
-	-copy /Y plugins\*.py "$(GEANY_PREFIX)/lib/geanypy/plugins/"
+	-copy /Y plugins\*.py "$(GEANY_PREFIX)/lib/"
 
 uninstall:
 	-del "$(GEANY_PREFIX)/lib/geanypy.dll"
