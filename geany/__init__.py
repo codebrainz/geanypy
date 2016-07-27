@@ -15,10 +15,8 @@ import editor
 import encoding
 import filetypes
 import highlighting
-import loader
 import glog
 import main
-import manager
 import msgwindow
 import navqueue
 import prefs
@@ -27,6 +25,7 @@ import scintilla
 import search
 import templates
 import ui_utils
+import keybindings
 
 from app import App
 from prefs import Prefs, ToolPrefs
@@ -45,6 +44,7 @@ __all__ = [ "Plugin",
             "interface_prefs",
             "app",
             "glog",
+            "keybindings",
             "general_prefs",
             "search_prefs",
             "template_prefs",
