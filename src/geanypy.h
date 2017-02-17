@@ -75,6 +75,15 @@ extern "C" {
 #include <string.h>
 
 #include <gtk/gtk.h>
+
+/* necessary for compilation with -fno-common,
+ * see https://bugzilla.gnome.org/show_bug.cgi?id=610657 for details,
+ * INCLUDE_PYGOBJECT_ONCE_FULL is set only once in geanypy-plugin.c */
+#ifndef INCLUDE_PYGOBJECT_ONCE_FULL
+#  define NO_IMPORT_PYGOBJECT
+#  define NO_IMPORT_PYGTK
+#endif
+
 #include <pygobject.h>
 
 #ifndef GEANYPY_WINDOWS
@@ -98,10 +107,6 @@ extern "C" {
 
 #ifndef G_LOG_DOMAIN
 #  define G_LOG_DOMAIN "GeanyPy"
-#endif
-
-#ifndef GEANYPY_WINDOWS
-#  include "plugin-config.h"
 #endif
 
 #include "geanypy-document.h"

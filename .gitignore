@@ -34,7 +34,7 @@ Makefile.in
 /missing
 /libtool
 /build-aux/
-/src/plugin-config.h*
+/src/config.h*
 /src/stamp-h1
 
 # Project-specific

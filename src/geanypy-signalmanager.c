@@ -1,3 +1,7 @@
+#if defined(HAVE_CONFIG_H) && !defined(GEANYPY_WINDOWS)
+# include "config.h"
+#endif
+
 #include "geanypy.h"
 
 struct _SignalManager
@@ -47,6 +51,7 @@ SignalManager *signal_manager_new(GeanyPlugin *geany_plugin)
 		if (PyErr_Occurred())
 			PyErr_Print();
 		g_warning("Unable to import 'geany' module");
+		g_free(man);
 		return NULL;
 	}
 
@@ -57,6 +62,7 @@ SignalManager *signal_manager_new(GeanyPlugin *geany_plugin)
 		if (PyErr_Occurred())
 			PyErr_Print();
 		g_warning("Unable to get 'SignalManager' instance from 'geany' module.");
+		g_free(man);
 		return NULL;
 	}
 	man->obj = pygobject_get(man->py_obj);

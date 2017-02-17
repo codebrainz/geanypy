@@ -19,6 +19,12 @@
  * MA 02110-1301, USA.
  */
 
+#if defined(HAVE_CONFIG_H) && !defined(GEANYPY_WINDOWS)
+# include "config.h"
+#endif
+
+#define INCLUDE_PYGOBJECT_ONCE_FULL
+
 #include "geanypy.h"
 #include "geanypy-keybindings.h"
 
@@ -413,5 +419,5 @@ geany_load_module(GeanyPlugin *plugin)
 	plugin->funcs->init       = geanypy_init;
 	plugin->funcs->cleanup    = geanypy_cleanup;
 
-	GEANY_PLUGIN_REGISTER_FULL(plugin, 224, state, g_free);
+	GEANY_PLUGIN_REGISTER_FULL(plugin, 226, state, g_free);
 }

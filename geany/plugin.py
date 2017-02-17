@@ -80,7 +80,7 @@ class Plugin(object):
 		string name of the plugin.
 		"""
 		raise NotImplementedError(
-			"Plugin's must implement the __plugin_name__ attribute.")
+			"Plugins must implement the __plugin_name__ attribute.")
 
 
 	@property

@@ -1,3 +1,7 @@
+#if defined(HAVE_CONFIG_H) && !defined(GEANYPY_WINDOWS)
+# include "config.h"
+#endif
+
 #include "geanypy.h"
 
 
@@ -123,8 +127,8 @@ UiUtils_combo_box_add_to_history(PyObject *module, PyObject *args, PyObject *kwa
 	{
 		GOB_CHECK(py_cbo, 1);
 		widget = pygobject_get(py_cbo);
-		GOB_TYPE_CHECK(widget, GTK_TYPE_COMBO_BOX_ENTRY, 1);
-		ui_combo_box_add_to_history(GTK_COMBO_BOX_ENTRY(widget), text, hist_len);
+		GOB_TYPE_CHECK(widget, GTK_TYPE_COMBO_BOX_TEXT, 1);
+		ui_combo_box_add_to_history(GTK_COMBO_BOX_TEXT(widget), text, hist_len);
 	}
 
 	Py_RETURN_NONE;
@@ -355,7 +359,7 @@ UiUtils_widget_set_tooltip_text(PyObject *module, PyObject *args, PyObject *kwar
 		GOB_CHECK(py_widget, 1);
 		widget = pygobject_get(py_widget);
 		GOB_TYPE_CHECK(widget, GTK_TYPE_WIDGET, 1);
-		ui_widget_set_tooltip_text(GTK_WIDGET(widget), text);
+		gtk_widget_set_tooltip_text(GTK_WIDGET(widget), text);
 	}
 
 	Py_RETURN_NONE;

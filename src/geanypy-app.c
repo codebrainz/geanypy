@@ -1,5 +1,8 @@
-#include "geanypy.h"
+#if defined(HAVE_CONFIG_H) && !defined(GEANYPY_WINDOWS)
+# include "config.h"
+#endif
 
+#include "geanypy.h"
 
 typedef struct
 {
